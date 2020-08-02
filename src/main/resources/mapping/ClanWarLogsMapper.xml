@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarLogsMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWarLogs">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="attacker_tag" jdbcType="VARCHAR" property="attackerTag" />
+    <result column="defender_tag" jdbcType="VARCHAR" property="defenderTag" />
+    <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
+    <result column="star" jdbcType="SMALLINT" property="star" />
+    <result column="destruction_percentage" jdbcType="SMALLINT" property="destructionPercentage" />
+    <result column="attack_order" jdbcType="INTEGER" property="attackOrder" />
+    <result column="has_calculated" jdbcType="TINYINT" property="hasCalculated" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <insert id="insertIgnoreExist">
+    insert ignore into coc_clan_war_logs (attacker_tag, defender_tag, war_tag, star, destruction_percentage, attack_order)
+    values
+    <foreach collection="list">
+      (#{item.attackerTag}, #{item.defenderTag}, #{item.warTag}, #{item.star}, #{item.destructionPercentage}, #{item.attackOrder})
+    </foreach>
+  </insert>
+</mapper>

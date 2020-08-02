@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarMembersMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWarMembers">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
+    <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
+    <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="attack_three_star_time" jdbcType="SMALLINT" property="attackThreeStarTime" />
+    <result column="attack_two_star_time" jdbcType="SMALLINT" property="attackTwoStarTime" />
+    <result column="attack_one_star_time" jdbcType="SMALLINT" property="attackOneStarTime" />
+    <result column="attack_no_star_time" jdbcType="SMALLINT" property="attackNoStarTime" />
+    <result column="attack_time_used" jdbcType="SMALLINT" property="attackTimeUsed" />
+    <result column="attack_time_left" jdbcType="SMALLINT" property="attackTimeLeft" />
+    <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <insert id="insertIgnoreExist">
+    insert ignore into coc_clan_war_members (member_tag, war_tag, clan_tag, attack_time_left)
+    values
+     <foreach collection="list" item="item" separator=",">
+       (#{item.memberTag}, #{item.warTag}, #{item.clanTag}, #{item.attackTimeLeft})
+     </foreach>
+  </insert>
+</mapper>

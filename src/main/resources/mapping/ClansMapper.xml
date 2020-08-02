@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClansMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.Clans">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <insert id="insertOnDuplicateKeyUpdate" parameterType="com.coc.data.model.Clans">
+    insert into coc_clans (tag, name) VALUES
+    (#{clan.tag}, #{clan.name})
+    on duplicate key update name = values(name);
+  </insert>
+</mapper>

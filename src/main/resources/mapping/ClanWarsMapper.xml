@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarsMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWars">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="season" jdbcType="VARCHAR" property="season" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="team_size" jdbcType="SMALLINT" property="teamSize" />
+    <result column="preparation_start_time" jdbcType="TIMESTAMP" property="preparationStartTime" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="is_league_war" jdbcType="TINYINT" property="isLeagueWar" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <insert id="insertOnDuplicateKeyUpdate" parameterType="com.coc.data.model.ClanWars">
+    replace into coc_clan_wars (tag, season, state, team_size, preparation_start_time, start_time, end_time, is_league_war)
+    values (#{warInfo.tag}, #{warInfo.season}, #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime}, #{warInfo.endTime}, #{warInfo.isLeagueWar})
+  </insert>
+</mapper>
