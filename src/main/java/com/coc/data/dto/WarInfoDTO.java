@@ -16,13 +16,13 @@ public class WarInfoDTO {
 
     private Long teamSize;
 
-    @JsonFormat(pattern = "yyyyMMddTHH:mm:ss.000Z")
+    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
     private Date preparationStartTime;
 
-    @JsonFormat(pattern = "yyyyMMddTHH:mm:ss.000Z")
+    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
     private Date startTime;
 
-    @JsonFormat(pattern = "yyyyMMddTHH:mm:ss.000Z")
+    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
     private Date endTime;
 
     private ClanWarInfoDTO clan;

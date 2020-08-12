@@ -10,6 +10,8 @@ import java.util.Date;
 public class ClanWars {
     private Long id;
 
+    private String clanTag;
+
     private String tag;
 
     private String season;

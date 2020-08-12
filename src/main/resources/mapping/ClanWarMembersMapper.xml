@@ -23,4 +23,36 @@
        (#{item.memberTag}, #{item.warTag}, #{item.clanTag}, #{item.attackTimeLeft})
      </foreach>
   </insert>
+  <select id="getWarLogRelatedClanWarMembers" resultMap="BaseResultMap">
+    select * from coc_clan_war_members where clan_tag = #{clanTag} and war_tag = #{warTag} and member_tag in (#{defenderTag}, #{attackerTag});
+  </select>
+  <update id="updateClanWarMember">
+    update coc_clan_war_members set attack_no_star_time = #{member.attackNoStarTime},
+                                    attack_one_star_time = #{member.attackOneStarTime},
+                                    attack_two_star_time = #{member.attackTwoStarTime},
+                                    attack_three_star_time = #{member.attackThreeStarTime},
+                                    attack_time_used = #{member.attackTimeUsed},
+                                    attack_time_left = #{member.attackTimeLeft},
+                                    defense_three_star_time = #{member.defenseThreeStarTime}
+    where id = #{member.id}
+  </update>
+  <select id="getCurrentSeasonData" resultMap="BaseResultMap">
+      select
+          ccwm.clan_tag as clan_tag,
+          ccwm.member_tag as member_tag,
+          sum( ccwm.attack_no_star_time ) AS attack_no_star_time,
+          sum( ccwm.attack_one_star_time ) AS attack_one_star_time,
+          sum( ccwm.attack_two_star_time ) AS attack_two_star_time,
+          sum( ccwm.attack_three_star_time ) AS attack_three_star_time,
+          sum( ccwm.defense_three_star_time ) AS defense_three_star_time,
+          sum( ccwm.attack_time_left ) AS attack_time_left,
+          sum( ccwm.attack_time_used ) AS attack_time_used
+      FROM
+          coc_clan_war_members ccwm
+      JOIN coc_clan_wars ccw on ccwm.war_tag = ccw.tag and ccwm.clan_tag = ccw.clan_tag
+      WHERE
+            ccw.season = #{season}
+      GROUP BY
+          ccwm.clan_tag, ccwm.member_tag
+  </select>
 </mapper>

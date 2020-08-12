@@ -16,6 +16,8 @@ public class ClanWarLogs {
 
     private String warTag;
 
+    private String clanTag;
+
     private Long star;
 
     private String destructionPercentage;

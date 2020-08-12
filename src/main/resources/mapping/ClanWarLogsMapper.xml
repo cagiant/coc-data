@@ -6,6 +6,7 @@
     <result column="attacker_tag" jdbcType="VARCHAR" property="attackerTag" />
     <result column="defender_tag" jdbcType="VARCHAR" property="defenderTag" />
     <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
+    <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
     <result column="star" jdbcType="SMALLINT" property="star" />
     <result column="destruction_percentage" jdbcType="SMALLINT" property="destructionPercentage" />
     <result column="attack_order" jdbcType="INTEGER" property="attackOrder" />
@@ -13,10 +14,16 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <insert id="insertIgnoreExist">
-    insert ignore into coc_clan_war_logs (attacker_tag, defender_tag, war_tag, star, destruction_percentage, attack_order)
+    insert ignore into coc_clan_war_logs (attacker_tag, defender_tag, war_tag, clan_tag, star, destruction_percentage, attack_order)
     values
-    <foreach collection="list">
-      (#{item.attackerTag}, #{item.defenderTag}, #{item.warTag}, #{item.star}, #{item.destructionPercentage}, #{item.attackOrder})
+    <foreach collection="list" item="item" separator=",">
+      (#{item.attackerTag}, #{item.defenderTag}, #{item.warTag}, #{item.clanTag}, #{item.star}, #{item.destructionPercentage}, #{item.attackOrder})
     </foreach>
   </insert>
+  <select id="getUncalculatedLogs" resultMap="BaseResultMap">
+    select * from coc_clan_war_logs where has_calculated != 1
+  </select>
+  <update id="setClanWarLogCalaulated">
+    update coc_clan_war_logs set has_calculated = 1 where id = #{id}
+  </update>
 </mapper>

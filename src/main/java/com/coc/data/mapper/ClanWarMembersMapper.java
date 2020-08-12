@@ -8,4 +8,14 @@ import org.apache.ibatis.annotations.Param;
 public interface ClanWarMembersMapper {
 
     void insertIgnoreExist(@Param("list") List<ClanWarMembers> clanWarMemberDOList);
+
+    List<ClanWarMembers> getWarLogRelatedClanWarMembers(
+        @Param("attackerTag") String attackerTag,
+        @Param("defenderTag") String defenderTag,
+        @Param("warTag") String warTag,
+        @Param("clanTag") String clanTag);
+
+    void updateClanWarMember(@Param("member") ClanWarMembers clanWarMember);
+
+    List<ClanWarMembers> getCurrentSeasonData(@Param("season") String season);
 }

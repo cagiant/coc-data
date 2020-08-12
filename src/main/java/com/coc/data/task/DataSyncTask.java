@@ -4,6 +4,9 @@ import com.coc.data.service.DataSyncService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -13,6 +16,8 @@ import javax.annotation.Resource;
  */
 @Component
 @Slf4j
+@RestController
+@RequestMapping("")
 public class DataSyncTask {
 
     @Resource
@@ -26,5 +31,13 @@ public class DataSyncTask {
     @Scheduled(cron = "0 40 23 * * *")
     public void syncClanWarInfo() {
         dataSyncService.syncChanCurrentWarInfo();
+    }
+
+    @GetMapping("/test")
+    public void test() {
+//        dataSyncService.syncClanInfo();
+//        dataSyncService.syncChanCurrentWarInfo();
+//        dataSyncService.calculateClanWarLogs();
+        dataSyncService.generateSeasonReports();
     }
 }

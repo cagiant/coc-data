@@ -8,4 +8,8 @@ import org.apache.ibatis.annotations.Param;
 public interface ClanWarLogsMapper {
 
     void insertIgnoreExist(@Param("list") List<ClanWarLogs> clanWarLogList);
+
+    List<ClanWarLogs> getUncalculatedLogs();
+
+    void setClanWarLogCalaulated(@Param("id") Long id);
 }

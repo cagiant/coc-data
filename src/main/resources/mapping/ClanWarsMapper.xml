@@ -15,7 +15,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <insert id="insertOnDuplicateKeyUpdate" parameterType="com.coc.data.model.ClanWars">
-    replace into coc_clan_wars (tag, season, state, team_size, preparation_start_time, start_time, end_time, is_league_war)
-    values (#{warInfo.tag}, #{warInfo.season}, #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime}, #{warInfo.endTime}, #{warInfo.isLeagueWar})
+    replace into coc_clan_wars (clan_tag, tag, season, state, team_size, preparation_start_time, start_time, end_time, is_league_war)
+    values (#{warInfo.clanTag}, #{warInfo.tag}, #{warInfo.season}, #{warInfo.state}, #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime}, #{warInfo.endTime}, #{warInfo.isLeagueWar})
   </insert>
 </mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ReportClanWarMemberMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ReportClanWarMember">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
+    <result column="season" jdbcType="VARCHAR" property="season" />
+    <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="attack_three_star_time" jdbcType="SMALLINT" property="attackThreeStarTime" />
+    <result column="attack_two_star_time" jdbcType="SMALLINT" property="attackTwoStarTime" />
+    <result column="attack_one_star_time" jdbcType="SMALLINT" property="attackOneStarTime" />
+    <result column="attack_no_star_time" jdbcType="SMALLINT" property="attackNoStarTime" />
+    <result column="attack_time_used" jdbcType="SMALLINT" property="attackTimeUsed" />
+    <result column="attack_time_left" jdbcType="SMALLINT" property="attackTimeLeft" />
+    <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <insert id="replaceBatch">
+    replace into coc_report_clan_war_member
+        (member_tag, season, clan_tag, attack_three_star_time, attack_two_star_time, attack_one_star_time,
+         attack_no_star_time, attack_time_used, attack_time_left, defense_three_star_time)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.memberTag}, #{item.season}, #{item.clanTag}, #{item.attackThreeStarTime}, #{item.attackTwoStarTime}, #{item.attackOneStarTime},
+       #{item.attackNoStarTime}, #{item.attackTimeUsed}, #{item.attackTimeLeft}, #{item.defenseThreeStarTime})
+    </foreach>
+  </insert>
+</mapper>

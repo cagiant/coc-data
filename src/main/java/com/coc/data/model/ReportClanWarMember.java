@@ -1,22 +1,18 @@
 package com.coc.data.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ClanWarMembers {
+public class ReportClanWarMember {
     private Long id;
 
     private String memberTag;
 
-    private String warTag;
+    private String season;
 
     private String clanTag;
 
