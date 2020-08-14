@@ -28,16 +28,19 @@ public class DataSyncTask {
         dataSyncService.syncClanInfo();
     }
 
-    @Scheduled(cron = "0 40 23 * * *")
+    @Scheduled(cron = "0 0 */1 * * *")
     public void syncClanWarInfo() {
+        dataSyncService.syncClanInfo();
         dataSyncService.syncChanCurrentWarInfo();
+        dataSyncService.calculateClanWarLogs();
+        dataSyncService.generateSeasonReports();
     }
 
     @GetMapping("/test")
     public void test() {
-//        dataSyncService.syncClanInfo();
-//        dataSyncService.syncChanCurrentWarInfo();
-//        dataSyncService.calculateClanWarLogs();
+        dataSyncService.syncClanInfo();
+        dataSyncService.syncChanCurrentWarInfo();
+        dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
 }
