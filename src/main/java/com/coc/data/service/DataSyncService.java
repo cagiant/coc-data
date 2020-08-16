@@ -22,7 +22,7 @@ public interface DataSyncService {
      * @author guokaiqiang
      * @date 2020/8/1 16:52
      **/
-    void syncChanCurrentWarInfo();
+    void syncClanCurrentWarInfo();
 
     /**
      * 计算部落战日志，将对应的星星加给成员。

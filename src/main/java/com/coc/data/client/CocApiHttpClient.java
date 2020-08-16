@@ -1,34 +1,26 @@
-package com.coc.data.utils;
+package com.coc.data.client;
 
 import com.coc.data.constant.UrlConstants;
 import com.coc.data.dto.ClanInfoDTO;
-import com.coc.data.dto.ClanWarInfoDTO;
 import com.coc.data.dto.WarInfoDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /**
+ * 使用官方api获取数据
  * @author guokaiqiang
  * @date 2020/7/30 22:16
  */
 @Slf4j
 @Component
-public class HttpUtil {
+public class CocApiHttpClient implements HttpClient {
 
     private final WebClient webClient;
 
-    public HttpUtil(WebClient.Builder webClientBuilder) {
+    public CocApiHttpClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
             .filter((req, next) -> {
                 final ClientRequest.Builder request = ClientRequest.from(req);
@@ -45,6 +37,7 @@ public class HttpUtil {
      * @author guokaiqiang
      * @date 2020/8/1 10:35
      **/
+    @Override
     public ClanInfoDTO getClanInfoByTag(String clanTag) {
         Flux<ClanInfoDTO> clanInfoDTOFlux = this.webClient.get().uri(UrlConstants.CLAN_INFO, clanTag)
             .retrieve().bodyToFlux(ClanInfoDTO.class);
@@ -59,6 +52,7 @@ public class HttpUtil {
      * @author guokaiqiang
      * @date 2020/8/1 17:21
      **/
+    @Override
     public WarInfoDTO getClanCurrentWarInfoByClanTag(String clanTag) {
         Flux<WarInfoDTO> clanWarInfoDTOFlux = this.webClient.get().uri(UrlConstants.CLAN_WAR_INFO, clanTag)
             .retrieve().bodyToFlux(WarInfoDTO.class);

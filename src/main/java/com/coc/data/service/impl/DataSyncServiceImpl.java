@@ -1,16 +1,17 @@
-package com.coc.data.service;
+package com.coc.data.service.impl;
 
+import com.coc.data.client.ProxyHttpClient;
 import com.coc.data.constant.ClanTagConstants;
 import com.coc.data.dto.*;
 import com.coc.data.mapper.*;
 import com.coc.data.model.*;
-import com.coc.data.utils.HttpUtil;
+import com.coc.data.service.DataSyncService;
+import com.coc.data.client.CocApiHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,7 +24,7 @@ import java.util.*;
 public class DataSyncServiceImpl implements DataSyncService {
 
     @Resource
-    private HttpUtil httpUtil;
+    private ProxyHttpClient httpClient;
 
     @Resource
     private ClansMapper clansMapper;
@@ -43,7 +44,7 @@ public class DataSyncServiceImpl implements DataSyncService {
     public void syncClanInfo() {
         List<String> clanTags = Arrays.asList(ClanTagConstants.WHITE_LIST_TAGS.split(","));
         for (String clanTag : clanTags) {
-            ClanInfoDTO clanInfo = httpUtil.getClanInfoByTag(clanTag);
+            ClanInfoDTO clanInfo = httpClient.getClanInfoByTag(clanTag);
             Clans clan = Clans.builder()
                 .name(clanInfo.getName())
                 .tag(clanInfo.getTag())
@@ -65,13 +66,13 @@ public class DataSyncServiceImpl implements DataSyncService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void syncChanCurrentWarInfo() {
+    public void syncClanCurrentWarInfo() {
         List<String> clanTags = Arrays.asList(ClanTagConstants.WHITE_LIST_TAGS.split(","));
         for (String clanTag : clanTags) {
             log.info("clan tag {}, fetching current war info", clanTag);
-            WarInfoDTO currentWarInfo = httpUtil.getClanCurrentWarInfoByClanTag(clanTag);
+            WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
             log.info("clan tag {}, fetch current war info done", clanTag);
-            String currentWarTag = new SimpleDateFormat("yyyy-MM-dd").format(currentWarInfo.getStartTime());
+            String currentWarTag = new SimpleDateFormat("yyyy-MM-dd").format(currentWarInfo.getPreparationStartTime());
             ClanWars currentWar = ClanWars.builder()
                 .clanTag(clanTag)
                 .tag(currentWarTag)
