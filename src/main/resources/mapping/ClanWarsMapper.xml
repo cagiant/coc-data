@@ -18,4 +18,7 @@
     replace into coc_clan_wars (clan_tag, tag, season, state, team_size, preparation_start_time, start_time, end_time, is_league_war)
     values (#{warInfo.clanTag}, #{warInfo.tag}, #{warInfo.season}, #{warInfo.state}, #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime}, #{warInfo.endTime}, #{warInfo.isLeagueWar})
   </insert>
+  <select id="getUnStartedClanWar" resultMap="BaseResultMap">
+    select * from coc_clan_wars where clan_tag = #{clanTag} and start_time &gt; #{now} and preparation_start_time  &lt;  #{now}
+  </select>
 </mapper>

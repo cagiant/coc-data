@@ -16,6 +16,8 @@ public class ClanWarMembers {
 
     private String memberTag;
 
+    private String memberName;
+
     private String warTag;
 
     private String clanTag;

@@ -17,10 +17,10 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <insert id="insertIgnoreExist">
-    insert ignore into coc_clan_war_members (member_tag, war_tag, clan_tag, attack_time_left)
+    insert ignore into coc_clan_war_members (member_tag,member_name, war_tag, clan_tag, attack_time_left)
     values
      <foreach collection="list" item="item" separator=",">
-       (#{item.memberTag}, #{item.warTag}, #{item.clanTag}, #{item.attackTimeLeft})
+       (#{item.memberTag}, #{item.memberName},#{item.warTag}, #{item.clanTag}, #{item.attackTimeLeft})
      </foreach>
   </insert>
   <select id="getWarLogRelatedClanWarMembers" resultMap="BaseResultMap">
