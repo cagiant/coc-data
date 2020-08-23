@@ -19,4 +19,7 @@
     values (#{warInfo.clanTag}, #{warInfo.tag}, #{warInfo.season}, #{warInfo.state}, #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime}, #{warInfo.endTime}, #{warInfo.isLeagueWar})
     on duplicate key update `state` = values(state), `update_time` = now()
   </insert>
+  <select id="getUnStartedClanWar" resultMap="BaseResultMap">
+    select * from coc_clan_wars where clan_tag = #{clanTag} and start_time &gt; #{now} and preparation_start_time  &lt;  #{now}
+  </select>
 </mapper>

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -18,4 +19,8 @@ public class DataApplication {
 		SpringApplication.run(DataApplication.class, args);
 	}
 
+	@PostConstruct
+	public void setDefaultTimezone() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+	}
 }

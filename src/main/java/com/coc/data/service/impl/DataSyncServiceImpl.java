@@ -10,6 +10,7 @@ import com.coc.data.client.CocApiHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -69,6 +70,14 @@ public class DataSyncServiceImpl implements DataSyncService {
     public void syncClanCurrentWarInfo() {
         List<String> clanTags = Arrays.asList(ClanTagConstants.WHITE_LIST_TAGS.split(","));
         for (String clanTag : clanTags) {
+            ClanWars clanWar = clanWarsMapper.getUnStartedClanWar(new Date(), clanTag);
+            if (!ObjectUtils.isEmpty(clanWar) && clanWar.getIsLeagueWar() == 0) {
+                log.warn("clan tag:{}, have clan war not started. war tag:{}, start time:{}. skipping...",
+                        clanWar.getClanTag(),
+                        clanWar.getTag(),
+                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(clanWar.getStartTime()));
+                continue;
+            }
             log.info("clan tag {}, fetching current war info", clanTag);
             WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
             log.info("clan tag {}, fetch current war info done", clanTag);
@@ -94,6 +103,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                 currentClanWarMemberDOList.add(ClanWarMembers.builder()
                     .clanTag(clanTag)
                     .memberTag(memberDTO.getTag())
+                    .memberName(memberDTO.getName())
                     .warTag(currentWarTag)
                     .attackTimeLeft(2L)
                     .build()
