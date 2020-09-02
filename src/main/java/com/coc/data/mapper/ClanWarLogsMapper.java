@@ -9,7 +9,7 @@ public interface ClanWarLogsMapper {
 
     void insertIgnoreExist(@Param("list") List<ClanWarLogs> clanWarLogList);
 
-    List<ClanWarLogs> getUncalculatedLogs();
+    List<ClanWarLogs> getUncalculatedClanWarLogs();
 
     void setClanWarLogCalaulated(@Param("id") Long id);
 }

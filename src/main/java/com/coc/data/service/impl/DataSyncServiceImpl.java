@@ -6,7 +6,6 @@ import com.coc.data.dto.*;
 import com.coc.data.mapper.*;
 import com.coc.data.model.*;
 import com.coc.data.service.DataSyncService;
-import com.coc.data.client.CocApiHttpClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,94 +71,108 @@ public class DataSyncServiceImpl implements DataSyncService {
         for (String clanTag : clanTags) {
             ClanWars clanWar = clanWarsMapper.getUnStartedClanWar(new Date(), clanTag);
             if (!ObjectUtils.isEmpty(clanWar) && clanWar.getIsLeagueWar() == 0) {
-                log.warn("clan tag:{}, have clan war not started. war tag:{}, start time:{}. skipping...",
+                log.warn("部落标签:{}, 有处于准备日的战争: {}, 战争开始时间为:{}. 先跳过...",
                         clanWar.getClanTag(),
                         clanWar.getTag(),
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(clanWar.getStartTime()));
                 continue;
             }
-            log.info("clan tag {}, fetching current war info", clanTag);
+            log.info("部落标签 {}, 开始获取当前对战信息", clanTag);
             WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
-            log.info("clan tag {}, fetch current war info done", clanTag);
+            log.info("部落标签 {}, 获取当前对战信息完毕。 对应部落名称 {}", clanTag, currentWarInfo.getClan().getName());
             String currentWarTag = new SimpleDateFormat("yyyy-MM-dd").format(currentWarInfo.getPreparationStartTime());
-            ClanWars currentWar = ClanWars.builder()
-                .clanTag(clanTag)
-                .tag(currentWarTag)
-                .season(new SimpleDateFormat("yyyy-MM").format(currentWarInfo.getStartTime()))
-                .state(currentWarInfo.getState())
-                .teamSize(currentWarInfo.getTeamSize())
-                .preparationStartTime(currentWarInfo.getPreparationStartTime())
-                .startTime(currentWarInfo.getStartTime())
-                .endTime(currentWarInfo.getEndTime())
-                .isLeagueWar((byte) 0)
-                .build();
-            clanWarsMapper.insertOnDuplicateKeyUpdate(currentWar);
-
-            List<ClanWarMembers> currentClanWarMemberDOList = new ArrayList<>();
-            List<ClanWarMemberDTO> clanWarMemberDTOList = currentWarInfo.getClan().getMembers();
-            List<ClanWarLogs> clanWarLogList = new ArrayList<>(100);
-            log.info("clan tag {}, processing clan war member", clanTag);
-            clanWarMemberDTOList.forEach(memberDTO -> {
-                currentClanWarMemberDOList.add(ClanWarMembers.builder()
-                    .clanTag(clanTag)
-                    .memberTag(memberDTO.getTag())
-                    .memberName(memberDTO.getName())
-                    .warTag(currentWarTag)
-                    .attackTimeLeft(2L)
-                    .build()
-                );
-                if (memberDTO.getAttacks() != null) {
-                    memberDTO.getAttacks().forEach(attack -> {
-                        clanWarLogList.add(
-                            ClanWarLogs.builder()
-                                .attackerTag(attack.getAttackerTag())
-                                .defenderTag(attack.getDefenderTag())
-                                .destructionPercentage(attack.getDestructionPercentage())
-                                .attackOrder(attack.getOrder())
-                                .star(attack.getStars())
-                                .warTag(currentWarTag)
-                                .clanTag(clanTag)
-                                .build()
-                        );
-                    });
-                }
-            });
-            List<ClanWarMemberDTO> opponentClanMemberDTOList = currentWarInfo.getOpponent().getMembers();
-            opponentClanMemberDTOList.forEach(memberDTO -> {
-                if (memberDTO.getAttacks() != null) {
-                    memberDTO.getAttacks().forEach(attack -> {
-                        clanWarLogList.add(
-                            ClanWarLogs.builder()
-                                .attackerTag(attack.getAttackerTag())
-                                .defenderTag(attack.getDefenderTag())
-                                .destructionPercentage(attack.getDestructionPercentage())
-                                .attackOrder(attack.getOrder())
-                                .star(attack.getStars())
-                                .warTag(currentWarTag)
-                                .clanTag(clanTag)
-                                .build()
-                        );
-                    });
-                }
-            });
-            if (!currentClanWarMemberDOList.isEmpty()) {
-                clanWarMembersMapper.insertIgnoreExist(currentClanWarMemberDOList);
-            }
-            if(!clanWarLogList.isEmpty()) {
-                clanWarLogsMapper.insertIgnoreExist(clanWarLogList);
-            }
+            // 记录下战争信息
+            recWarInfo(currentWarInfo, currentWarTag, (byte) 0);
+            // 记下参战成员及对战记录
+            recWarMemberAndWarLogs(currentWarInfo, currentWarTag, 2L);
         }
+    }
+
+    private void recWarMemberAndWarLogs(WarInfoDTO currentWarInfo, String currentWarTag, Long attachTimeLeft) {
+        String clanTag = currentWarInfo.getClan().getTag();
+        List<ClanWarMembers> currentClanWarMemberDOList = new ArrayList<>();
+        List<ClanWarMemberDTO> clanWarMemberDTOList = currentWarInfo.getClan().getMembers();
+        List<ClanWarLogs> clanWarLogList = new ArrayList<>(100);
+        log.info("部落 {}, 正在处理参战成员及对战记录信息", currentWarInfo.getClan().getName());
+        clanWarMemberDTOList.forEach(memberDTO -> {
+            currentClanWarMemberDOList.add(ClanWarMembers.builder()
+                .clanTag(clanTag)
+                .memberTag(memberDTO.getTag())
+                .memberName(memberDTO.getName())
+                .warTag(currentWarTag)
+                .attackTimeLeft(attachTimeLeft)
+                .build()
+            );
+            if (memberDTO.getAttacks() != null) {
+                memberDTO.getAttacks().forEach(attack -> {
+                    clanWarLogList.add(
+                        ClanWarLogs.builder()
+                            .attackerTag(attack.getAttackerTag())
+                            .defenderTag(attack.getDefenderTag())
+                            .destructionPercentage(attack.getDestructionPercentage())
+                            .attackOrder(attack.getOrder())
+                            .star(attack.getStars())
+                            .warTag(currentWarTag)
+                            .clanTag(clanTag)
+                            .build()
+                    );
+                });
+            }
+        });
+        List<ClanWarMemberDTO> opponentClanMemberDTOList = currentWarInfo.getOpponent().getMembers();
+        opponentClanMemberDTOList.forEach(memberDTO -> {
+            if (memberDTO.getAttacks() != null) {
+                memberDTO.getAttacks().forEach(attack -> {
+                    clanWarLogList.add(
+                        ClanWarLogs.builder()
+                            .attackerTag(attack.getAttackerTag())
+                            .defenderTag(attack.getDefenderTag())
+                            .destructionPercentage(attack.getDestructionPercentage())
+                            .attackOrder(attack.getOrder())
+                            .star(attack.getStars())
+                            .warTag(currentWarTag)
+                            .clanTag(clanTag)
+                            .build()
+                    );
+                });
+            }
+        });
+        if (!currentClanWarMemberDOList.isEmpty()) {
+            log.info("部落 {}, 正在保存参战成员信息", currentWarInfo.getClan().getName());
+            clanWarMembersMapper.insertIgnoreExist(currentClanWarMemberDOList);
+        }
+        if(!clanWarLogList.isEmpty()) {
+            log.info("部落 {}, 正在保存对战记录信息", currentWarInfo.getClan().getName());
+            clanWarLogsMapper.insertIgnoreExist(clanWarLogList);
+        }
+    }
+
+    private void recWarInfo(WarInfoDTO currentWarInfo, String currentWarTag, byte isLeagaueWar) {
+        ClanWars currentWar = ClanWars.builder()
+            .clanTag(currentWarInfo.getClan().getTag())
+            .tag(currentWarTag)
+            .season(new SimpleDateFormat("yyyy-MM").format(currentWarInfo.getStartTime()))
+            .state(currentWarInfo.getState())
+            .teamSize(currentWarInfo.getTeamSize())
+            .preparationStartTime(currentWarInfo.getPreparationStartTime())
+            .startTime(currentWarInfo.getStartTime())
+            .endTime(currentWarInfo.getEndTime())
+            .isLeagueWar(isLeagaueWar)
+            .build();
+
+        clanWarsMapper.insertOnDuplicateKeyUpdate(currentWar);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void calculateClanWarLogs() {
-        List<ClanWarLogs> warLogList = clanWarLogsMapper.getUncalculatedLogs();
+        List<ClanWarLogs> warLogList = clanWarLogsMapper.getUncalculatedClanWarLogs();
         if (!warLogList.isEmpty()) {
-            log.info("calculating war logs...");
+            log.info("将未处理的对战信息归档...");
             for (ClanWarLogs warLog : warLogList) {
                 addLogToClanWarMember(warLog);
             }
+            log.info("归档完毕");
         }
     }
 
