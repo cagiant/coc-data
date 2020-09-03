@@ -29,6 +29,7 @@ jobs:
         with:
           source: "/home/ubuntu/projects/coc/application.properties"
           target: "./src/main/resources"
+          strip_components: 1
 
       # Runs a single command using the runners shell
       - name: Build with Maven
