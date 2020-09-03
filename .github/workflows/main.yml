@@ -25,7 +25,7 @@ jobs:
         env:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.KEY }}
           port: 22
         with:
             source: "/home/ubuntu/projects/coc/application.properties"
