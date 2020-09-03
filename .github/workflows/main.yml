@@ -22,11 +22,12 @@ jobs:
 
       - name: scp application.properties here
         uses: appleboy/scp-action@master
+        env:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
         with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            password: ${{ secrets.PASSWORD }}
-            port: ${{ secrets.PORT }}
             source: "/home/ubuntu/projects/coc/application.properties"
             target: "./src/main/resources"
 
