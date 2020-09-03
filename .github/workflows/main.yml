@@ -23,13 +23,12 @@ jobs:
       - name: scp application.properties here
         uses: appleboy/scp-action@master
         env:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: 22
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
         with:
-            source: "/home/ubuntu/projects/coc/application.properties"
-            target: "./src/main/resources"
+          source: "/home/ubuntu/projects/coc/application.properties"
+          target: "./src/main/resources"
 
       # Runs a single command using the runners shell
       - name: Build with Maven
