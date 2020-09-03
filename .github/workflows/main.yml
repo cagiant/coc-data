@@ -28,6 +28,6 @@ jobs:
             ls -a
             echo "env_var:$FIRST_NAME"
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          user: ${{ secrets.USERNAME }}
+          pass: ${{ secrets.PASSWORD }}
          
