@@ -5,6 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="provide_clan_war_report" jdbcType="INTEGER" property="provideClanWarReport" />
+    <result column="provide_league_war_report" jdbcType="INTEGER" property="provideLeagueGroupWarReport" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -13,4 +15,7 @@
     (#{clan.tag}, #{clan.name})
     on duplicate key update name = values(name);
   </insert>
+  <select id="getClansNeedLeagueReport" resultMap="BaseResultMap">
+    select * from coc_clans where provide_league_war_report = 1;
+  </select>
 </mapper>

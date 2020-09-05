@@ -12,4 +12,6 @@ public interface ClanWarsMapper {
     void insertOnDuplicateKeyUpdate(@Param("warInfo") ClanWars currentWar);
 
     ClanWars getUnStartedClanWar(@Param("now") Date now, @Param("clanTag") String clanTag);
+
+    List<ClanWars> getWarsByWarTagList(@Param("list") List<String> warTags);
 }

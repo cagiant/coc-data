@@ -2,6 +2,7 @@ package com.coc.data.client;
 
 import com.coc.data.constant.UrlConstants;
 import com.coc.data.dto.ClanInfoDTO;
+import com.coc.data.dto.LeagueGroupInfoDTO;
 import com.coc.data.dto.WarInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -58,5 +59,35 @@ public class CocApiHttpClient implements HttpClient {
             .retrieve().bodyToFlux(WarInfoDTO.class);
 
         return clanWarInfoDTOFlux.singleOrEmpty().block();
+    }
+
+    /**
+     * 获取当前联赛信息
+     * @param tag
+     * @return com.coc.data.dto.LeagueGroupInfoDTO
+     * @author guokaiqiang
+     * @date 2020/9/5 22:59
+     **/
+    @Override
+    public LeagueGroupInfoDTO getClanLeagueGroupInfoByClanTag(String tag) {
+        Flux<LeagueGroupInfoDTO> leagueGroupInfoDTOFlux = this.webClient.get().uri(UrlConstants.CLAN_LEAGUE_GROUP_INFO, tag)
+            .retrieve().bodyToFlux(LeagueGroupInfoDTO.class);
+
+        return leagueGroupInfoDTOFlux.singleOrEmpty().block();
+    }
+
+    /**
+     * 获取当前联赛战争信息
+     * @param warTag
+     * @return com.coc.data.dto.WarInfoDTO
+     * @author guokaiqiang
+     * @date 2020/9/5 23:00
+     **/
+    @Override
+    public WarInfoDTO getClanLeagueGroupWarInfoByTag(String warTag) {
+        Flux<WarInfoDTO> warInfoDTOFlux = this.webClient.get().uri(UrlConstants.CLAN_LEAGUE_GROUP_WAR_INFO, warTag)
+            .retrieve().bodyToFlux(WarInfoDTO.class);
+
+        return warInfoDTOFlux.singleOrEmpty().block();
     }
 }

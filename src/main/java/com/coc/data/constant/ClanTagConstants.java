@@ -12,4 +12,6 @@ public class ClanTagConstants {
      * @date 2020/8/1 10:43
      **/
     public static final String WHITE_LIST_TAGS = "#2VJ2RCUC,#LCV289QP,#2QCJVVYC";
+
+    public static final String DEFAULT_LEAGUE_GROUP_WAR_TAG = "#0";
 }

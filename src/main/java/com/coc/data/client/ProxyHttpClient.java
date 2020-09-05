@@ -2,6 +2,7 @@ package com.coc.data.client;
 
 import com.coc.data.constant.UrlConstants;
 import com.coc.data.dto.ClanInfoDTO;
+import com.coc.data.dto.LeagueGroupInfoDTO;
 import com.coc.data.dto.WarInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -27,6 +28,21 @@ public class ProxyHttpClient implements HttpClient {
         return sendPostResult(
                 prepareParams(clanTag, UrlConstants.PROXY_OPTION_GET_CURRENT_WAR_INFO),
                 WarInfoDTO.class
+        );
+    }
+
+    @Override
+    public LeagueGroupInfoDTO getClanLeagueGroupInfoByClanTag(String tag) {
+        return sendPostResult(
+            prepareParams(tag, UrlConstants.PROXY_OPTION_GET_LEAGUE_GROUP_INFO),
+            LeagueGroupInfoDTO.class
+        );
+    }
+
+    @Override
+    public WarInfoDTO getClanLeagueGroupWarInfoByTag(String warTag) {
+        return sendPostResult(
+            prepareParams(warTag, UrlConstants.PROXY_OPTION_GET_LEAGUE_GROUP_WAR), WarInfoDTO.class
         );
     }
 

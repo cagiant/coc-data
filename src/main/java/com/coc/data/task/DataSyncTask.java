@@ -34,4 +34,9 @@ public class DataSyncTask {
         dataSyncService.generateSeasonReports();
     }
 
+    @Scheduled(cron = "0 7 */1 * * *")
+    public void syncLeagueGroupWarInfo() {
+        dataSyncService.syncLeagueGroupInfo();
+    }
+
 }

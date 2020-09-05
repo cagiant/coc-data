@@ -14,6 +14,10 @@ public class Clans {
 
     private String name;
 
+    private Long provideClanWarReport;
+
+    private Long provideLeagueGroupWarReport;
+
     private Date createTime;
 
     private Date updateTime;

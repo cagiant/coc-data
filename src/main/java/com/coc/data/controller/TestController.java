@@ -21,4 +21,9 @@ public class TestController {
         dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
+
+    @GetMapping("/test1")
+    public void test1() {
+        dataSyncService.syncLeagueGroupInfo();
+    }
 }

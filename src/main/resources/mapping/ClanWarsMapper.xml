@@ -22,4 +22,10 @@
   <select id="getUnStartedClanWar" resultMap="BaseResultMap">
     select * from coc_clan_wars where clan_tag = #{clanTag} and start_time &gt; #{now} and preparation_start_time  &lt;  #{now}
   </select>
+  <select id="getWarsByWarTagList" resultMap="BaseResultMap">
+    select * from coc_clan_wars where tag in
+    (<foreach collection="list" item="item" separator=",">
+        #{item}
+  </foreach>)
+  </select>
 </mapper>

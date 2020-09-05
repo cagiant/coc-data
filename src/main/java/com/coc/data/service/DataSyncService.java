@@ -41,4 +41,13 @@ public interface DataSyncService {
      * @date 2020/8/11 22:36
      **/
     void generateSeasonReports();
+
+    /**
+     * 获取联赛对战信息
+     * @param
+     * @return void
+     * @author guokaiqiang
+     * @date 2020/9/5 21:32
+     **/
+    void syncLeagueGroupInfo();
 }
