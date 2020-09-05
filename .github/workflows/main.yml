@@ -46,7 +46,8 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            java -jar /home/ubuntu/projects/coc/data-0.0.1-SNAPSHOT.jar
+            /etc/init.d/stop_coc_data.sh
+            /etc/init.d/start_coc_data.sh
           host: ${{ secrets.HOST }}
           user: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
