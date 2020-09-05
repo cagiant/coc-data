@@ -11,5 +11,5 @@ public class ClanTagConstants {
      * @author guokaiqiang
      * @date 2020/8/1 10:43
      **/
-    public static final String WHITE_LIST_TAGS = "#2VJ2RCUC,#LCV289QP";
+    public static final String WHITE_LIST_TAGS = "#2VJ2RCUC,#LCV289QP,#2QCJVVYC";
 }
