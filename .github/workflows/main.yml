@@ -19,7 +19,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      - name: set ssh env
+        run: |
+          ls
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KEY }}" > ~/.ssh/id_rsa
+          cd ~
+          git clone git@github.com:cagiant/configs.git
       - name: run publish script
         uses: fifsky/ssh-action@master
         with:
