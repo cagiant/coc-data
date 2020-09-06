@@ -79,6 +79,10 @@ public class DataSyncServiceImpl implements DataSyncService {
             }
             log.info("部落标签 {}, 开始获取当前对战信息", clanTag);
             WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
+            if (ObjectUtils.isEmpty(currentWarInfo)) {
+                log.error("部落标签{}, 获取当前对战信息失败。", clanTag);
+                continue;
+            }
             log.info("部落标签 {}, 获取当前对战信息完毕。 对应部落名称 {}", clanTag, currentWarInfo.getClan().getName());
             String currentWarTag = new SimpleDateFormat("yyyy-MM-dd").format(currentWarInfo.getPreparationStartTime());
             currentWarInfo.setTag(currentWarTag);
