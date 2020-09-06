@@ -108,9 +108,16 @@ public class DataSyncServiceImpl implements DataSyncService {
                     continue;
                 }
                 List<ClanWars> warList = clanWarsMapper.getWarsByWarTagList(warTags);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 if (!ObjectUtils.isEmpty(warList)) {
                     ClanWars war = warList.get(0);
-                    log.info("战争 {} 已经被同步，开始时间{}， 结束时间{},状态：{}", war.getTag(), war.getStartTime(), war.getEndTime(), war.getState());
+                    log.info(
+                        "战争 {} 已经被同步，开始时间{}， 结束时间{},状态：{}",
+                        war.getTag(),
+                        dateFormat.format(war.getStartTime()),
+                        dateFormat.format(war.getEndTime()),
+                        war.getState()
+                    );
                     continue;
                 }
                 WarInfoDTO warInfo = getLeagueGroupWarBelongsToClan(warTags, clan.getTag());
@@ -149,6 +156,15 @@ public class DataSyncServiceImpl implements DataSyncService {
         return null;
     }
 
+    /**
+     * 记下对战成员和对战日志
+     * @param warInfo
+     * @param clanTag
+     * @param attachTimeLeft
+     * @return void
+     * @author guokaiqiang
+     * @date 2020/9/6 10:41
+     **/
     private void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag, Long attachTimeLeft) {
         List<ClanWarMembers> currentClanWarMemberDOList = new ArrayList<>();
         ClanWarInfoDTO clanWarInfo;
@@ -216,6 +232,14 @@ public class DataSyncServiceImpl implements DataSyncService {
         }
     }
 
+    /**
+     * 记下当前对战信息
+     * @param warInfo
+     * @param isLeagaueWar
+     * @return void
+     * @author guokaiqiang
+     * @date 2020/9/6 10:42
+     **/
     private void recWarInfo(WarInfoDTO warInfo, byte isLeagaueWar) {
         ClanWars currentWar = ClanWars.builder()
             .clanTag(warInfo.getClan().getTag())
@@ -263,6 +287,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                 .attackTimeLeft(clanWarMember.getAttackTimeLeft())
                 .attackTimeUsed(clanWarMember.getAttackTimeUsed())
                 .season(season)
+                .leagueWar(clanWarMember.getLeagueWar())
                 .memberTag(clanWarMember.getMemberTag())
                 .clanTag(clanWarMember.getClanTag())
                 .build()

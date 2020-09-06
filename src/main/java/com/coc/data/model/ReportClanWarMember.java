@@ -30,6 +30,8 @@ public class ReportClanWarMember {
 
     private Long defenseThreeStarTime;
 
+    private Boolean leagueWar;
+
     private Date createTime;
 
     private Date updateTime;

@@ -13,6 +13,7 @@
     <result column="attack_time_used" jdbcType="SMALLINT" property="attackTimeUsed" />
     <result column="attack_time_left" jdbcType="SMALLINT" property="attackTimeLeft" />
     <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+    <result column="is_league_war" jdbcType="SMALLINT" property="leagueWar"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -46,13 +47,16 @@
           sum( ccwm.attack_three_star_time ) AS attack_three_star_time,
           sum( ccwm.defense_three_star_time ) AS defense_three_star_time,
           sum( ccwm.attack_time_left ) AS attack_time_left,
-          sum( ccwm.attack_time_used ) AS attack_time_used
+          sum( ccwm.attack_time_used ) AS attack_time_used,
+          ccw.is_league_war
       FROM
           coc_clan_war_members ccwm
       JOIN coc_clan_wars ccw on ccwm.war_tag = ccw.tag and ccwm.clan_tag = ccw.clan_tag
       WHERE
             ccw.season = #{season}
       GROUP BY
-          ccwm.clan_tag, ccwm.member_tag
+          ccw.is_league_war,
+          ccwm.clan_tag,
+          ccwm.member_tag
   </select>
 </mapper>

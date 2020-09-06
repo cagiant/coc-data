@@ -23,8 +23,7 @@
   <select id="getUncalculatedClanWarLogs" resultMap="BaseResultMap">
     select war_log.* from coc_clan_war_logs as war_log
     join coc_clan_wars war on war_log.war_tag = war.tag
-    where war_log.has_calculated != 1
-    and war.is_league_war = 0;
+    where war_log.has_calculated != 1;
   </select>
   <update id="setClanWarLogCalaulated">
     update coc_clan_war_logs set has_calculated = 1 where id = #{id}
