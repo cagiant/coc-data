@@ -28,7 +28,19 @@ public class ReportClanWarMember {
 
     private Long attackTimeLeft;
 
+    private Long totalDefenseTime;
+
     private Long defenseThreeStarTime;
+
+    private Long defenseTwoStarTime;
+
+    private Long defenseOneStarTime;
+
+    private Long defenseNoStarTime;
+
+    private Long totalAttackStar;
+
+    private Long totalDefenseStar;
 
     private Boolean leagueWar;
 

@@ -7,6 +7,7 @@ import com.coc.data.dto.*;
 import com.coc.data.mapper.*;
 import com.coc.data.model.*;
 import com.coc.data.service.DataSyncService;
+import com.coc.data.util.FormatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -331,6 +332,7 @@ public class DataSyncServiceImpl implements DataSyncService {
     @Override
     public void generateSeasonReports() {
         String season = new SimpleDateFormat("yyyy-MM").format(new Date());
+        log.info("正在生成赛季 {} 的报表", season);
         List<ClanWarMembers> clanWarMembersList = clanWarMembersMapper.getCurrentSeasonData(season);
         List<ReportClanWarMember> reportClanWarMemberList = new ArrayList<>();
         if (clanWarMembersList.size() == 0) {
@@ -342,9 +344,15 @@ public class DataSyncServiceImpl implements DataSyncService {
                 .attackOneStarTime(clanWarMember.getAttackOneStarTime())
                 .attackTwoStarTime(clanWarMember.getAttackTwoStarTime())
                 .attackThreeStarTime(clanWarMember.getAttackThreeStarTime())
+                .defenseNoStarTime(clanWarMember.getDefenseNoStarTime())
+                .defenseOneStarTime(clanWarMember.getDefenseOneStarTime())
+                .defenseTwoStarTime(clanWarMember.getDefenseTwoStarTime())
                 .defenseThreeStarTime(clanWarMember.getDefenseThreeStarTime())
                 .attackTimeLeft(clanWarMember.getAttackTimeLeft())
                 .attackTimeUsed(clanWarMember.getAttackTimeUsed())
+                .totalAttackStar(clanWarMember.getTotalAttackStar())
+                .totalDefenseStar(clanWarMember.getTotalDefenseStar())
+                .totalDefenseTime(clanWarMember.getTotalDefenseTime())
                 .season(season)
                 .leagueWar(clanWarMember.getLeagueWar())
                 .memberTag(clanWarMember.getMemberTag())
@@ -367,6 +375,7 @@ public class DataSyncServiceImpl implements DataSyncService {
         for(ClanWarMembers clanWarMember : relatedMemberList) {
             // 是进攻方，记录下进攻星星
             if (attackerTag.equals(clanWarMember.getMemberTag())) {
+                clanWarMember.setTotalAttackStar(clanWarMember.getTotalAttackStar() + warLog.getStar());
                 switch (warLog.getStar().byteValue()) {
                     case 0:
                         clanWarMember.setAttackNoStarTime(clanWarMember.getAttackNoStarTime() + 1);
@@ -389,9 +398,25 @@ public class DataSyncServiceImpl implements DataSyncService {
             // 防守方，记录下被三次数
             if (
                 defenderTag.equals(clanWarMember.getMemberTag())
-                && warLog.getStar().byteValue() == 3
             ) {
-                clanWarMember.setDefenseThreeStarTime(clanWarMember.getDefenseThreeStarTime() + 1);
+                clanWarMember.setTotalDefenseStar(clanWarMember.getTotalDefenseStar() + warLog.getStar());
+                switch (warLog.getStar().byteValue()) {
+                    case 0:
+                        clanWarMember.setDefenseNoStarTime(clanWarMember.getDefenseNoStarTime() + 1);
+                        break;
+                    case 1:
+                        clanWarMember.setDefenseOneStarTime(clanWarMember.getDefenseOneStarTime() + 1);
+                        break;
+                    case 2:
+                        clanWarMember.setDefenseTwoStarTime(clanWarMember.getDefenseTwoStarTime() + 1);
+                        break;
+                    case 3:
+                        clanWarMember.setDefenseThreeStarTime(clanWarMember.getDefenseThreeStarTime() + 1);
+                        break;
+                    default:
+                        log.error("unrecognized war log {}", FormatUtil.serializeObject2JsonStr(warLog));
+                }
+                clanWarMember.setTotalDefenseTime(clanWarMember.getTotalDefenseTime() + 1);
             }
             clanWarMembersMapper.updateClanWarMember(clanWarMember);
             clanWarLogsMapper.setClanWarLogCalaulated(warLog.getId());

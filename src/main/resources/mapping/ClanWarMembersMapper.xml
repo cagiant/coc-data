@@ -12,7 +12,13 @@
     <result column="attack_no_star_time" jdbcType="SMALLINT" property="attackNoStarTime" />
     <result column="attack_time_used" jdbcType="SMALLINT" property="attackTimeUsed" />
     <result column="attack_time_left" jdbcType="SMALLINT" property="attackTimeLeft" />
-    <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+      <result column="defense_no_star_time" jdbcType="SMALLINT" property="defenseNoStarTime" />
+      <result column="defense_one_star_time" jdbcType="SMALLINT" property="defenseOneStarTime" />
+      <result column="defense_two_star_time" jdbcType="SMALLINT" property="defenseTwoStarTime" />
+      <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+      <result column="total_defense_star" jdbcType="SMALLINT" property="totalDefenseStar" />
+      <result column="total_attack_star" jdbcType="SMALLINT" property="totalAttackStar" />
+      <result column="total_defense_time" jdbcType="SMALLINT" property="totalDefenseTime"/>
     <result column="is_league_war" jdbcType="SMALLINT" property="leagueWar"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -34,7 +40,13 @@
                                     attack_three_star_time = #{member.attackThreeStarTime},
                                     attack_time_used = #{member.attackTimeUsed},
                                     attack_time_left = #{member.attackTimeLeft},
-                                    defense_three_star_time = #{member.defenseThreeStarTime}
+                                    defense_no_star_time = #{member.defenseNoStarTime},
+                                    defense_one_star_time = #{member.defenseOneStarTime},
+                                    defense_two_star_time = #{member.defenseTwoStarTime},
+                                    defense_three_star_time = #{member.defenseThreeStarTime},
+                                    total_defense_time = #{member.totalDefenseTime},
+                                    total_attack_star = #{member.totalAttackStar},
+                                    total_defense_star = #{member.totalDefenseStar}
     where id = #{member.id}
   </update>
   <select id="getCurrentSeasonData" resultMap="BaseResultMap">
@@ -45,9 +57,15 @@
           sum( ccwm.attack_one_star_time ) AS attack_one_star_time,
           sum( ccwm.attack_two_star_time ) AS attack_two_star_time,
           sum( ccwm.attack_three_star_time ) AS attack_three_star_time,
+          sum( ccwm.defense_no_star_time ) AS defense_no_star_time,
+          sum( ccwm.defense_one_star_time ) AS defense_one_star_time,
+          sum( ccwm.defense_two_star_time ) AS defense_two_star_time,
           sum( ccwm.defense_three_star_time ) AS defense_three_star_time,
           sum( ccwm.attack_time_left ) AS attack_time_left,
           sum( ccwm.attack_time_used ) AS attack_time_used,
+          sum( ccwm.total_attack_star ) AS total_attack_star,
+          sum( ccwm.total_defense_star ) AS total_defense_star,
+          sum( ccwm.total_defense_time ) AS total_defense_time,
           ccw.is_league_war
       FROM
           coc_clan_war_members ccwm

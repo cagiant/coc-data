@@ -12,18 +12,26 @@
     <result column="attack_no_star_time" jdbcType="SMALLINT" property="attackNoStarTime" />
     <result column="attack_time_used" jdbcType="SMALLINT" property="attackTimeUsed" />
     <result column="attack_time_left" jdbcType="SMALLINT" property="attackTimeLeft" />
+    <result column="defense_no_star_time" jdbcType="SMALLINT" property="defenseNoStarTime" />
+    <result column="defense_one_star_time" jdbcType="SMALLINT" property="defenseOneStarTime" />
+    <result column="defense_two_star_time" jdbcType="SMALLINT" property="defenseTwoStarTime" />
     <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+    <result column="total_defense_star" jdbcType="SMALLINT" property="totalDefenseStar" />
+    <result column="total_attack_star" jdbcType="SMALLINT" property="totalAttackStar" />
+    <result column="total_defense_time" jdbcType="SMALLINT" property="totalDefenseTime"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <insert id="replaceBatch">
     replace into coc_report_clan_war_member
         (member_tag, season, clan_tag, attack_three_star_time, attack_two_star_time, attack_one_star_time,
-         attack_no_star_time, attack_time_used, attack_time_left, defense_three_star_time)
+         attack_no_star_time, attack_time_used, attack_time_left, defense_three_star_time, is_league_war,
+         defense_one_star_time,defense_two_star_time, defense_no_star_time, total_defense_star, total_attack_star, total_defense_time)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.memberTag}, #{item.season}, #{item.clanTag}, #{item.attackThreeStarTime}, #{item.attackTwoStarTime}, #{item.attackOneStarTime},
-       #{item.attackNoStarTime}, #{item.attackTimeUsed}, #{item.attackTimeLeft}, #{item.defenseThreeStarTime})
+       #{item.attackNoStarTime}, #{item.attackTimeUsed}, #{item.attackTimeLeft}, #{item.defenseThreeStarTime}, #{item.leagueWar},
+       #{item.defenseOneStarTime}, #{item.defenseTwoStarTime}, #{item.defenseNoStarTime}, #{item.totalDefenseStar}, #{item.totalAttackStar}, #{item.totalDefenseTime})
     </foreach>
   </insert>
 </mapper>
