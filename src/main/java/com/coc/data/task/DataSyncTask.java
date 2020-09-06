@@ -30,6 +30,7 @@ public class DataSyncTask {
     public void syncClanWarInfo() {
         dataSyncService.syncClanInfo();
         dataSyncService.syncClanCurrentWarInfo();
+        dataSyncService.syncLeagueGroupWarInfo();
         dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }

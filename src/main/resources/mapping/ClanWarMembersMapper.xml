@@ -59,4 +59,12 @@
           ccwm.clan_tag,
           ccwm.member_tag
   </select>
+  <delete id="deleteNotInClanWarMember">
+      update coc_clan_war_members set is_deleted = 1 where war_tag = #{warTag} and clan_tag = #{clanTag}
+      and member_tag not in(
+          <foreach collection="list" item="item" separator=",">
+                #{item}
+          </foreach>
+          )
+  </delete>
 </mapper>

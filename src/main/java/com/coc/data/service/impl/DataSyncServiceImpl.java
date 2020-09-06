@@ -2,6 +2,7 @@ package com.coc.data.service.impl;
 
 import com.coc.data.client.ProxyHttpClient;
 import com.coc.data.constant.ClanTagConstants;
+import com.coc.data.constant.ClanWarConstants;
 import com.coc.data.dto.*;
 import com.coc.data.mapper.*;
 import com.coc.data.model.*;
@@ -14,6 +15,7 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author guokaiqiang
@@ -79,6 +81,10 @@ public class DataSyncServiceImpl implements DataSyncService {
             }
             log.info("部落标签 {}, 开始获取当前对战信息", clanTag);
             WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
+            if (ClanWarConstants.NOT_IN_WAR.equals(currentWarInfo.getState())) {
+                log.info("对战信息获取结束，部落:{}没有日常部落战",clanTag);
+                continue;
+            }
             if (ObjectUtils.isEmpty(currentWarInfo)) {
                 log.error("部落标签{}, 获取当前对战信息失败。", clanTag);
                 continue;
@@ -88,7 +94,7 @@ public class DataSyncServiceImpl implements DataSyncService {
             currentWarInfo.setTag(currentWarTag);
             currentWarInfo.setSeason(new SimpleDateFormat("yyyy-MM").format(currentWarInfo.getStartTime()));
             // 记录下战争信息
-            recWarInfo(currentWarInfo, (byte) 0);
+            recWarInfo(currentWarInfo, clanTag, (byte) 0);
             // 记下参战成员及对战记录
             recWarMemberAndWarLogs(currentWarInfo, clanTag, 2L);
         }
@@ -98,9 +104,9 @@ public class DataSyncServiceImpl implements DataSyncService {
     public void syncLeagueGroupInfo() {
         List<Clans> clansList = clansMapper.getClansNeedLeagueReport();
         clansList.forEach(clan -> {
-            log.info("正在获取部落 {} 的联赛信息",clan.getName());
+            log.info("开始获取部落 {} 的联赛信息",clan.getName());
             LeagueGroupInfoDTO leagueGroupInfo = httpClient.getClanLeagueGroupInfoByClanTag(clan.getTag());
-            log.info("正在获取部落 {} 的联赛信息完毕",clan.getName());
+            log.info("获取部落 {} 的联赛信息完毕",clan.getName());
             List<LeagueGroupRoundDTO> rounds = leagueGroupInfo.getRounds();
             for (LeagueGroupRoundDTO round : rounds) {
                 List<String> warTags = round.getWarTags();
@@ -126,11 +132,63 @@ public class DataSyncServiceImpl implements DataSyncService {
                     continue;
                 }
                 // 先记录下对战信息
-                recWarInfo(warInfo,  (byte) 1);
+                recWarInfo(warInfo,  clan.getTag(), (byte) 1);
                 // 先记录下对战详细信息
                 recWarMemberAndWarLogs(warInfo, clan.getTag(),1L);
             }
         });
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void syncLeagueGroupWarInfo() {
+        String season = new SimpleDateFormat("yyyy-MM").format(new Date());
+        List<ClanWars> leagueWarList = clanWarsMapper.getUnEndedLeagueWar(season);
+        if (ObjectUtils.isEmpty(leagueWarList)) {
+            log.info("目前没有未结束的联赛战争");
+            return;
+        }
+        for (ClanWars clanWar : leagueWarList) {
+            WarInfoDTO warInfo = httpClient.getClanLeagueGroupWarInfoByTag(clanWar.getTag());
+            if (ObjectUtils.isEmpty(warInfo)) {
+                log.error("联赛战争信息获取失败，战争标签:{},部落标签{}", clanWar.getTag(), clanWar.getClanTag());
+                continue;
+            }
+            log.info("联赛战争信息获取成功，战争标签:{},部落标签{}", clanWar.getTag(), clanWar.getClanTag());
+            warInfo.setSeason(season);
+            warInfo.setTag(clanWar.getTag());
+            // 记录下对战信息
+            log.info("更新战争信息");
+            recWarInfo(warInfo, clanWar.getClanTag(), (byte) 1);
+            // 记录下对战详细信息
+            log.info("更新对战详细信息");
+            if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
+                log.info("战争已结束，更新参战人员");
+                refreshLeagueGroupWarMembers(warInfo, clanWar.getClanTag());
+            }
+            recWarMemberAndWarLogs(warInfo, clanWar.getClanTag(),1L);
+        }
+    }
+
+    /**
+     * 防止上场后被系统抓到，开战后又替换下去
+     * @param warInfo
+     * @param clanTag
+     * @return void
+     * @author guokaiqiang
+     * @date 2020/9/6 11:20
+     **/
+    private void refreshLeagueGroupWarMembers(WarInfoDTO warInfo, String clanTag) {
+        ClanWarInfoDTO clanWarInfo;
+        if (clanTag.equals(warInfo.getClan().getTag())) {
+            clanWarInfo = warInfo.getClan();
+        } else {
+            clanWarInfo = warInfo.getOpponent();
+        }
+
+        List<ClanWarMemberDTO> clanWarMemberList = clanWarInfo.getMembers();
+        List<String> clanWarMemberTagList = clanWarMemberList.stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
+        clanWarMembersMapper.deleteNotInClanWarMember(warInfo.getTag(), clanTag, clanWarMemberTagList);
     }
 
     /**
@@ -178,7 +236,7 @@ public class DataSyncServiceImpl implements DataSyncService {
         }
         List<ClanWarMemberDTO> clanWarMemberDTOList = clanWarInfo.getMembers();
         List<ClanWarLogs> clanWarLogList = new ArrayList<>(100);
-        log.info("部落 {}, 正在处理参战成员及对战记录信息", clanWarInfo.getName());
+        log.info("部落 {}, 正在处理参战成员及对战记录信息，战争标签：{}", clanWarInfo.getName(), warInfo.getTag());
         clanWarMemberDTOList.forEach(memberDTO -> {
             currentClanWarMemberDOList.add(ClanWarMembers.builder()
                 .clanTag(clanTag)
@@ -235,14 +293,15 @@ public class DataSyncServiceImpl implements DataSyncService {
     /**
      * 记下当前对战信息
      * @param warInfo
+     * @param clanTag
      * @param isLeagaueWar
      * @return void
      * @author guokaiqiang
      * @date 2020/9/6 10:42
      **/
-    private void recWarInfo(WarInfoDTO warInfo, byte isLeagaueWar) {
+    private void recWarInfo(WarInfoDTO warInfo,String clanTag, byte isLeagaueWar) {
         ClanWars currentWar = ClanWars.builder()
-            .clanTag(warInfo.getClan().getTag())
+            .clanTag(clanTag)
             .tag(warInfo.getTag())
             .season(warInfo.getSeason())
             .state(warInfo.getState())

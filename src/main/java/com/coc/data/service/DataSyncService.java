@@ -50,4 +50,13 @@ public interface DataSyncService {
      * @date 2020/9/5 21:32
      **/
     void syncLeagueGroupInfo();
+
+    /**
+     * 获取联赛战争信息
+     * @param
+     * @return void
+     * @author guokaiqiang
+     * @date 2020/9/6 11:03
+     **/
+    void syncLeagueGroupWarInfo();
 }

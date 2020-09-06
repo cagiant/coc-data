@@ -14,4 +14,6 @@ public interface ClanWarsMapper {
     ClanWars getUnStartedClanWar(@Param("now") Date now, @Param("clanTag") String clanTag);
 
     List<ClanWars> getWarsByWarTagList(@Param("list") List<String> warTags);
+
+    List<ClanWars> getUnEndedLeagueWar(@Param("season") String season);
 }

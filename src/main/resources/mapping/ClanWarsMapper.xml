@@ -28,4 +28,7 @@
         #{item}
   </foreach>)
   </select>
+  <select id="getUnEndedLeagueWar" resultMap="BaseResultMap">
+    select * from coc_clan_wars where is_league_war = 1 and season = #{season}
+  </select>
 </mapper>
