@@ -31,7 +31,7 @@
      </foreach>
   </insert>
   <select id="getWarLogRelatedClanWarMembers" resultMap="BaseResultMap">
-    select * from coc_clan_war_members where clan_tag = #{clanTag} and war_tag = #{warTag} and member_tag in (#{defenderTag}, #{attackerTag});
+    select * from coc_clan_war_members where clan_tag = #{clanTag} and war_tag = #{warTag} and member_tag in (#{defenderTag}, #{attackerTag}) group by member_tag;
   </select>
   <update id="updateClanWarMember">
     update coc_clan_war_members set attack_no_star_time = #{member.attackNoStarTime},
