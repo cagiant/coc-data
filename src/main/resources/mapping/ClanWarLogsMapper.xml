@@ -22,7 +22,7 @@
   </insert>
   <select id="getUncalculatedClanWarLogs" resultMap="BaseResultMap">
     select war_log.* from coc_clan_war_logs as war_log
-    join coc_clan_wars war on war_log.war_tag = war.tag
+    join coc_clan_wars war on war_log.war_tag = war.tag and war.clan_tag = war_log.clan_tag
     where war_log.has_calculated != 1;
   </select>
   <update id="setClanWarLogCalaulated">
