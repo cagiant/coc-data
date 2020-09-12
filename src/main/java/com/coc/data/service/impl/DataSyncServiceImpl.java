@@ -372,6 +372,9 @@ public class DataSyncServiceImpl implements DataSyncService {
         String clanTag = warLog.getClanTag();
         List<ClanWarMembers> relatedMemberList = clanWarMembersMapper.getWarLogRelatedClanWarMembers(
             attackerTag, defenderTag, warTag, clanTag);
+        if (relatedMemberList.size() > 1) {
+           log.info("{},{},{},{}",attackerTag, defenderTag, warTag, clanTag);
+        }
         for(ClanWarMembers clanWarMember : relatedMemberList) {
             // 是进攻方，记录下进攻星星
             if (attackerTag.equals(clanWarMember.getMemberTag())) {
@@ -419,7 +422,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                 clanWarMember.setTotalDefenseTime(clanWarMember.getTotalDefenseTime() + 1);
             }
             clanWarMembersMapper.updateClanWarMember(clanWarMember);
-            clanWarLogsMapper.setClanWarLogCalaulated(warLog.getId());
-        }
+          }
+          clanWarLogsMapper.setClanWarLogCalaulated(warLog.getId());    
     }
 }
