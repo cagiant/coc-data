@@ -421,6 +421,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                 }
                 clanWarMember.setTotalDefenseTime(clanWarMember.getTotalDefenseTime() + 1);
             }
+            log.info("updating,{},{}",warLog.getId(),clanWarMember.getMemberName());
             clanWarMembersMapper.updateClanWarMember(clanWarMember);
           }
           clanWarLogsMapper.setClanWarLogCalaulated(warLog.getId());    
