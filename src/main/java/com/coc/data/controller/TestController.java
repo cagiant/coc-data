@@ -16,11 +16,16 @@ public class TestController {
 
     @GetMapping("/test")
     public void test() {
-        dataSyncService.syncLeagueGroupInfo();
         dataSyncService.syncClanInfo();
         dataSyncService.syncClanCurrentWarInfo();
-        dataSyncService.syncLeagueGroupWarInfo();
         dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
+
+    @GetMapping("/testLeague")
+    public void testLeague() {
+        dataSyncService.syncLeagueGroupInfo();
+        dataSyncService.syncLeagueGroupWarInfo();
+    }
+
 }
