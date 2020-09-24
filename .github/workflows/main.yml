@@ -26,7 +26,8 @@ jobs:
           echo "${{ secrets.KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           git clone git@github.com:cagiant/configs.git
-          cp ./configs/coc-data/* ./src/main/resources/
+          cp ./configs/coc-data/application.properties ./src/main/resources/
+          cp ./configs/coc-data/logback-spring.xml ./src/main/resources/
           rm -rf configs
       
       # Runs a single command using the runners shell
