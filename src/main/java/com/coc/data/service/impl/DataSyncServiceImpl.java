@@ -1,5 +1,6 @@
 package com.coc.data.service.impl;
 
+import com.coc.data.client.CocApiHttpClient;
 import com.coc.data.client.ProxyHttpClient;
 import com.coc.data.constant.ClanTagConstants;
 import com.coc.data.constant.ClanWarConstants;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public class DataSyncServiceImpl implements DataSyncService {
 
     @Resource
-    private ProxyHttpClient httpClient;
+    private CocApiHttpClient httpClient;
 
     @Resource
     private ClansMapper clansMapper;
