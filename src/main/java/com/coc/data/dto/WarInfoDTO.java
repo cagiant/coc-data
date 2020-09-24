@@ -20,16 +20,16 @@ public class WarInfoDTO {
 
     private String season;
 
-//    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date preparationStartTime;
 
-//    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date startTime;
 
-//    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @JsonFormat(pattern = "yyyyMMdd'T'HHmmss.SSS'Z'")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date endTime;
 
     private ClanWarInfoDTO clan;
