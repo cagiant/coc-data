@@ -40,7 +40,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          source: "./target/data-0.0.1-SNAPSHOT.jar"
+          source: "./target/data-v1.jar"
           target: "/home/ubuntu/projects/coc"
 
       - name: run publish script
