@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>com.coc</groupId>
 	<artifactId>data</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>data</name>
+	<version>v1</version>
+	<name>coc_data</name>
 	<description>my coc data.</description>
 
 	<properties>
