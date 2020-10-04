@@ -26,7 +26,7 @@ public class DataSyncTask {
         dataSyncService.syncClanInfo();
     }
 
-    @Scheduled(cron = "0 */20 * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     public void syncClanWarInfo() {
         dataSyncService.syncClanInfo();
         dataSyncService.syncClanCurrentWarInfo();
