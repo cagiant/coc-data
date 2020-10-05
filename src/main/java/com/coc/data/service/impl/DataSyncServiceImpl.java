@@ -105,9 +105,16 @@ public class DataSyncServiceImpl implements DataSyncService {
     @Override
     public void syncLeagueGroupInfo() {
         List<Clans> clansList = clansMapper.getClansNeedLeagueReport();
-        clansList.forEach(clan -> {
+        for (Clans clan: clansList) {
             log.info("开始获取部落 {} 的联赛信息",clan.getName());
-            LeagueGroupInfoDTO leagueGroupInfo = httpClient.getClanLeagueGroupInfoByClanTag(clan.getTag());
+            LeagueGroupInfoDTO leagueGroupInfo;
+            try {
+                leagueGroupInfo = httpClient.getClanLeagueGroupInfoByClanTag(clan.getTag());
+            } catch (Exception e) {
+                log.info("{} 部落没有进行中的联赛", clan.getName());
+                log.error(e.getMessage(),e);
+                continue;
+            }
             log.info("获取部落 {} 的联赛信息完毕",clan.getName());
             List<LeagueGroupRoundDTO> rounds = leagueGroupInfo.getRounds();
             for (LeagueGroupRoundDTO round : rounds) {
@@ -138,7 +145,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                 // 先记录下对战详细信息
                 recWarMemberAndWarLogs(warInfo, clan.getTag(),1L);
             }
-        });
+        }
     }
 
     @Override
