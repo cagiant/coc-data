@@ -1,8 +1,10 @@
 package com.coc.data.controller;
 
 import com.coc.data.util.CheckUtil;
+import com.coc.data.util.FormatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MiniProgramController {
 
     @GetMapping("/msgCallback")
-    public String msgCallback(HttpServletRequest request) {
+    public String getMsgCallback(HttpServletRequest request) {
         String signature = request.getParameter("signature");
         // 时间戳
         String timestamp = request.getParameter("timestamp");
@@ -32,5 +34,12 @@ public class MiniProgramController {
         }
 
         return "";
+    }
+
+    @PostMapping("/msgCallback")
+    public String postMsgCallback(HttpServletRequest request) {
+        log.info(FormatUtil.serializeObject2JsonStr(request));
+
+        return "success";
     }
 }

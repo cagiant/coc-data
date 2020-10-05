@@ -30,14 +30,14 @@ public class DataSyncTask {
     public void syncClanWarInfo() {
         dataSyncService.syncClanInfo();
         dataSyncService.syncClanCurrentWarInfo();
-//        dataSyncService.syncLeagueGroupWarInfo();
+        dataSyncService.syncLeagueGroupWarInfo();
         dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
 
     @Scheduled(cron = "0 7 */1 * * *")
     public void syncLeagueGroupWarInfo() {
-//        dataSyncService.syncLeagueGroupInfo();
+        dataSyncService.syncLeagueGroupInfo();
     }
 
 }
