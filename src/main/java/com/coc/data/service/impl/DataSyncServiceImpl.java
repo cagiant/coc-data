@@ -203,11 +203,6 @@ public class DataSyncServiceImpl implements DataSyncService {
         List<String> clanWarMemberTagList = clanWarMemberList.stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
         clanWarMembersMapper.deleteNotInClanWarMember(warInfo.getTag(), clanTag, clanWarMemberTagList);
 
-        // 全部被打过，直接返回
-        if (opponentWarInfo.getAttacks().intValue() == clanWarInfo.getMembers().size()) {
-            log.info("战争{}中，部落{}的成员都被打过，不需要计算", warInfo.getTag(), clanTag);
-            return;
-        }
         // 没有被打的，按照二星来计算
         List<String> clanMemberTagsAttacked = new ArrayList<>();
         List<String> clanMemberTagsNoAttacked = new ArrayList<>();
