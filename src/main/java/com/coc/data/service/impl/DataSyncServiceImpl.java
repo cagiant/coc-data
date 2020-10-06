@@ -174,6 +174,7 @@ public class DataSyncServiceImpl implements DataSyncService {
             if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
                 log.info("战争已结束，更新参战人员");
                 refreshLeagueGroupWarMembers(warInfo, clanWar.getClanTag());
+                log.info("刷新后的战争信息：{}", FormatUtil.serializeObject2JsonStr(warInfo));
             }
             recWarMemberAndWarLogs(warInfo, clanWar.getClanTag(),1L);
         }
@@ -189,15 +190,49 @@ public class DataSyncServiceImpl implements DataSyncService {
      **/
     private void refreshLeagueGroupWarMembers(WarInfoDTO warInfo, String clanTag) {
         ClanWarInfoDTO clanWarInfo;
+        ClanWarInfoDTO opponentWarInfo;
         if (clanTag.equals(warInfo.getClan().getTag())) {
             clanWarInfo = warInfo.getClan();
+            opponentWarInfo = warInfo.getOpponent();
         } else {
             clanWarInfo = warInfo.getOpponent();
+            opponentWarInfo = warInfo.getClan();
         }
 
         List<ClanWarMemberDTO> clanWarMemberList = clanWarInfo.getMembers();
         List<String> clanWarMemberTagList = clanWarMemberList.stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
         clanWarMembersMapper.deleteNotInClanWarMember(warInfo.getTag(), clanTag, clanWarMemberTagList);
+
+        // 全部被打过，直接返回
+        if (opponentWarInfo.getAttacks().intValue() == clanWarInfo.getMembers().size()) {
+            log.info("战争{}中，部落{}的成员都被打过，不需要计算", warInfo.getTag(), clanTag);
+            return;
+        }
+        // 没有被打的，按照二星来计算
+        List<String> clanMemberTagsAttacked = new ArrayList<>();
+        List<String> clanMemberTagsNoAttacked = new ArrayList<>();
+        for (ClanWarMemberDTO member : opponentWarInfo.getMembers()) {
+            for (AttackDTO attack : member.getAttacks()) {
+                clanMemberTagsAttacked.add(attack.getDefenderTag());
+            }
+        }
+        for (String tag : clanWarMemberTagList) {
+            if (!clanMemberTagsAttacked.contains(tag)) {
+                clanMemberTagsNoAttacked.add(tag);
+            }
+        }
+        log.info("战争{}中，部落{}的成员{}没有被打过，增加计算", warInfo.getTag(), clanTag, FormatUtil.serializeObject2JsonStr(clanMemberTagsNoAttacked));
+        List<AttackDTO> mockedAttackLogs = new ArrayList<>();
+        for (String tag : clanMemberTagsNoAttacked) {
+            mockedAttackLogs.add(AttackDTO.builder()
+                .attackerTag(ClanTagConstants.MOCKED_ATTACKER_TAG)
+                .defenderTag(tag)
+                .destructionPercentage("50")
+                .order(9999L)
+                .stars(2L)
+                .build());
+        }
+        opponentWarInfo.getMembers().get(0).getAttacks().addAll(mockedAttackLogs);
     }
 
     /**
