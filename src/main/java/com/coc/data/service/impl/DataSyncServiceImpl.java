@@ -212,6 +212,9 @@ public class DataSyncServiceImpl implements DataSyncService {
         List<String> clanMemberTagsAttacked = new ArrayList<>();
         List<String> clanMemberTagsNoAttacked = new ArrayList<>();
         for (ClanWarMemberDTO member : opponentWarInfo.getMembers()) {
+            if (ObjectUtils.isEmpty(member.getAttacks())) {
+                continue;
+            }
             for (AttackDTO attack : member.getAttacks()) {
                 clanMemberTagsAttacked.add(attack.getDefenderTag());
             }
