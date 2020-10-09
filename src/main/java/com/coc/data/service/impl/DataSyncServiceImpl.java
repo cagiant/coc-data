@@ -42,6 +42,8 @@ public class DataSyncServiceImpl implements DataSyncService {
     private ClanWarLogsMapper clanWarLogsMapper;
     @Resource
     private ReportClanWarMemberMapper reportClanWarMemberMapper;
+    @Resource
+    private PlayersMapper playersMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -56,6 +58,7 @@ public class DataSyncServiceImpl implements DataSyncService {
             clansMapper.insertOnDuplicateKeyUpdate(clan);
             List<ClanMemberDTO> clanMemberDTOList = clanInfo.getMemberList();
             List<ClanMembers> clanMembersList = new ArrayList<>();
+            List<Players> playersList = new ArrayList<>();
             clanMemberDTOList.forEach(clanMemberDTO -> {
                 clanMembersList.add(ClanMembers.builder()
                     .clanTag(clanInfo.getTag())
@@ -63,8 +66,13 @@ public class DataSyncServiceImpl implements DataSyncService {
                     .name(clanMemberDTO.getName())
                     .build()
                 );
+                playersList.add(Players.builder()
+                    .name(clanMemberDTO.getName())
+                    .tag(clanMemberDTO.getTag())
+                    .build());
             });
             clanMembersMapper.insertOnDuplicateKeyUpdate(clanMembersList);
+            playersMapper.insertOnDuplicateKeyUpdate(playersList);
         }
     }
 
@@ -440,7 +448,14 @@ public class DataSyncServiceImpl implements DataSyncService {
             if (
                 defenderTag.equals(clanWarMember.getMemberTag())
             ) {
-                clanWarMember.setTotalDefenseStar(clanWarMember.getTotalDefenseStar() + warLog.getStar());
+                Long totalDefenseStar = 0L;
+                // 联赛的，只看最高的那次防守星星
+                if (clanWarMember.getLeagueWar()) {
+                    totalDefenseStar = Math.max(clanWarMember.getTotalDefenseStar(), warLog.getStar());
+                } else {
+                    totalDefenseStar = clanWarMember.getTotalDefenseStar() + warLog.getStar();
+                }
+                clanWarMember.setTotalDefenseStar(totalDefenseStar);
                 switch (warLog.getStar().byteValue()) {
                     case 0:
                         clanWarMember.setDefenseNoStarTime(clanWarMember.getDefenseNoStarTime() + 1);
