@@ -31,7 +31,7 @@
      </foreach>
   </insert>
   <select id="getWarLogRelatedClanWarMembers" resultMap="BaseResultMap">
-    select ccwm.*,ccw.is_league_war from coc_clan_war_members ccwm join coc_clan_wars ccw on ccwm.war_tag = ccw.tag where ccwm.clan_tag = #{clanTag} and ccwm.war_tag = #{warTag} and ccwm.member_tag in (#{defenderTag}, #{attackerTag}) group by ccwm.member_tag;
+    select ccwm.*,ccw.is_league_war from coc_clan_war_members ccwm join coc_clan_wars ccw on ccwm.war_tag = ccw.tag where ccwm.clan_tag = #{clanTag} and ccwm.war_tag = #{warTag} and ccwm.member_tag in (#{defenderTag}, #{attackerTag});
   </select>
   <update id="updateClanWarMember">
     update coc_clan_war_members set attack_no_star_time = #{member.attackNoStarTime},
