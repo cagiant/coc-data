@@ -1,7 +1,7 @@
 package com.coc.data.mapper;
 
 import com.coc.data.model.ClanWarLogs;
-import com.coc.data.model.ClanWarLogsExample;
+
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

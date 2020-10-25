@@ -1,7 +1,6 @@
 package com.coc.data.mapper;
 
 import com.coc.data.model.ClanWars;
-import com.coc.data.model.ClanWarsExample;
 
 import java.util.Date;
 import java.util.List;
