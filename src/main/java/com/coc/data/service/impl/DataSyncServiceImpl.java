@@ -83,7 +83,7 @@ public class DataSyncServiceImpl implements DataSyncService {
         for (String clanTag : clanTags) {
             ClanWars clanWar = clanWarsMapper.getUnStartedClanWar(new Date(), clanTag);
             if (!ObjectUtils.isEmpty(clanWar) && clanWar.getIsLeagueWar() == 0) {
-                log.warn("部落标签:{}, 有处于准备日的战争: {}, 战争开始时间为:{}. 先跳过...",
+                log.info("部落标签:{}, 有处于准备日的战争: {}, 战争开始时间为:{}. 先跳过...",
                         clanWar.getClanTag(),
                         clanWar.getTag(),
                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(clanWar.getStartTime()));
@@ -284,6 +284,7 @@ public class DataSyncServiceImpl implements DataSyncService {
             clanWarInfo = warInfo.getOpponent();
             opponentWarInfo = warInfo.getClan();
         }
+        String season = new SimpleDateFormat("yyyy-MM").format(warInfo.getStartTime());
         List<ClanWarMemberDTO> clanWarMemberDTOList = clanWarInfo.getMembers();
         List<ClanWarLogs> clanWarLogList = new ArrayList<>(100);
         log.info("部落 {}, 正在处理参战成员及对战记录信息，战争标签：{}", clanWarInfo.getName(), warInfo.getTag());
@@ -292,8 +293,10 @@ public class DataSyncServiceImpl implements DataSyncService {
                 .clanTag(clanTag)
                 .memberTag(memberDTO.getTag())
                 .memberName(memberDTO.getName())
+                .season(season)
                 .warTag(warInfo.getTag())
                 .attackTimeLeft(attachTimeLeft)
+                .leagueWar(attachTimeLeft.intValue() == 1)
                 .build()
             );
             if (memberDTO.getAttacks() != null) {
@@ -384,6 +387,7 @@ public class DataSyncServiceImpl implements DataSyncService {
         log.info("正在生成赛季 {} 的报表", season);
         List<ClanWarMembers> clanWarMembersList = clanWarMembersMapper.getCurrentSeasonData(season);
         List<ReportClanWarMember> reportClanWarMemberList = new ArrayList<>();
+        List<ClanWarMembers> reportClanWarMemberListTmp = new ArrayList<>();
         if (clanWarMembersList.size() == 0) {
             return;
         }
@@ -408,9 +412,34 @@ public class DataSyncServiceImpl implements DataSyncService {
                 .clanTag(clanWarMember.getClanTag())
                 .build()
             );
+            reportClanWarMemberListTmp.add(ClanWarMembers.builder()
+                .seasonallyReport(true)
+                .memberName(clanWarMember.getMemberName())
+                .attackNoStarTime(clanWarMember.getAttackNoStarTime())
+                .attackOneStarTime(clanWarMember.getAttackOneStarTime())
+                .attackTwoStarTime(clanWarMember.getAttackTwoStarTime())
+                .attackThreeStarTime(clanWarMember.getAttackThreeStarTime())
+                .defenseNoStarTime(clanWarMember.getDefenseNoStarTime())
+                .defenseOneStarTime(clanWarMember.getDefenseOneStarTime())
+                .defenseTwoStarTime(clanWarMember.getDefenseTwoStarTime())
+                .defenseThreeStarTime(clanWarMember.getDefenseThreeStarTime())
+                .attackTimeLeft(clanWarMember.getAttackTimeLeft())
+                .attackTimeUsed(clanWarMember.getAttackTimeUsed())
+                .totalAttackStar(clanWarMember.getTotalAttackStar())
+                .totalDefenseStar(clanWarMember.getTotalDefenseStar())
+                .totalDefenseTime(clanWarMember.getTotalDefenseTime())
+                .totalAttackPercentage(clanWarMember.getTotalAttackPercentage())
+                .totalDefensePercentage(clanWarMember.getTotalDefensePercentage())
+                .season(season)
+                .warTag(ClanTagConstants.MOCKED_WAR_TAG)
+                .leagueWar(clanWarMember.getLeagueWar())
+                .memberTag(clanWarMember.getMemberTag())
+                .clanTag(clanWarMember.getClanTag())
+                .build());
         });
 
         reportClanWarMemberMapper.replaceBatch(reportClanWarMemberList);
+        clanWarMembersMapper.replaceSeasonReport(reportClanWarMemberListTmp);
 
     }
 
@@ -443,6 +472,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                 }
                 clanWarMember.setAttackTimeUsed(clanWarMember.getAttackTimeUsed() + 1);
                 clanWarMember.setAttackTimeLeft(clanWarMember.getAttackTimeLeft() - 1);
+                clanWarMember.setTotalAttackPercentage(clanWarMember.getTotalAttackPercentage() + Long.parseLong(warLog.getDestructionPercentage()));
             }
             // 防守方，记录下被三次数
             if (
@@ -473,6 +503,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                         log.error("unrecognized war log {}", FormatUtil.serializeObject2JsonStr(warLog));
                 }
                 clanWarMember.setTotalDefenseTime(clanWarMember.getTotalDefenseTime() + 1);
+                clanWarMember.setTotalDefensePercentage(clanWarMember.getTotalDefensePercentage() + Long.parseLong(warLog.getDestructionPercentage()));
             }
             clanWarMembersMapper.updateClanWarMember(clanWarMember);
           }

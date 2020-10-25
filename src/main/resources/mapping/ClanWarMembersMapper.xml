@@ -4,30 +4,35 @@
   <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWarMembers">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
+    <result column="member_name" jdbcType="VARCHAR" property="memberName" />
     <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
     <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="is_league_war" jdbcType="BIT" property="leagueWar" />
+    <result column="is_seasonaly_report" jdbcType="BIT" property="seasonallyReport" />
     <result column="attack_three_star_time" jdbcType="SMALLINT" property="attackThreeStarTime" />
     <result column="attack_two_star_time" jdbcType="SMALLINT" property="attackTwoStarTime" />
     <result column="attack_one_star_time" jdbcType="SMALLINT" property="attackOneStarTime" />
     <result column="attack_no_star_time" jdbcType="SMALLINT" property="attackNoStarTime" />
+    <result column="total_attack_percentage" jdbcType="BIGINT" property="totalAttackPercentage" />
     <result column="attack_time_used" jdbcType="SMALLINT" property="attackTimeUsed" />
     <result column="attack_time_left" jdbcType="SMALLINT" property="attackTimeLeft" />
-      <result column="defense_no_star_time" jdbcType="SMALLINT" property="defenseNoStarTime" />
-      <result column="defense_one_star_time" jdbcType="SMALLINT" property="defenseOneStarTime" />
-      <result column="defense_two_star_time" jdbcType="SMALLINT" property="defenseTwoStarTime" />
-      <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
-      <result column="total_defense_star" jdbcType="SMALLINT" property="totalDefenseStar" />
-      <result column="total_attack_star" jdbcType="SMALLINT" property="totalAttackStar" />
-      <result column="total_defense_time" jdbcType="SMALLINT" property="totalDefenseTime"/>
-    <result column="is_league_war" jdbcType="SMALLINT" property="leagueWar"/>
+    <result column="defense_no_star_time" jdbcType="SMALLINT" property="defenseNoStarTime" />
+    <result column="defense_one_star_time" jdbcType="SMALLINT" property="defenseOneStarTime" />
+    <result column="defense_two_star_time" jdbcType="SMALLINT" property="defenseTwoStarTime" />
+    <result column="defense_three_star_time" jdbcType="SMALLINT" property="defenseThreeStarTime" />
+    <result column="total_defense_percentage" jdbcType="BIGINT" property="totalDefensePercentage" />
+    <result column="total_defense_time" jdbcType="SMALLINT" property="totalDefenseTime" />
+    <result column="total_attack_star" jdbcType="SMALLINT" property="totalAttackStar" />
+    <result column="total_defense_star" jdbcType="SMALLINT" property="totalDefenseStar" />
+    <result column="is_deleted" jdbcType="BIT" property="deleted" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <insert id="insertIgnoreExist">
-    insert ignore into coc_clan_war_members (member_tag,member_name, war_tag, clan_tag, attack_time_left)
+    insert ignore into coc_clan_war_members (member_tag,member_name, war_tag, clan_tag, attack_time_left, is_league_war, season)
     values
      <foreach collection="list" item="item" separator=",">
-       (#{item.memberTag}, #{item.memberName},#{item.warTag}, #{item.clanTag}, #{item.attackTimeLeft})
+       (#{item.memberTag}, #{item.memberName},#{item.warTag}, #{item.clanTag}, #{item.attackTimeLeft}, #{item.leagueWar}, #{item.season})
      </foreach>
   </insert>
   <select id="getWarLogRelatedClanWarMembers" resultMap="BaseResultMap">
@@ -46,13 +51,16 @@
                                     defense_three_star_time = #{member.defenseThreeStarTime},
                                     total_defense_time = #{member.totalDefenseTime},
                                     total_attack_star = #{member.totalAttackStar},
-                                    total_defense_star = #{member.totalDefenseStar}
+                                    total_defense_star = #{member.totalDefenseStar},
+                                    total_attack_percentage = #{member.totalAttackPercentage},
+                                    total_defense_percentage = #{member.totalDefensePercentage}
     where id = #{member.id}
   </update>
   <select id="getCurrentSeasonData" resultMap="BaseResultMap">
       select
           ccwm.clan_tag as clan_tag,
           ccwm.member_tag as member_tag,
+          cp.name as member_name,
           sum( ccwm.attack_no_star_time ) AS attack_no_star_time,
           sum( ccwm.attack_one_star_time ) AS attack_one_star_time,
           sum( ccwm.attack_two_star_time ) AS attack_two_star_time,
@@ -66,12 +74,16 @@
           sum( ccwm.total_attack_star ) AS total_attack_star,
           sum( ccwm.total_defense_star ) AS total_defense_star,
           sum( ccwm.total_defense_time ) AS total_defense_time,
+          sum( ccwm.total_attack_percentage ) AS total_attack_percentage,
+          sum( ccwm.total_defense_percentage ) AS total_defense_percentage,
           ccw.is_league_war
       FROM
           coc_clan_war_members ccwm
       JOIN coc_clan_wars ccw on ccwm.war_tag = ccw.tag and ccwm.clan_tag = ccw.clan_tag
+      join coc_players cp on ccwm.member_tag = cp.tag
       WHERE
             ccw.season = #{season}
+            and ccwm.is_seasonaly_report = 0
       GROUP BY
           ccw.is_league_war,
           ccwm.clan_tag,
@@ -85,4 +97,18 @@
           </foreach>
           )
   </delete>
+    <insert id="replaceSeasonReport">
+        replace into coc_clan_war_members
+            (member_tag, member_name, season, war_tag, clan_tag, is_league_war, is_seasonaly_report, attack_three_star_time,
+             attack_two_star_time, attack_one_star_time, attack_no_star_time, total_attack_percentage, attack_time_used,
+             attack_time_left, defense_no_star_time, defense_one_star_time, defense_two_star_time, defense_three_star_time,
+             total_defense_percentage, total_defense_time, total_attack_star, total_defense_star)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.memberTag}, #{item.memberName}, #{item.season}, #{item.warTag}, #{item.clanTag}, #{item.leagueWar}, #{item.seasonallyReport}, #{item.attackThreeStarTime},
+             #{item.attackTwoStarTime}, #{item.attackOneStarTime},#{item.attackNoStarTime}, #{item.totalAttackPercentage}, #{item.attackTimeUsed},
+             #{item.attackTimeLeft}, #{item.defenseNoStarTime}, #{item.defenseOneStarTime}, #{item.defenseTwoStarTime}, #{item.defenseThreeStarTime},
+             #{item.totalDefensePercentage}, #{item.totalDefenseTime}, #{item.totalAttackStar}, #{item.totalDefenseStar})
+        </foreach>
+    </insert>
 </mapper>

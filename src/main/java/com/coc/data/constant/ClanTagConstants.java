@@ -15,5 +15,7 @@ public class ClanTagConstants {
 
     public static final String MOCKED_ATTACKER_TAG = "#0";
 
+    public static final String MOCKED_WAR_TAG = "#0";
+
     public static final String DEFAULT_LEAGUE_GROUP_WAR_TAG = "#0";
 }

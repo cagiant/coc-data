@@ -20,4 +20,6 @@ public interface ClanWarMembersMapper {
     List<ClanWarMembers> getCurrentSeasonData(@Param("season") String season);
 
     void deleteNotInClanWarMember(@Param("warTag") String tag, @Param("clanTag") String clanTag, @Param("list") List<String> clanWarMemberTagList);
+
+    void replaceSeasonReport(List<ClanWarMembers> reportClanWarMemberListTmp);
 }
