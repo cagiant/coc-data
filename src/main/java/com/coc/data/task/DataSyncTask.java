@@ -21,23 +21,18 @@ public class DataSyncTask {
     @Resource
     private DataSyncService dataSyncService;
 
-//    @Scheduled(cron = "* 0 */1 * * *")
-    public void syncClanInfo() {
-        dataSyncService.syncClanInfo();
-    }
-
     @Scheduled(cron = "0 */5 * * * *")
     public void syncClanWarInfo() {
         dataSyncService.syncClanInfo();
-        dataSyncService.syncClanCurrentWarInfo();
-//        dataSyncService.syncLeagueGroupWarInfo();
+//        dataSyncService.syncClanCurrentWarInfo();
+        dataSyncService.syncLeagueGroupWarInfo();
         dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
 
     @Scheduled(cron = "0 7 */1 * * *")
     public void syncLeagueGroupWarInfo() {
-//        dataSyncService.syncLeagueGroupInfo();
+        dataSyncService.syncLeagueGroupInfo();
     }
 
 }
