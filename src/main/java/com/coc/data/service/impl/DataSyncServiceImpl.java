@@ -246,7 +246,12 @@ public class DataSyncServiceImpl implements DataSyncService {
                 .stars(2L)
                 .build());
         }
-        opponentWarInfo.getMembers().get(0).getAttacks().addAll(mockedAttackLogs);
+        for (ClanWarMemberDTO opponentMember : opponentWarInfo.getMembers()) {
+            if (!ObjectUtils.isEmpty(opponentMember.getAttacks())) {
+                opponentMember.getAttacks().addAll(mockedAttackLogs);
+                break;
+            }
+        }
     }
 
     /**
