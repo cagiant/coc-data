@@ -166,7 +166,13 @@ public class DataSyncServiceImpl implements DataSyncService {
             return;
         }
         for (ClanWars clanWar : leagueWarList) {
-            WarInfoDTO warInfo = httpClient.getClanLeagueGroupWarInfoByTag(clanWar.getTag());
+            WarInfoDTO warInfo;
+            try {
+                 warInfo = httpClient.getClanLeagueGroupWarInfoByTag(clanWar.getTag());
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                continue;
+            }
             if (ObjectUtils.isEmpty(warInfo)) {
                 log.error("联赛战争信息获取失败，战争标签:{},部落标签{}", clanWar.getTag(), clanWar.getClanTag());
                 continue;
@@ -182,7 +188,6 @@ public class DataSyncServiceImpl implements DataSyncService {
             if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
                 log.info("战争已结束，更新参战人员");
                 refreshLeagueGroupWarMembers(warInfo, clanWar.getClanTag());
-                log.info("刷新后的战争信息：{}", FormatUtil.serializeObject2JsonStr(warInfo));
             }
             recWarMemberAndWarLogs(warInfo, clanWar.getClanTag(),1L);
         }
@@ -226,6 +231,9 @@ public class DataSyncServiceImpl implements DataSyncService {
             if (!clanMemberTagsAttacked.contains(tag)) {
                 clanMemberTagsNoAttacked.add(tag);
             }
+        }
+        if (ObjectUtils.isEmpty(clanMemberTagsNoAttacked)) {
+            return;
         }
         log.info("战争{}中，部落{}的成员{}没有被打过，增加计算", warInfo.getTag(), clanTag, FormatUtil.serializeObject2JsonStr(clanMemberTagsNoAttacked));
         List<AttackDTO> mockedAttackLogs = new ArrayList<>();
