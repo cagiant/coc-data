@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarLogMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWarLog">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="war_id" jdbcType="BIGINT" property="warId" />
+    <result column="attacker_tag" jdbcType="VARCHAR" property="attackerTag" />
+    <result column="defender_tag" jdbcType="VARCHAR" property="defenderTag" />
+    <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
+    <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="star" jdbcType="SMALLINT" property="star" />
+    <result column="destruction_percentage" jdbcType="VARCHAR" property="destructionPercentage" />
+    <result column="attack_order" jdbcType="INTEGER" property="attackOrder" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, war_id, attacker_tag, defender_tag, war_tag, clan_tag, star, destruction_percentage, 
+    attack_order, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarLogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from clan_war_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.coc.data.model.base.ClanWarLogExample">
+    delete from clan_war_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.coc.data.model.ClanWarLog">
+    insert into clan_war_log (id, war_id, attacker_tag, 
+      defender_tag, war_tag, clan_tag, 
+      star, destruction_percentage, attack_order, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{warId,jdbcType=BIGINT}, #{attackerTag,jdbcType=VARCHAR}, 
+      #{defenderTag,jdbcType=VARCHAR}, #{warTag,jdbcType=VARCHAR}, #{clanTag,jdbcType=VARCHAR}, 
+      #{star,jdbcType=SMALLINT}, #{destructionPercentage,jdbcType=VARCHAR}, #{attackOrder,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.coc.data.model.ClanWarLog">
+    insert into clan_war_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="warId != null">
+        war_id,
+      </if>
+      <if test="attackerTag != null">
+        attacker_tag,
+      </if>
+      <if test="defenderTag != null">
+        defender_tag,
+      </if>
+      <if test="warTag != null">
+        war_tag,
+      </if>
+      <if test="clanTag != null">
+        clan_tag,
+      </if>
+      <if test="star != null">
+        star,
+      </if>
+      <if test="destructionPercentage != null">
+        destruction_percentage,
+      </if>
+      <if test="attackOrder != null">
+        attack_order,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="warId != null">
+        #{warId,jdbcType=BIGINT},
+      </if>
+      <if test="attackerTag != null">
+        #{attackerTag,jdbcType=VARCHAR},
+      </if>
+      <if test="defenderTag != null">
+        #{defenderTag,jdbcType=VARCHAR},
+      </if>
+      <if test="warTag != null">
+        #{warTag,jdbcType=VARCHAR},
+      </if>
+      <if test="clanTag != null">
+        #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null">
+        #{star,jdbcType=SMALLINT},
+      </if>
+      <if test="destructionPercentage != null">
+        #{destructionPercentage,jdbcType=VARCHAR},
+      </if>
+      <if test="attackOrder != null">
+        #{attackOrder,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.coc.data.model.base.ClanWarLogExample" resultType="java.lang.Long">
+    select count(*) from clan_war_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update clan_war_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.warId != null">
+        war_id = #{record.warId,jdbcType=BIGINT},
+      </if>
+      <if test="record.attackerTag != null">
+        attacker_tag = #{record.attackerTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.defenderTag != null">
+        defender_tag = #{record.defenderTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warTag != null">
+        war_tag = #{record.warTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clanTag != null">
+        clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.star != null">
+        star = #{record.star,jdbcType=SMALLINT},
+      </if>
+      <if test="record.destructionPercentage != null">
+        destruction_percentage = #{record.destructionPercentage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attackOrder != null">
+        attack_order = #{record.attackOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update clan_war_log
+    set id = #{record.id,jdbcType=BIGINT},
+      war_id = #{record.warId,jdbcType=BIGINT},
+      attacker_tag = #{record.attackerTag,jdbcType=VARCHAR},
+      defender_tag = #{record.defenderTag,jdbcType=VARCHAR},
+      war_tag = #{record.warTag,jdbcType=VARCHAR},
+      clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      star = #{record.star,jdbcType=SMALLINT},
+      destruction_percentage = #{record.destructionPercentage,jdbcType=VARCHAR},
+      attack_order = #{record.attackOrder,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
