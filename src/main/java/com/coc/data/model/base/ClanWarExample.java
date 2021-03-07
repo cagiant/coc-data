@@ -685,63 +685,73 @@ public class ClanWarExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarIsNull() {
-            addCriterion("is_league_war is null");
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarIsNotNull() {
-            addCriterion("is_league_war is not null");
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarEqualTo(Byte value) {
-            addCriterion("is_league_war =", value, "isLeagueWar");
+        public Criteria andTypeEqualTo(String value) {
+            addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarNotEqualTo(Byte value) {
-            addCriterion("is_league_war <>", value, "isLeagueWar");
+        public Criteria andTypeNotEqualTo(String value) {
+            addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarGreaterThan(Byte value) {
-            addCriterion("is_league_war >", value, "isLeagueWar");
+        public Criteria andTypeGreaterThan(String value) {
+            addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarGreaterThanOrEqualTo(Byte value) {
-            addCriterion("is_league_war >=", value, "isLeagueWar");
+        public Criteria andTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarLessThan(Byte value) {
-            addCriterion("is_league_war <", value, "isLeagueWar");
+        public Criteria andTypeLessThan(String value) {
+            addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarLessThanOrEqualTo(Byte value) {
-            addCriterion("is_league_war <=", value, "isLeagueWar");
+        public Criteria andTypeLessThanOrEqualTo(String value) {
+            addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarIn(List<Byte> values) {
-            addCriterion("is_league_war in", values, "isLeagueWar");
+        public Criteria andTypeLike(String value) {
+            addCriterion("type like", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarNotIn(List<Byte> values) {
-            addCriterion("is_league_war not in", values, "isLeagueWar");
+        public Criteria andTypeNotLike(String value) {
+            addCriterion("type not like", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarBetween(Byte value1, Byte value2) {
-            addCriterion("is_league_war between", value1, value2, "isLeagueWar");
+        public Criteria andTypeIn(List<String> values) {
+            addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIsLeagueWarNotBetween(Byte value1, Byte value2) {
-            addCriterion("is_league_war not between", value1, value2, "isLeagueWar");
+        public Criteria andTypeNotIn(List<String> values) {
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(String value1, String value2) {
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(String value1, String value2) {
+            addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
 

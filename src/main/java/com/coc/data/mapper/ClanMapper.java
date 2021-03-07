@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Param;
 public interface ClanMapper extends BaseDao<Clan, ClanExample> {
 
     void insertOnDuplicateKeyUpdate(@Param("clan") Clan clan);
+
+    Clan selectByClanTag(@Param("tag") String clanTag);
 }

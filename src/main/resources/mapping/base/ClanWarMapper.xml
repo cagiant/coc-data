@@ -11,7 +11,7 @@
     <result column="preparation_start_time" jdbcType="TIMESTAMP" property="preparationStartTime" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="is_league_war" jdbcType="TINYINT" property="isLeagueWar" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -74,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, clan_tag, tag, season, state, team_size, preparation_start_time, start_time, 
-    end_time, is_league_war, create_time, update_time
+    id, clan_tag, tag, season, state, team_size, preparation_start_time, start_time,
+    end_time, type, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarExample" resultMap="BaseResultMap">
     select
@@ -98,16 +98,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.ClanWar">
-    insert into clan_war (id, clan_tag, tag, 
-      season, state, team_size, 
-      preparation_start_time, start_time, end_time, 
-      is_league_war, create_time, update_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
-      #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT}, 
-      #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-      #{isLeagueWar,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into clan_war (id, clan_tag, tag,
+                          season, state, team_size,
+                          preparation_start_time, start_time, end_time,
+                          type, create_time, update_time
+    )
+    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
+            #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT},
+            #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+            #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+           )
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.ClanWar">
     insert into clan_war
@@ -139,8 +139,8 @@
       <if test="endTime != null">
         end_time,
       </if>
-      <if test="isLeagueWar != null">
-        is_league_war,
+      <if test="type != null">
+        type,
       </if>
       <if test="createTime != null">
         create_time,
@@ -177,8 +177,8 @@
       <if test="endTime != null">
         #{endTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="isLeagueWar != null">
-        #{isLeagueWar,jdbcType=TINYINT},
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -224,8 +224,8 @@
       <if test="record.endTime != null">
         end_time = #{record.endTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.isLeagueWar != null">
-        is_league_war = #{record.isLeagueWar,jdbcType=TINYINT},
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -241,17 +241,17 @@
   <update id="updateByExample" parameterType="map">
     update clan_war
     set id = #{record.id,jdbcType=BIGINT},
-      clan_tag = #{record.clanTag,jdbcType=VARCHAR},
-      tag = #{record.tag,jdbcType=VARCHAR},
-      season = #{record.season,jdbcType=VARCHAR},
-      state = #{record.state,jdbcType=VARCHAR},
-      team_size = #{record.teamSize,jdbcType=SMALLINT},
-      preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
-      start_time = #{record.startTime,jdbcType=TIMESTAMP},
-      end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      is_league_war = #{record.isLeagueWar,jdbcType=TINYINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+    tag = #{record.tag,jdbcType=VARCHAR},
+    season = #{record.season,jdbcType=VARCHAR},
+    state = #{record.state,jdbcType=VARCHAR},
+    team_size = #{record.teamSize,jdbcType=SMALLINT},
+    preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
+    start_time = #{record.startTime,jdbcType=TIMESTAMP},
+    end_time = #{record.endTime,jdbcType=TIMESTAMP},
+    type = #{record.type,jdbcType=VARCHAR},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP},
+    update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

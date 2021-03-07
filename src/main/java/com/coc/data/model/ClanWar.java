@@ -26,7 +26,7 @@ public class ClanWar {
 
     private Date endTime;
 
-    private Byte isLeagueWar;
+    private String type;
 
     private Date createTime;
 
