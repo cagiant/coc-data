@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarMemberMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWarMember">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="war_id" jdbcType="BIGINT" property="warId" />
+    <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
+    <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+    <result column="season" jdbcType="VARCHAR" property="season" />
+    <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
+    <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, war_id, member_tag, member_name, season, war_tag, clan_tag, is_deleted, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarMemberExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from clan_war_member
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.coc.data.model.base.ClanWarMemberExample">
+    delete from clan_war_member
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.coc.data.model.ClanWarMember">
+    insert into clan_war_member (id, war_id, member_tag, 
+      member_name, season, war_tag, 
+      clan_tag, is_deleted, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{warId,jdbcType=BIGINT}, #{memberTag,jdbcType=VARCHAR}, 
+      #{memberName,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{warTag,jdbcType=VARCHAR}, 
+      #{clanTag,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.coc.data.model.ClanWarMember">
+    insert into clan_war_member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="warId != null">
+        war_id,
+      </if>
+      <if test="memberTag != null">
+        member_tag,
+      </if>
+      <if test="memberName != null">
+        member_name,
+      </if>
+      <if test="season != null">
+        season,
+      </if>
+      <if test="warTag != null">
+        war_tag,
+      </if>
+      <if test="clanTag != null">
+        clan_tag,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="warId != null">
+        #{warId,jdbcType=BIGINT},
+      </if>
+      <if test="memberTag != null">
+        #{memberTag,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null">
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null">
+        #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="warTag != null">
+        #{warTag,jdbcType=VARCHAR},
+      </if>
+      <if test="clanTag != null">
+        #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.coc.data.model.base.ClanWarMemberExample" resultType="java.lang.Long">
+    select count(*) from clan_war_member
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update clan_war_member
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.warId != null">
+        war_id = #{record.warId,jdbcType=BIGINT},
+      </if>
+      <if test="record.memberTag != null">
+        member_tag = #{record.memberTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memberName != null">
+        member_name = #{record.memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.season != null">
+        season = #{record.season,jdbcType=VARCHAR},
+      </if>
+      <if test="record.warTag != null">
+        war_tag = #{record.warTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.clanTag != null">
+        clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDeleted != null">
+        is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update clan_war_member
+    set id = #{record.id,jdbcType=BIGINT},
+      war_id = #{record.warId,jdbcType=BIGINT},
+      member_tag = #{record.memberTag,jdbcType=VARCHAR},
+      member_name = #{record.memberName,jdbcType=VARCHAR},
+      season = #{record.season,jdbcType=VARCHAR},
+      war_tag = #{record.warTag,jdbcType=VARCHAR},
+      clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>

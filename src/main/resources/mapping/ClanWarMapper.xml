@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarMapper">
+    <select id="getUnStartedClanWar" resultType="integer">
+    select count(*) from clan_war
+        where clan_tag = #{clanTag}
+          and start_time &gt; #{date}
+          and preparation_start_time  &lt;  #{date}
+    </select>
+    <insert id="insertOnDuplicateKeyUpdate" parameterType="com.coc.data.model.ClanWars">
+        insert into clan_war
+            (clan_tag, tag, season, state,
+             team_size, preparation_start_time, start_time,
+             end_time, type)
+        values (#{warInfo.clanTag}, #{warInfo.tag}, #{warInfo.season}, #{warInfo.state},
+                #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime},
+                #{warInfo.endTime}, #{warInfo.type})
+        on duplicate key update `state` = values(state), `update_time` = now()
+    </insert>
+    <select id="getWarsByWarTagList" resultMap="BaseResultMap">
+        select * from clan_war where tag in
+        (<foreach collection="list" item="item" separator=",">
+        #{item}
+    </foreach>)
+    </select>
+    <select id="getUnEndedLeagueWar" resultMap="BaseResultMap">
+        select * from clan_war where type = 'league' and season = #{season} and state != 'warEnded'
+    </select>
+</mapper>

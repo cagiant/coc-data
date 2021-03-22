@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarMemberMapper">
+    <insert id="batchInsert">
+        insert ignore into clan_war_member (
+                         member_tag,member_name, war_tag, clan_tag, season)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+             #{item.memberTag}, #{item.memberName},#{item.warTag},
+             #{item.clanTag}, #{item.season})
+        </foreach>
+    </insert>
+    <delete id="deleteNotInClanWarMember">
+        update clan_war_member set is_deleted = 1 where war_tag = #{warTag} and clan_tag = #{clanTag}
+        and member_tag not in(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+</mapper>

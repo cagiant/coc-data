@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coc.data.mapper.ClanWarMapper">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanWar">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="season" jdbcType="VARCHAR" property="season" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="team_size" jdbcType="SMALLINT" property="teamSize" />
+    <result column="preparation_start_time" jdbcType="TIMESTAMP" property="preparationStartTime" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, clan_tag, tag, season, state, team_size, preparation_start_time, start_time,
+    end_time, type, create_time, update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from clan_war
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.coc.data.model.base.ClanWarExample">
+    delete from clan_war
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.coc.data.model.ClanWar">
+    insert into clan_war (id, clan_tag, tag,
+                          season, state, team_size,
+                          preparation_start_time, start_time, end_time,
+                          type, create_time, update_time
+    )
+    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
+            #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT},
+            #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
+            #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.coc.data.model.ClanWar">
+    insert into clan_war
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="clanTag != null">
+        clan_tag,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="season != null">
+        season,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="teamSize != null">
+        team_size,
+      </if>
+      <if test="preparationStartTime != null">
+        preparation_start_time,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="clanTag != null">
+        #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null">
+        #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="teamSize != null">
+        #{teamSize,jdbcType=SMALLINT},
+      </if>
+      <if test="preparationStartTime != null">
+        #{preparationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.coc.data.model.base.ClanWarExample" resultType="java.lang.Long">
+    select count(*) from clan_war
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update clan_war
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.clanTag != null">
+        clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tag != null">
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.season != null">
+        season = #{record.season,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teamSize != null">
+        team_size = #{record.teamSize,jdbcType=SMALLINT},
+      </if>
+      <if test="record.preparationStartTime != null">
+        preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update clan_war
+    set id = #{record.id,jdbcType=BIGINT},
+    clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+    tag = #{record.tag,jdbcType=VARCHAR},
+    season = #{record.season,jdbcType=VARCHAR},
+    state = #{record.state,jdbcType=VARCHAR},
+    team_size = #{record.teamSize,jdbcType=SMALLINT},
+    preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
+    start_time = #{record.startTime,jdbcType=TIMESTAMP},
+    end_time = #{record.endTime,jdbcType=TIMESTAMP},
+    type = #{record.type,jdbcType=VARCHAR},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP},
+    update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
