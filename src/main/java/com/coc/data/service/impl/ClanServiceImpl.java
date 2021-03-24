@@ -102,6 +102,21 @@ public class ClanServiceImpl implements ClanService {
         }
     }
 
+    @Override
+    public boolean atLeagueWar(String tag) {
+        try {
+            LeagueGroupInfoDTO leagueGroupInfo =
+                httpClient.getClanLeagueGroupInfoByClanTag(tag);
+            if (!ObjectUtils.isEmpty(leagueGroupInfo)) {
+                return true;
+            }
+        } catch (Exception e) {
+            log.info("{} 部落没有进行中的联赛", tag);
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+
     /**
      * 从一众对战信息中选出我们需要的那个
      * @param warTags

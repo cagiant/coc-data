@@ -9,4 +9,7 @@
     <select id="selectByClanTag" resultMap="BaseResultMap">
         select * from clan where tag = #{tag}
     </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from clan;
+    </select>
 </mapper>

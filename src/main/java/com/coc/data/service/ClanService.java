@@ -34,4 +34,13 @@ public interface ClanService {
      * @date 2021/3/7 17:06
      **/
     void syncLeagueGroupInfo(String clanTag);
+
+    /**
+     * 检查一个部落是否处于联赛期间
+     * @param tag
+     * @return boolean
+     * @author guokaiqiang
+     * @date 2021/3/24 22:20
+     **/
+    boolean atLeagueWar(String tag);
 }
