@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.PlayerMapper">
-  <resultMap id="BaseResultMap" type="com.coc.data.model.Player">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.base.Player">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -99,13 +99,13 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.coc.data.model.Player">
+  <insert id="insert" parameterType="com.coc.data.model.base.Player">
     insert into player (id, tag, name, 
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.coc.data.model.Player">
+  <insert id="insertSelective" parameterType="com.coc.data.model.base.Player">
     insert into player
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.coc.data.model.Player">
+  <update id="updateByPrimaryKeySelective" parameterType="com.coc.data.model.base.Player">
     update player
     <set>
       <if test="tag != null">
@@ -200,7 +200,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.coc.data.model.Player">
+  <update id="updateByPrimaryKey" parameterType="com.coc.data.model.base.Player">
     update player
     set tag = #{tag,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},

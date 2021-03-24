@@ -1,7 +1,7 @@
 package com.coc.data.mapper;
 
 import com.coc.data.mapper.base.BaseDao;
-import com.coc.data.model.Player;
+import com.coc.data.model.base.Player;
 import com.coc.data.model.base.PlayerExample;
 
 import java.util.List;

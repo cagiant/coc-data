@@ -1,4 +1,4 @@
-package com.coc.data.model;
+package com.coc.data.model.base;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,16 +7,12 @@ import java.util.Date;
 
 @Data
 @Builder
-public class ClanMember {
-    private Integer id;
-
-    private String clanTag;
+public class Player {
+    private Long id;
 
     private String tag;
 
     private String name;
-
-    private Boolean isDeleted;
 
     private Date createTime;
 

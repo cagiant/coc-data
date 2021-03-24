@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.ClanMemberMapper">
-  <resultMap id="BaseResultMap" type="com.coc.data.model.ClanMember">
+  <resultMap id="BaseResultMap" type="com.coc.data.model.base.ClanMember">
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
@@ -91,7 +91,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.coc.data.model.ClanMember">
+  <insert id="insert" parameterType="com.coc.data.model.base.ClanMember">
     insert into clan_member (id, clan_tag, tag, 
       name, is_deleted, create_time, 
       update_time)
@@ -99,7 +99,7 @@
       #{name,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.coc.data.model.ClanMember">
+  <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanMember">
     insert into clan_member
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

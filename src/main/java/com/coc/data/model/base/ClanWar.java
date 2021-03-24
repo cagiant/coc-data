@@ -1,4 +1,4 @@
-package com.coc.data.model;
+package com.coc.data.model.base;
 
 import lombok.Builder;
 import lombok.Data;
