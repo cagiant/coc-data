@@ -11,4 +11,6 @@ public interface ClansMapper {
     void insertOnDuplicateKeyUpdate(@Param("clan") Clans clan);
 
     List<Clans> getClansNeedLeagueReport();
+
+    List<Clans> getClansNeedNormalWarReport();
 }

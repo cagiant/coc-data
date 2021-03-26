@@ -18,4 +18,7 @@
   <select id="getClansNeedLeagueReport" resultMap="BaseResultMap">
     select * from coc_clans where provide_league_war_report = 1;
   </select>
+  <select id="getClansNeedNormalWarReport" resultMap="BaseResultMap">
+    select * from coc_clans where provide_clan_war_report = 1;
+  </select>
 </mapper>

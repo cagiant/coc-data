@@ -34,4 +34,40 @@
        #{item.defenseOneStarTime}, #{item.defenseTwoStarTime}, #{item.defenseNoStarTime}, #{item.totalDefenseStar}, #{item.totalAttackStar}, #{item.totalDefenseTime})
     </foreach>
   </insert>
+  <select id="getSeasons" resultType="string">
+    select season from coc_report_clan_war_member group by season
+  </select>
+  <select id="getReportWarData" resultType="map">
+    cp.name,
+            ccwm.attack_no_star_time AS at_no_star,
+            ccwm.attack_one_star_time AS at_one_star,
+            ccwm.attack_two_star_time AS at_two_star,
+            ccwm.attack_three_star_time AS at_three_star,
+            ccwm.defense_three_star_time AS df_three_star,
+            ccwm.attack_time_left AS at_time_left,
+            ccwm.attack_time_used AS at_time_used,
+            ccwm.total_attack_star as total_star_get,
+            ccwm.total_defense_star as total_star_lose,
+            ccwm.total_attack_percentage as total_attack_percentage,
+            ccwm.total_attack_star - ccwm.total_defense_star as total_star_gained
+        FROM
+            coc_clan_war_members ccwm
+            JOIN coc_clans cc on cc.tag = ccwm.clan_tag
+            JOIN coc_players cp ON ccwm.member_tag = cp.tag
+        WHERE
+            ccwm.clan_tag = #{tag}
+            AND ccwm.season = #{season}
+            and ccwm.is_league_war = #{league}
+            and ccwm.is_seasonaly_report = 1
+        ORDER BY
+            <if test="league">
+              total_star_gained desc,
+            </if>
+          at_three_star DESC,
+          total_attack_percentage DESC,
+          at_two_star DESC,
+          at_one_star DESC,
+          at_no_star DESC,
+          df_three_star ASC
+  </select>
 </mapper>
