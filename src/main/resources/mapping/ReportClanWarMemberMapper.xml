@@ -38,7 +38,8 @@
     select season from coc_report_clan_war_member group by season
   </select>
   <select id="getReportWarData" resultType="map">
-    cp.name,
+        select
+            cp.name,
             ccwm.attack_no_star_time AS at_no_star,
             ccwm.attack_one_star_time AS at_one_star,
             ccwm.attack_two_star_time AS at_two_star,
