@@ -32,7 +32,7 @@ public class Schedule {
 
 //	@Scheduled(cron = "0 */5 * * * *")
 	public void syncClanInfo() {
-		List<Clan> clanList = clanMapper.selectAll();
+		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {
 			clanService.syncClanBaseInfo(clan.getTag());
 			if (clanService.atLeagueWar(clan.getTag())) {

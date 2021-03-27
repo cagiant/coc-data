@@ -13,5 +13,7 @@ public interface ClanMapper extends BaseDao<Clan, ClanExample> {
 
     Clan selectByClanTag(@Param("tag") String clanTag);
 
-	List<Clan> selectAll();
+	List<Clan> getClansNeedLeagueReport();
+
+	List<Clan> getClansNeedNormalWarReport();
 }

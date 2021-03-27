@@ -3,10 +3,11 @@ package com.coc.data.service.impl;
 import com.coc.data.controller.vo.ReportDataVO;
 import com.coc.data.controller.vo.ReportOptionVO;
 import com.coc.data.controller.vo.ReportOptionVO.*;
-import com.coc.data.mapper.ClansMapper;
+import com.coc.data.mapper.ClanMapper;
 import com.coc.data.mapper.ReportClanWarMemberMapper;
-import com.coc.data.model.Clans;
+import com.coc.data.model.base.Clan;
 import com.coc.data.service.ReportService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,14 +22,14 @@ import java.util.Map;
 public class ReportServiceImpl implements ReportService {
 
 	@Resource
-	private ClansMapper clansMapper;
+	private ClanMapper clanMapper;
 	@Resource
 	private ReportClanWarMemberMapper reportClanWarMemberMapper;
 
 
 	@Override
 	public ReportOptionVO getLeagueGroupWarDataClanInfo() {
-		List<Clans> clanList = clansMapper.getClansNeedLeagueReport();
+		List<Clan> clanList = clanMapper.getClansNeedLeagueReport();
 		List<String> seasons = reportClanWarMemberMapper.getSeasons();
 
 		return buildVO(clanList, seasons);
@@ -36,7 +37,7 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public ReportOptionVO getNormalWarDataClanInfo() {
-		List<Clans> clanList = clansMapper.getClansNeedNormalWarReport();
+		List<Clan> clanList = clanMapper.getClansNeedNormalWarReport();
 		List<String> seasons = reportClanWarMemberMapper.getSeasons();
 
 		return buildVO(clanList, seasons);
@@ -52,9 +53,11 @@ public class ReportServiceImpl implements ReportService {
 			.build();
 	}
 
-	ReportOptionVO buildVO(List<Clans> clanList, List<String> seasons) {
+	ReportOptionVO buildVO(List<Clan> clanList, List<String> seasons) {
 		ReportOptionVO vo = new ReportOptionVO();
-		for (Clans clans : clanList) {
+		vo.setOptions(Lists.newLinkedList());
+		vo.setSeasonOptions(Lists.newLinkedList());
+		for (Clan clans : clanList) {
 			vo.getOptions().add(ClanOption.builder()
 				.name(clans.getName())
 				.tag(clans.getTag())
