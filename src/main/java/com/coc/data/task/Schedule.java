@@ -2,7 +2,9 @@ package com.coc.data.task;
 
 import com.coc.data.mapper.ClanMapper;
 import com.coc.data.model.base.Clan;
+import com.coc.data.model.base.ClanWar;
 import com.coc.data.service.ClanService;
+import com.coc.data.service.ClanWarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,8 +31,10 @@ public class Schedule {
 	 **/
 	@Resource
 	private ClanService clanService;
+	@Resource
+	private ClanWarService clanWarService;
 
-//	@Scheduled(cron = "0 */5 * * * *")
+	@Scheduled(cron = "0 */5 * * * *")
 	public void syncClanInfo() {
 		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {
@@ -38,6 +42,14 @@ public class Schedule {
 			if (clanService.atLeagueWar(clan.getTag())) {
 				clanService.syncLeagueGroupInfo(clan.getTag());
 			}
+		}
+	}
+
+	@Scheduled(cron = "0 */2 * * * *")
+	public void syncClanCurrentWarInfo() {
+		List<Clan> clanList = clanMapper.selectByExample(null);
+		for (Clan clan : clanList) {
+			clanWarService.syncClanCurrentWarInfo(clan);
 		}
 	}
 }

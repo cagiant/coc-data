@@ -1,6 +1,7 @@
 package com.coc.data.service;
 
 import com.coc.data.dto.WarInfoDTO;
+import com.coc.data.model.base.Clan;
 
 /**
  * @author guokaiqiang
@@ -24,11 +25,20 @@ public interface ClanWarService {
      * @author guokaiqiang
      * @date 2021/3/7 17:21
      **/
-    void syncClanLeagueWarInfo();
+    void syncClanLeagueWarInfo(String warTag, String clanTag);
 
     void recNormalWarInfo(WarInfoDTO currentWarInfo, String clanTag);
 
     void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag);
 
     void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag);
+
+    /**
+     * 同步部落当前进行中的战争信息
+     * @param clan
+     * @return void
+     * @author guokaiqiang
+     * @date 2021/3/28 21:11
+     **/
+    void syncClanCurrentWarInfo(Clan clan);
 }

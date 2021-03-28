@@ -97,7 +97,7 @@ public class ClanServiceImpl implements ClanService {
             }
             // 先记录下对战信息
             clanWarService.recLeagueWarInfo(warInfo,  clan.getTag());
-            // 先记录下对战详细信息
+            // 记录下对战详细信息
             clanWarService.recWarMemberAndWarLogs(warInfo, clan.getTag());
         }
     }
@@ -117,7 +117,7 @@ public class ClanServiceImpl implements ClanService {
         return false;
     }
 
-    /**
+	/**
      * 从一众对战信息中选出我们需要的那个
      * @param warTags
      * @param clanTag

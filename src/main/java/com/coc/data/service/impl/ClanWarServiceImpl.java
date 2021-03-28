@@ -8,6 +8,7 @@ import com.coc.data.mapper.ClanMapper;
 import com.coc.data.mapper.ClanWarLogMapper;
 import com.coc.data.mapper.ClanWarMapper;
 import com.coc.data.mapper.ClanWarMemberMapper;
+import com.coc.data.model.base.Clan;
 import com.coc.data.model.base.ClanWar;
 import com.coc.data.model.base.ClanWarLog;
 import com.coc.data.model.base.ClanWarMember;
@@ -19,8 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,54 +52,51 @@ public class ClanWarServiceImpl implements ClanWarService {
         if (count > 0) {
             return;
         }
-        WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
-        if (ClanWarConstants.NOT_IN_WAR.equals(currentWarInfo.getState())) {
-            return;
-        }
-        if (ObjectUtils.isEmpty(currentWarInfo)) {
+        try {
+            WarInfoDTO currentWarInfo = httpClient.getClanCurrentWarInfoByClanTag(clanTag);
+            if (ClanWarConstants.NOT_IN_WAR.equals(currentWarInfo.getState())) {
+                return;
+            }
+            if (ObjectUtils.isEmpty(currentWarInfo)) {
+                log.error("部落标签{}, 获取当前对战信息失败。", clanTag);
+                return;
+            }
+            currentWarInfo.setTag(getNormalWarTag(currentWarInfo.getPreparationStartTime()));
+            currentWarInfo.setSeason(getWarSeason(currentWarInfo.getStartTime()));
+            recNormalWarInfo(currentWarInfo, clanTag);
+            recWarMemberAndWarLogs(currentWarInfo, clanTag);
+        } catch (Exception e) {
             log.error("部落标签{}, 获取当前对战信息失败。", clanTag);
-            return;
         }
-        currentWarInfo.setTag(getNormalWarTag(currentWarInfo.getPreparationStartTime()));
-        currentWarInfo.setSeason(getWarSeason(currentWarInfo.getStartTime()));
-        recNormalWarInfo(currentWarInfo, clanTag);
-        recWarMemberAndWarLogs(currentWarInfo, clanTag);
     }
 
     @Override
-    public void syncClanLeagueWarInfo() {
-        String season = new SimpleDateFormat("yyyy-MM").format(new Date());
-        List<ClanWar> leagueWarList = clanWarMapper.getUnEndedLeagueWar(season);
-        if (ObjectUtils.isEmpty(leagueWarList)) {
-            log.info("目前没有未结束的联赛战争");
+    public void syncClanLeagueWarInfo(String warTag, String clanTag) {
+        WarInfoDTO warInfo;
+        try {
+            warInfo = httpClient.getClanLeagueGroupWarInfoByTag(warTag);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return;
         }
-        for (ClanWar clanWar : leagueWarList) {
-            WarInfoDTO warInfo;
-            try {
-                warInfo = httpClient.getClanLeagueGroupWarInfoByTag(clanWar.getTag());
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                continue;
-            }
-            if (ObjectUtils.isEmpty(warInfo)) {
-                log.error("联赛战争信息获取失败，战争标签:{},部落标签{}", clanWar.getTag(), clanWar.getClanTag());
-                continue;
-            }
-            log.info("联赛战争信息获取成功，战争标签:{},部落标签{}", clanWar.getTag(), clanWar.getClanTag());
-            warInfo.setSeason(season);
-            warInfo.setTag(clanWar.getTag());
-            // 记录下对战信息
-            log.info("更新战争信息");
-            recLeagueWarInfo(warInfo, clanWar.getClanTag());
-            // 记录下对战详细信息
-            log.info("更新对战详细信息");
-            if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
-                log.info("战争已结束，更新参战人员");
-                refreshLeagueGroupWarMembers(warInfo, clanWar.getClanTag());
-            }
-            recWarMemberAndWarLogs(warInfo, clanWar.getClanTag());
+        if (ObjectUtils.isEmpty(warInfo)) {
+            log.error("联赛战争信息获取失败，战争标签:{}", warTag);
+            return;
         }
+        log.info("联赛战争信息获取成功，战争标签:{}", warTag);
+        String season = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        warInfo.setSeason(season);
+        warInfo.setTag(warTag);
+        // 记录下对战信息
+        log.info("更新战争信息");
+        recLeagueWarInfo(warInfo, clanTag);
+        // 记录下对战详细信息
+        log.info("更新对战详细信息");
+        if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
+            log.info("战争已结束，更新参战人员");
+            refreshLeagueGroupWarMembers(warInfo, clanTag);
+        }
+        recWarMemberAndWarLogs(warInfo, clanTag);
     }
 
     /**
@@ -197,6 +195,18 @@ public class ClanWarServiceImpl implements ClanWarService {
         if(!clanWarLogList.isEmpty()) {
             log.info("部落 {}, 正在保存对战记录信息", clanWarInfo.getName());
             clanWarLogMapper.batchInsert(clanWarLogList);
+        }
+    }
+
+    @Override
+    public void syncClanCurrentWarInfo(Clan clan) {
+        ClanWar clanWar = clanWarMapper.getStartedWarByClanTag(clan.getTag());
+        if (!ObjectUtils.isEmpty(clanWar) &&
+            ClanWarTypeEnum.LEAGUE.code.equals(clanWar.getType())
+        ) {
+            syncClanLeagueWarInfo(clanWar.getTag(), clan.getTag());
+        } else {
+            syncClanNormalWarInfo(clan.getTag());
         }
     }
 
