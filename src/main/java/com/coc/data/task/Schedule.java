@@ -34,7 +34,7 @@ public class Schedule {
 	@Resource
 	private ClanWarService clanWarService;
 
-	@Scheduled(cron = "0 */5 * * * *")
+	@Scheduled(cron = "0 */50 * * * *")
 	public void syncClanInfo() {
 		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {
@@ -45,7 +45,7 @@ public class Schedule {
 		}
 	}
 
-	@Scheduled(cron = "0 */2 * * * *")
+	@Scheduled(cron = "0 */10 * * * *")
 	public void syncClanCurrentWarInfo() {
 		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {
