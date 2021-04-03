@@ -35,7 +35,7 @@
     </foreach>
   </insert>
   <select id="getSeasons" resultType="string">
-    select season from coc_report_clan_war_member group by season
+    select season from coc_clan_wars group by season
   </select>
   <select id="getReportWarData" resultType="map">
         select
