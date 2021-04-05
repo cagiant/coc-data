@@ -1,7 +1,5 @@
 package com.coc.data.mapper.base;
 
-import com.coc.data.model.base.Clan;
-import com.coc.data.model.base.ClanExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -11,17 +9,21 @@ import java.util.List;
  * @date 2021/2/11 12:10
  */
 public interface BaseDao<T, E> {
-    long countByExample(ClanExample example);
+    long countByExample(E example);
 
-    int deleteByExample(ClanExample example);
+    int deleteByExample(E example);
 
-    int insert(Clan record);
+    int insert(T record);
 
-    int insertSelective(Clan record);
+    int insertSelective(T record);
 
-    List<Clan> selectByExample(ClanExample example);
+    List<T> selectByExample(E example);
 
-    int updateByExampleSelective(@Param("record") Clan record, @Param("example") ClanExample example);
+    int updateByExampleSelective(@Param("record") T record, @Param("example") E example);
 
-    int updateByExample(@Param("record") Clan record, @Param("example") ClanExample example);
+    int updateByExample(@Param("record") T record, @Param("example") E example);
+
+    int updateByPrimaryKeySelective(T record);
+
+    int updateByPrimaryKey(T record);
 }

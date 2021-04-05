@@ -165,63 +165,73 @@ public class ClanWarMemberExample {
             return (Criteria) this;
         }
 
-        public Criteria andWarIdIsNull() {
-            addCriterion("war_id is null");
+        public Criteria andWarTagIsNull() {
+            addCriterion("war_tag is null");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdIsNotNull() {
-            addCriterion("war_id is not null");
+        public Criteria andWarTagIsNotNull() {
+            addCriterion("war_tag is not null");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdEqualTo(Long value) {
-            addCriterion("war_id =", value, "warId");
+        public Criteria andWarTagEqualTo(String value) {
+            addCriterion("war_tag =", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdNotEqualTo(Long value) {
-            addCriterion("war_id <>", value, "warId");
+        public Criteria andWarTagNotEqualTo(String value) {
+            addCriterion("war_tag <>", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdGreaterThan(Long value) {
-            addCriterion("war_id >", value, "warId");
+        public Criteria andWarTagGreaterThan(String value) {
+            addCriterion("war_tag >", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("war_id >=", value, "warId");
+        public Criteria andWarTagGreaterThanOrEqualTo(String value) {
+            addCriterion("war_tag >=", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdLessThan(Long value) {
-            addCriterion("war_id <", value, "warId");
+        public Criteria andWarTagLessThan(String value) {
+            addCriterion("war_tag <", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdLessThanOrEqualTo(Long value) {
-            addCriterion("war_id <=", value, "warId");
+        public Criteria andWarTagLessThanOrEqualTo(String value) {
+            addCriterion("war_tag <=", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdIn(List<Long> values) {
-            addCriterion("war_id in", values, "warId");
+        public Criteria andWarTagLike(String value) {
+            addCriterion("war_tag like", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdNotIn(List<Long> values) {
-            addCriterion("war_id not in", values, "warId");
+        public Criteria andWarTagNotLike(String value) {
+            addCriterion("war_tag not like", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdBetween(Long value1, Long value2) {
-            addCriterion("war_id between", value1, value2, "warId");
+        public Criteria andWarTagIn(List<String> values) {
+            addCriterion("war_tag in", values, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdNotBetween(Long value1, Long value2) {
-            addCriterion("war_id not between", value1, value2, "warId");
+        public Criteria andWarTagNotIn(List<String> values) {
+            addCriterion("war_tag not in", values, "warTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andWarTagBetween(String value1, String value2) {
+            addCriterion("war_tag between", value1, value2, "warTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andWarTagNotBetween(String value1, String value2) {
+            addCriterion("war_tag not between", value1, value2, "warTag");
             return (Criteria) this;
         }
 
@@ -295,216 +305,6 @@ public class ClanWarMemberExample {
             return (Criteria) this;
         }
 
-        public Criteria andMemberNameIsNull() {
-            addCriterion("member_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameIsNotNull() {
-            addCriterion("member_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameEqualTo(String value) {
-            addCriterion("member_name =", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameNotEqualTo(String value) {
-            addCriterion("member_name <>", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameGreaterThan(String value) {
-            addCriterion("member_name >", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameGreaterThanOrEqualTo(String value) {
-            addCriterion("member_name >=", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameLessThan(String value) {
-            addCriterion("member_name <", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameLessThanOrEqualTo(String value) {
-            addCriterion("member_name <=", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameLike(String value) {
-            addCriterion("member_name like", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameNotLike(String value) {
-            addCriterion("member_name not like", value, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameIn(List<String> values) {
-            addCriterion("member_name in", values, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameNotIn(List<String> values) {
-            addCriterion("member_name not in", values, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameBetween(String value1, String value2) {
-            addCriterion("member_name between", value1, value2, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andMemberNameNotBetween(String value1, String value2) {
-            addCriterion("member_name not between", value1, value2, "memberName");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonIsNull() {
-            addCriterion("season is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonIsNotNull() {
-            addCriterion("season is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonEqualTo(String value) {
-            addCriterion("season =", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonNotEqualTo(String value) {
-            addCriterion("season <>", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonGreaterThan(String value) {
-            addCriterion("season >", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonGreaterThanOrEqualTo(String value) {
-            addCriterion("season >=", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonLessThan(String value) {
-            addCriterion("season <", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonLessThanOrEqualTo(String value) {
-            addCriterion("season <=", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonLike(String value) {
-            addCriterion("season like", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonNotLike(String value) {
-            addCriterion("season not like", value, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonIn(List<String> values) {
-            addCriterion("season in", values, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonNotIn(List<String> values) {
-            addCriterion("season not in", values, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonBetween(String value1, String value2) {
-            addCriterion("season between", value1, value2, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andSeasonNotBetween(String value1, String value2) {
-            addCriterion("season not between", value1, value2, "season");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagIsNull() {
-            addCriterion("war_tag is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagIsNotNull() {
-            addCriterion("war_tag is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagEqualTo(String value) {
-            addCriterion("war_tag =", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotEqualTo(String value) {
-            addCriterion("war_tag <>", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagGreaterThan(String value) {
-            addCriterion("war_tag >", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagGreaterThanOrEqualTo(String value) {
-            addCriterion("war_tag >=", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagLessThan(String value) {
-            addCriterion("war_tag <", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagLessThanOrEqualTo(String value) {
-            addCriterion("war_tag <=", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagLike(String value) {
-            addCriterion("war_tag like", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotLike(String value) {
-            addCriterion("war_tag not like", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagIn(List<String> values) {
-            addCriterion("war_tag in", values, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotIn(List<String> values) {
-            addCriterion("war_tag not in", values, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagBetween(String value1, String value2) {
-            addCriterion("war_tag between", value1, value2, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotBetween(String value1, String value2) {
-            addCriterion("war_tag not between", value1, value2, "warTag");
-            return (Criteria) this;
-        }
-
         public Criteria andClanTagIsNull() {
             addCriterion("clan_tag is null");
             return (Criteria) this;
@@ -572,6 +372,76 @@ public class ClanWarMemberExample {
 
         public Criteria andClanTagNotBetween(String value1, String value2) {
             addCriterion("clan_tag not between", value1, value2, "clanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameIsNull() {
+            addCriterion("member_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameIsNotNull() {
+            addCriterion("member_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameEqualTo(String value) {
+            addCriterion("member_name =", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameNotEqualTo(String value) {
+            addCriterion("member_name <>", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameGreaterThan(String value) {
+            addCriterion("member_name >", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameGreaterThanOrEqualTo(String value) {
+            addCriterion("member_name >=", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameLessThan(String value) {
+            addCriterion("member_name <", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameLessThanOrEqualTo(String value) {
+            addCriterion("member_name <=", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameLike(String value) {
+            addCriterion("member_name like", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameNotLike(String value) {
+            addCriterion("member_name not like", value, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameIn(List<String> values) {
+            addCriterion("member_name in", values, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameNotIn(List<String> values) {
+            addCriterion("member_name not in", values, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameBetween(String value1, String value2) {
+            addCriterion("member_name between", value1, value2, "memberName");
+            return (Criteria) this;
+        }
+
+        public Criteria andMemberNameNotBetween(String value1, String value2) {
+            addCriterion("member_name not between", value1, value2, "memberName");
             return (Criteria) this;
         }
 

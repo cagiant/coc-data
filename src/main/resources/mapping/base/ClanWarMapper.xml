@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.ClanWarMapper">
   <resultMap id="BaseResultMap" type="com.coc.data.model.base.ClanWar">
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
     <result column="season" jdbcType="VARCHAR" property="season" />
@@ -74,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, clan_tag, tag, season, state, team_size, preparation_start_time, start_time,
+    id, clan_tag, tag, season, state, team_size, preparation_start_time, start_time, 
     end_time, type, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarExample" resultMap="BaseResultMap">
@@ -91,6 +91,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clan_war
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from clan_war
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.coc.data.model.base.ClanWarExample">
     delete from clan_war
     <if test="_parameter != null">
@@ -98,16 +108,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.base.ClanWar">
-    insert into clan_war (id, clan_tag, tag,
-                          season, state, team_size,
-                          preparation_start_time, start_time, end_time,
-                          type, create_time, update_time
-    )
-    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR},
-            #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT},
-            #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP},
-            #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-           )
+    insert into clan_war (id, clan_tag, tag, 
+      season, state, team_size, 
+      preparation_start_time, start_time, end_time, 
+      type, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+      #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT}, 
+      #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanWar">
     insert into clan_war
@@ -241,19 +251,73 @@
   <update id="updateByExample" parameterType="map">
     update clan_war
     set id = #{record.id,jdbcType=BIGINT},
-    clan_tag = #{record.clanTag,jdbcType=VARCHAR},
-    tag = #{record.tag,jdbcType=VARCHAR},
-    season = #{record.season,jdbcType=VARCHAR},
-    state = #{record.state,jdbcType=VARCHAR},
-    team_size = #{record.teamSize,jdbcType=SMALLINT},
-    preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
-    start_time = #{record.startTime,jdbcType=TIMESTAMP},
-    end_time = #{record.endTime,jdbcType=TIMESTAMP},
-    type = #{record.type,jdbcType=VARCHAR},
-    create_time = #{record.createTime,jdbcType=TIMESTAMP},
-    update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      season = #{record.season,jdbcType=VARCHAR},
+      state = #{record.state,jdbcType=VARCHAR},
+      team_size = #{record.teamSize,jdbcType=SMALLINT},
+      preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      type = #{record.type,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.coc.data.model.base.ClanWar">
+    update clan_war
+    <set>
+      <if test="clanTag != null">
+        clan_tag = #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null">
+        season = #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="teamSize != null">
+        team_size = #{teamSize,jdbcType=SMALLINT},
+      </if>
+      <if test="preparationStartTime != null">
+        preparation_start_time = #{preparationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.coc.data.model.base.ClanWar">
+    update clan_war
+    set clan_tag = #{clanTag,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      season = #{season,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      team_size = #{teamSize,jdbcType=SMALLINT},
+      preparation_start_time = #{preparationStartTime,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

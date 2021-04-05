@@ -1,30 +1,88 @@
 package com.coc.data.model.base;
 
 import lombok.Builder;
-import lombok.Data;
 
 import java.util.Date;
 
-@Data
 @Builder
 public class ClanWarMember {
     private Long id;
 
-    private Long warId;
+    private String warTag;
 
     private String memberTag;
 
-    private String memberName;
-
-    private String season;
-
-    private String warTag;
-
     private String clanTag;
+
+    private String memberName;
 
     private Byte isDeleted;
 
     private Date createTime;
 
     private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getWarTag() {
+        return warTag;
+    }
+
+    public void setWarTag(String warTag) {
+        this.warTag = warTag == null ? null : warTag.trim();
+    }
+
+    public String getMemberTag() {
+        return memberTag;
+    }
+
+    public void setMemberTag(String memberTag) {
+        this.memberTag = memberTag == null ? null : memberTag.trim();
+    }
+
+    public String getClanTag() {
+        return clanTag;
+    }
+
+    public void setClanTag(String clanTag) {
+        this.clanTag = clanTag == null ? null : clanTag.trim();
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName == null ? null : memberName.trim();
+    }
+
+    public Byte getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Byte isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 }

@@ -165,63 +165,73 @@ public class ClanWarLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andWarIdIsNull() {
-            addCriterion("war_id is null");
+        public Criteria andWarTagIsNull() {
+            addCriterion("war_tag is null");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdIsNotNull() {
-            addCriterion("war_id is not null");
+        public Criteria andWarTagIsNotNull() {
+            addCriterion("war_tag is not null");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdEqualTo(Long value) {
-            addCriterion("war_id =", value, "warId");
+        public Criteria andWarTagEqualTo(String value) {
+            addCriterion("war_tag =", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdNotEqualTo(Long value) {
-            addCriterion("war_id <>", value, "warId");
+        public Criteria andWarTagNotEqualTo(String value) {
+            addCriterion("war_tag <>", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdGreaterThan(Long value) {
-            addCriterion("war_id >", value, "warId");
+        public Criteria andWarTagGreaterThan(String value) {
+            addCriterion("war_tag >", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("war_id >=", value, "warId");
+        public Criteria andWarTagGreaterThanOrEqualTo(String value) {
+            addCriterion("war_tag >=", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdLessThan(Long value) {
-            addCriterion("war_id <", value, "warId");
+        public Criteria andWarTagLessThan(String value) {
+            addCriterion("war_tag <", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdLessThanOrEqualTo(Long value) {
-            addCriterion("war_id <=", value, "warId");
+        public Criteria andWarTagLessThanOrEqualTo(String value) {
+            addCriterion("war_tag <=", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdIn(List<Long> values) {
-            addCriterion("war_id in", values, "warId");
+        public Criteria andWarTagLike(String value) {
+            addCriterion("war_tag like", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdNotIn(List<Long> values) {
-            addCriterion("war_id not in", values, "warId");
+        public Criteria andWarTagNotLike(String value) {
+            addCriterion("war_tag not like", value, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdBetween(Long value1, Long value2) {
-            addCriterion("war_id between", value1, value2, "warId");
+        public Criteria andWarTagIn(List<String> values) {
+            addCriterion("war_tag in", values, "warTag");
             return (Criteria) this;
         }
 
-        public Criteria andWarIdNotBetween(Long value1, Long value2) {
-            addCriterion("war_id not between", value1, value2, "warId");
+        public Criteria andWarTagNotIn(List<String> values) {
+            addCriterion("war_tag not in", values, "warTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andWarTagBetween(String value1, String value2) {
+            addCriterion("war_tag between", value1, value2, "warTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andWarTagNotBetween(String value1, String value2) {
+            addCriterion("war_tag not between", value1, value2, "warTag");
             return (Criteria) this;
         }
 
@@ -362,146 +372,6 @@ public class ClanWarLogExample {
 
         public Criteria andDefenderTagNotBetween(String value1, String value2) {
             addCriterion("defender_tag not between", value1, value2, "defenderTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagIsNull() {
-            addCriterion("war_tag is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagIsNotNull() {
-            addCriterion("war_tag is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagEqualTo(String value) {
-            addCriterion("war_tag =", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotEqualTo(String value) {
-            addCriterion("war_tag <>", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagGreaterThan(String value) {
-            addCriterion("war_tag >", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagGreaterThanOrEqualTo(String value) {
-            addCriterion("war_tag >=", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagLessThan(String value) {
-            addCriterion("war_tag <", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagLessThanOrEqualTo(String value) {
-            addCriterion("war_tag <=", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagLike(String value) {
-            addCriterion("war_tag like", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotLike(String value) {
-            addCriterion("war_tag not like", value, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagIn(List<String> values) {
-            addCriterion("war_tag in", values, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotIn(List<String> values) {
-            addCriterion("war_tag not in", values, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagBetween(String value1, String value2) {
-            addCriterion("war_tag between", value1, value2, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andWarTagNotBetween(String value1, String value2) {
-            addCriterion("war_tag not between", value1, value2, "warTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagIsNull() {
-            addCriterion("clan_tag is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagIsNotNull() {
-            addCriterion("clan_tag is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagEqualTo(String value) {
-            addCriterion("clan_tag =", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagNotEqualTo(String value) {
-            addCriterion("clan_tag <>", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagGreaterThan(String value) {
-            addCriterion("clan_tag >", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagGreaterThanOrEqualTo(String value) {
-            addCriterion("clan_tag >=", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagLessThan(String value) {
-            addCriterion("clan_tag <", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagLessThanOrEqualTo(String value) {
-            addCriterion("clan_tag <=", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagLike(String value) {
-            addCriterion("clan_tag like", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagNotLike(String value) {
-            addCriterion("clan_tag not like", value, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagIn(List<String> values) {
-            addCriterion("clan_tag in", values, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagNotIn(List<String> values) {
-            addCriterion("clan_tag not in", values, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagBetween(String value1, String value2) {
-            addCriterion("clan_tag between", value1, value2, "clanTag");
-            return (Criteria) this;
-        }
-
-        public Criteria andClanTagNotBetween(String value1, String value2) {
-            addCriterion("clan_tag not between", value1, value2, "clanTag");
             return (Criteria) this;
         }
 

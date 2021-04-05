@@ -2,13 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.ClanWarMemberMapper">
   <resultMap id="BaseResultMap" type="com.coc.data.model.base.ClanWarMember">
-    <result column="id" jdbcType="BIGINT" property="id" />
-    <result column="war_id" jdbcType="BIGINT" property="warId" />
-    <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
-    <result column="member_name" jdbcType="VARCHAR" property="memberName" />
-    <result column="season" jdbcType="VARCHAR" property="season" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="war_tag" jdbcType="VARCHAR" property="warTag" />
+    <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
     <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="member_name" jdbcType="VARCHAR" property="memberName" />
     <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -72,8 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, war_id, member_tag, member_name, season, war_tag, clan_tag, is_deleted, create_time, 
-    update_time
+    id, war_tag, member_tag, clan_tag, member_name, is_deleted, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarMemberExample" resultMap="BaseResultMap">
     select
@@ -89,6 +86,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clan_war_member
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from clan_war_member
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.coc.data.model.base.ClanWarMemberExample">
     delete from clan_war_member
     <if test="_parameter != null">
@@ -96,14 +103,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.base.ClanWarMember">
-    insert into clan_war_member (id, war_id, member_tag, 
-      member_name, season, war_tag, 
-      clan_tag, is_deleted, create_time, 
-      update_time)
-    values (#{id,jdbcType=BIGINT}, #{warId,jdbcType=BIGINT}, #{memberTag,jdbcType=VARCHAR}, 
-      #{memberName,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{warTag,jdbcType=VARCHAR}, 
-      #{clanTag,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into clan_war_member (id, war_tag, member_tag, 
+      clan_tag, member_name, is_deleted, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{warTag,jdbcType=VARCHAR}, #{memberTag,jdbcType=VARCHAR}, 
+      #{clanTag,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanWarMember">
     insert into clan_war_member
@@ -111,23 +116,17 @@
       <if test="id != null">
         id,
       </if>
-      <if test="warId != null">
-        war_id,
+      <if test="warTag != null">
+        war_tag,
       </if>
       <if test="memberTag != null">
         member_tag,
       </if>
-      <if test="memberName != null">
-        member_name,
-      </if>
-      <if test="season != null">
-        season,
-      </if>
-      <if test="warTag != null">
-        war_tag,
-      </if>
       <if test="clanTag != null">
         clan_tag,
+      </if>
+      <if test="memberName != null">
+        member_name,
       </if>
       <if test="isDeleted != null">
         is_deleted,
@@ -143,23 +142,17 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="warId != null">
-        #{warId,jdbcType=BIGINT},
+      <if test="warTag != null">
+        #{warTag,jdbcType=VARCHAR},
       </if>
       <if test="memberTag != null">
         #{memberTag,jdbcType=VARCHAR},
       </if>
-      <if test="memberName != null">
-        #{memberName,jdbcType=VARCHAR},
-      </if>
-      <if test="season != null">
-        #{season,jdbcType=VARCHAR},
-      </if>
-      <if test="warTag != null">
-        #{warTag,jdbcType=VARCHAR},
-      </if>
       <if test="clanTag != null">
         #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null">
+        #{memberName,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=TINYINT},
@@ -184,23 +177,17 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.warId != null">
-        war_id = #{record.warId,jdbcType=BIGINT},
+      <if test="record.warTag != null">
+        war_tag = #{record.warTag,jdbcType=VARCHAR},
       </if>
       <if test="record.memberTag != null">
         member_tag = #{record.memberTag,jdbcType=VARCHAR},
       </if>
-      <if test="record.memberName != null">
-        member_name = #{record.memberName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.season != null">
-        season = #{record.season,jdbcType=VARCHAR},
-      </if>
-      <if test="record.warTag != null">
-        war_tag = #{record.warTag,jdbcType=VARCHAR},
-      </if>
       <if test="record.clanTag != null">
         clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memberName != null">
+        member_name = #{record.memberName,jdbcType=VARCHAR},
       </if>
       <if test="record.isDeleted != null">
         is_deleted = #{record.isDeleted,jdbcType=TINYINT},
@@ -219,17 +206,53 @@
   <update id="updateByExample" parameterType="map">
     update clan_war_member
     set id = #{record.id,jdbcType=BIGINT},
-      war_id = #{record.warId,jdbcType=BIGINT},
-      member_tag = #{record.memberTag,jdbcType=VARCHAR},
-      member_name = #{record.memberName,jdbcType=VARCHAR},
-      season = #{record.season,jdbcType=VARCHAR},
       war_tag = #{record.warTag,jdbcType=VARCHAR},
+      member_tag = #{record.memberTag,jdbcType=VARCHAR},
       clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      member_name = #{record.memberName,jdbcType=VARCHAR},
       is_deleted = #{record.isDeleted,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.coc.data.model.base.ClanWarMember">
+    update clan_war_member
+    <set>
+      <if test="warTag != null">
+        war_tag = #{warTag,jdbcType=VARCHAR},
+      </if>
+      <if test="memberTag != null">
+        member_tag = #{memberTag,jdbcType=VARCHAR},
+      </if>
+      <if test="clanTag != null">
+        clan_tag = #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null">
+        member_name = #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.coc.data.model.base.ClanWarMember">
+    update clan_war_member
+    set war_tag = #{warTag,jdbcType=VARCHAR},
+      member_tag = #{memberTag,jdbcType=VARCHAR},
+      clan_tag = #{clanTag,jdbcType=VARCHAR},
+      member_name = #{memberName,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
