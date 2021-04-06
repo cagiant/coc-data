@@ -91,10 +91,10 @@ public class ClanServiceImpl implements ClanService {
                 continue;
             }
             WarInfoDTO warInfo = getLeagueGroupWarBelongsToClan(warTags, clan.getTag());
-            warInfo.setSeason(leagueGroupInfo.getSeason());
             if (ObjectUtils.isEmpty(warInfo)) {
                 continue;
             }
+            warInfo.setSeason(leagueGroupInfo.getSeason());
             // 先记录下对战信息
             clanWarService.recLeagueWarInfo(warInfo,  clan.getTag());
             // 记录下对战详细信息

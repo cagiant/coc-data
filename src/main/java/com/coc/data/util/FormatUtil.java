@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -22,5 +23,11 @@ public class FormatUtil {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public static String formatNormalWarTag(Date preparationStartTime, String clanTag1, String clanTag2) {
+        String firstTag = clanTag1.compareTo(clanTag2) > 0 ? clanTag1 : clanTag2;
+        String secondTag = firstTag.equals(clanTag1) ? clanTag2 : clanTag1;
+        return String.format("@%s@%s@%s", firstTag, secondTag, DateUtil.asLocalDate(preparationStartTime).toString());
     }
 }

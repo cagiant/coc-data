@@ -3,12 +3,12 @@
 <mapper namespace="com.coc.data.mapper.ClanWarMemberMapper">
     <insert id="batchInsert">
         insert ignore into clan_war_member (
-                         member_tag,member_name, war_tag, clan_tag, season)
+                         member_tag,member_name, war_tag, clan_tag)
         values
         <foreach collection="list" item="item" separator=",">
             (
              #{item.memberTag}, #{item.memberName},#{item.warTag},
-             #{item.clanTag}, #{item.season})
+             #{item.clanTag})
         </foreach>
     </insert>
     <delete id="deleteNotInClanWarMember">

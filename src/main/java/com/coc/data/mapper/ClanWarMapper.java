@@ -16,7 +16,5 @@ public interface ClanWarMapper extends BaseDao<ClanWar, ClanWarExample> {
 
     List<ClanWar> getWarsByWarTagList(List<String> warTags);
 
-    List<ClanWar> getUnEndedLeagueWar(String season);
-
-	ClanWar getStartedWarByClanTag(@Param("tag") String tag);
+	List<ClanWar> getUnendedLeagueWarByClanTag(@Param("tag") String tag);
 }

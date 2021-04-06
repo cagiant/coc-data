@@ -3,10 +3,10 @@
 <mapper namespace="com.coc.data.mapper.ClanWarLogMapper">
     <insert id="batchInsert">
         insert ignore into clan_war_log
-            (attacker_tag, defender_tag, war_tag, clan_tag, star, destruction_percentage, attack_order)
+            (attacker_tag, defender_tag, war_tag, star, destruction_percentage, attack_order)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.attackerTag}, #{item.defenderTag}, #{item.warTag}, #{item.clanTag}, #{item.star},
+            (#{item.attackerTag}, #{item.defenderTag}, #{item.warTag}, #{item.star},
              #{item.destructionPercentage}, #{item.attackOrder})
         </foreach>
     </insert>

@@ -11,7 +11,6 @@ import org.mockito.junit.MockitoRule;
 import java.time.LocalDate;
 import java.util.Date;
 
-import static org.mockito.Mockito.*;
 /**
  * @author guokaiqiang
  * @date 2021/3/7 14:17
@@ -25,7 +24,14 @@ public class ClanWarServiceImplTest {
 
     @Test
     public void testGetNormalWarTag() {
-        Assert.assertEquals(LocalDate.now().toString(), clanWarService.getNormalWarTag(new Date()));
+        Assert.assertEquals("@#ZXD@#ABC@" + LocalDate.now().toString(),
+            clanWarService.getNormalWarTag(new Date(), "#ZXD", "#ABC"));
+        Assert.assertEquals("@#ZXD@#ABC@" + LocalDate.now().toString(),
+            clanWarService.getNormalWarTag(new Date(), "#ABC", "#ZXD"));
+        Assert.assertEquals("@#5ABC@#2ZXD@" + LocalDate.now().toString(),
+            clanWarService.getNormalWarTag(new Date(), "#5ABC", "#2ZXD"));
+        Assert.assertEquals("@#5ABC@#2ZXD@" + LocalDate.now().toString(),
+            clanWarService.getNormalWarTag(new Date(), "#2ZXD", "#5ABC"));
     }
 
     @Test

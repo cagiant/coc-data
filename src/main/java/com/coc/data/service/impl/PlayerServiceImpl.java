@@ -6,6 +6,7 @@ import com.coc.data.mapper.PlayerMapper;
 import com.coc.data.model.base.ClanMember;
 import com.coc.data.model.base.Player;
 import com.coc.data.service.PlayerService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -30,8 +31,8 @@ public class PlayerServiceImpl implements PlayerService {
         if (ObjectUtils.isEmpty(clanMemberDTOList)) {
             return;
         }
-        List<ClanMember> clanMembersList = new ArrayList<>();
-        List<Player> playersList = new ArrayList<>();
+        List<ClanMember> clanMembersList = Lists.newLinkedList();
+        List<Player> playersList = Lists.newLinkedList();
         clanMemberDTOList.forEach(clanMemberDTO -> {
             clanMembersList.add(ClanMember.builder()
                 .clanTag(clanTag)

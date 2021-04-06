@@ -8,6 +8,9 @@ import com.coc.data.service.ClanWarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -18,6 +21,8 @@ import java.util.List;
  */
 @Component
 @Slf4j
+@RestController
+@RequestMapping("/schedule")
 public class Schedule {
 
 	/**
@@ -34,7 +39,8 @@ public class Schedule {
 	@Resource
 	private ClanWarService clanWarService;
 
-//	@Scheduled(cron = "0 */50 * * * *")
+	@Scheduled(cron = "0 */50 * * * *")
+	@GetMapping("/clanInfo")
 	public void syncClanInfo() {
 		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {
@@ -45,7 +51,8 @@ public class Schedule {
 		}
 	}
 
-//	@Scheduled(cron = "0 */10 * * * *")
+	@Scheduled(cron = "0 */10 * * * *")
+	@GetMapping("/currentWarInfo")
 	public void syncClanCurrentWarInfo() {
 		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {

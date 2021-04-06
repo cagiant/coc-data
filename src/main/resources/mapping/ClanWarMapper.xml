@@ -23,10 +23,7 @@
         #{item}
     </foreach>)
     </select>
-    <select id="getUnEndedLeagueWar" resultMap="BaseResultMap">
-        select * from clan_war where type = 'league' and season = #{season} and state != 'warEnded'
-    </select>
-    <select id="getStartedWarByClanTag" resultMap="BaseResultMap">
-        select * from clan_war where state = 'inWar' and tag = #{tag} limit 1
+    <select id="getUnendedLeagueWarByClanTag" resultMap="BaseResultMap">
+        select * from clan_war where state != 'warEnded' and clan_tag = #{tag} and type = 'league'
     </select>
 </mapper>

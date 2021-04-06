@@ -2,6 +2,9 @@ package com.coc.data.service;
 
 import com.coc.data.dto.WarInfoDTO;
 import com.coc.data.model.base.Clan;
+import com.coc.data.model.base.ClanWar;
+
+import java.util.List;
 
 /**
  * @author guokaiqiang
@@ -26,6 +29,8 @@ public interface ClanWarService {
      * @date 2021/3/7 17:21
      **/
     void syncClanLeagueWarInfo(String warTag, String clanTag);
+
+    void syncClanLeagueWarInfos(List<ClanWar> clanWarList, String clanTag);
 
     void recNormalWarInfo(WarInfoDTO currentWarInfo, String clanTag);
 
