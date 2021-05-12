@@ -24,8 +24,8 @@ public class DataSyncTask {
     @Scheduled(cron = "0 */5 * * * *")
     public void syncClanWarInfo() {
         dataSyncService.syncClanInfo();
-//        dataSyncService.syncClanCurrentWarInfo();
-        dataSyncService.syncLeagueGroupWarInfo();
+        dataSyncService.syncClanCurrentWarInfo();
+//        dataSyncService.syncLeagueGroupWarInfo();
         dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
