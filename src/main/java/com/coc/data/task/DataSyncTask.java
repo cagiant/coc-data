@@ -26,13 +26,13 @@ public class DataSyncTask {
         dataSyncService.syncClanInfo();
         dataSyncService.syncClanCurrentWarInfo();
 //        dataSyncService.syncLeagueGroupWarInfo();
-//        dataSyncService.calculateClanWarLogs();
+        dataSyncService.calculateClanWarLogs();
         dataSyncService.generateSeasonReports();
     }
 
     @Scheduled(cron = "0 7 */1 * * *")
     public void syncLeagueGroupWarInfo() {
-        dataSyncService.syncLeagueGroupInfo();
+//        dataSyncService.syncLeagueGroupInfo();
     }
 
 }
