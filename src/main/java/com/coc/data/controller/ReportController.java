@@ -31,7 +31,7 @@ public class ReportController {
 
 	@PostMapping("/currentWarData")
 	public ReportDataVO getReportWarData(ReportDataRequest request) {
-		String tag = request.getClanTag();
+		String tag = request.getTag();
 		String season = request.getSeason();
 		Boolean league = request.getLeague() != null && request.getLeague();
 

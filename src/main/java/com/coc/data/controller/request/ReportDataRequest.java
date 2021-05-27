@@ -14,8 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReportDataRequest {
 
-	@JsonProperty(value = "tag")
-	private String clanTag;
+	private String tag;
 
 	private String season;
 
