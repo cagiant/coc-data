@@ -19,4 +19,10 @@
         </foreach>
         )
     </delete>
+    <select id="getClanWarMemberInfo" resultMap="BaseResultMap">
+        select * from clan_war_member where war_tag in
+        (<foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>) group by member_tag
+    </select>
 </mapper>

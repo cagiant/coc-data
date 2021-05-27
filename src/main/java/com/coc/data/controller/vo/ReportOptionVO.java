@@ -1,5 +1,6 @@
 package com.coc.data.controller.vo;
 
+import com.coc.data.model.base.Clan;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,11 @@ public class ReportOptionVO {
 	 * 赛季选项
 	 **/
 	private List<SeasonOption> seasonOptions;
+
+	/**
+	 * 部落选项
+	 **/
+	private List<Clan> clans;
 
 	@Data
 	@Builder

@@ -16,4 +16,6 @@ public interface ClanMapper extends BaseDao<Clan, ClanExample> {
 	List<Clan> getClansNeedLeagueReport();
 
 	List<Clan> getClansNeedNormalWarReport();
+
+	List<Clan> getNormalClans();
 }

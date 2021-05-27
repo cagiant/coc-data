@@ -1,5 +1,6 @@
 package com.coc.data.service;
 
+import com.coc.data.controller.request.ReportDataRequest;
 import com.coc.data.controller.vo.ReportDataVO;
 import com.coc.data.controller.vo.ReportOptionVO;
 
@@ -37,4 +38,22 @@ public interface ReportService {
 	 * @date 2021/3/25 22:37
 	 **/
 	ReportDataVO getReportWarData(String tag, String season, Boolean league);
+
+	/**
+	 * 获取报表选项信息
+	 * @param
+	 * @return com.coc.data.controller.vo.ReportOptionVO
+	 * @author guokaiqiang
+	 * @date 2021/5/7 21:53
+	 **/
+	ReportOptionVO getReportOption();
+
+	/**
+	 * 获取报表详情
+	 * @param request
+	 * @return com.coc.data.controller.vo.ReportDataVO
+	 * @author guokaiqiang
+	 * @date 2021/5/7 21:53
+	 **/
+	ReportDataVO getReportList(ReportDataRequest request);
 }

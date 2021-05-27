@@ -4,10 +4,7 @@ import com.coc.data.controller.request.ReportDataRequest;
 import com.coc.data.controller.vo.ReportDataVO;
 import com.coc.data.controller.vo.ReportOptionVO;
 import com.coc.data.service.ReportService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -34,10 +31,20 @@ public class ReportController {
 
 	@PostMapping("/currentWarData")
 	public ReportDataVO getReportWarData(ReportDataRequest request) {
-		String tag = request.getTag();
+		String tag = request.getClanTag();
 		String season = request.getSeason();
 		Boolean league = request.getLeague() != null && request.getLeague();
 
 		return reportService.getReportWarData(tag, season, league);
+	}
+
+	@GetMapping("/report/getReportOption")
+	public ReportOptionVO getReportOption() {
+		return reportService.getReportOption();
+	}
+
+	@PostMapping("/report/getReportList")
+	public ReportDataVO getReportList(ReportDataRequest request) {
+		return reportService.getReportList(request);
 	}
 }

@@ -15,4 +15,7 @@
     <select id="getClansNeedNormalWarReport" resultMap="BaseResultMap">
         select * from clan where provide_clan_war_report = 1;
     </select>
+    <select id="getNormalClans" resultMap="BaseResultMap">
+        select * from clan where expire_time is null or expire_time > now()
+    </select>
 </mapper>

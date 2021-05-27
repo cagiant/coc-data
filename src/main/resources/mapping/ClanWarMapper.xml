@@ -26,4 +26,7 @@
     <select id="getUnendedLeagueWarByClanTag" resultMap="BaseResultMap">
         select * from clan_war where state != 'warEnded' and clan_tag = #{tag} and type = 'league'
     </select>
+    <select id="getSeasons" resultType="string">
+        select season from clan_war group by season
+    </select>
 </mapper>

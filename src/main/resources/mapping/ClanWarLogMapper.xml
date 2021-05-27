@@ -10,4 +10,16 @@
              #{item.destructionPercentage}, #{item.attackOrder})
         </foreach>
     </insert>
+    <select id="getWarLogs" resultMap="BaseResultMap">
+        select * from clan_war cw
+        join clan_war_log cwl on cw.tag = cwl.war_tag
+        where cw.clan_tag = #{request.clanTag}
+              and cw.season = #{request.season}
+              <if test="request.league">
+                  and cw.type = 'league'
+              </if>
+              <if test="!request.league">
+                  and cw.type != 'league'
+              </if>
+    </select>
 </mapper>

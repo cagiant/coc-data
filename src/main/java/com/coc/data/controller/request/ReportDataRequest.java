@@ -1,5 +1,6 @@
 package com.coc.data.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReportDataRequest {
 
-	private String tag;
+	@JsonProperty(value = "tag")
+	private String clanTag;
 
 	private String season;
 
