@@ -16,6 +16,8 @@ public class ReportDataRequest {
 
 	private String tag;
 
+	private String clanTag;
+
 	private String season;
 
 	private Boolean league;
