@@ -12,6 +12,7 @@ import com.coc.data.service.ReportService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -77,22 +78,28 @@ public class ReportServiceImpl implements ReportService {
 	public ReportDataVO getReportList(ReportDataRequest request) {
 		// 获取满足条件的所有对战记录
 		List<ClanWarLog> clanWarLogList = clanWarLogMapper.getWarLogs(request);
+		if (ObjectUtils.isEmpty(clanWarLogList)) {
+			return ReportDataVO.builder()
+				.season(request.getSeason())
+				.reports(new ArrayList<>())
+				.build();
+		}
 		List<String> warTags = clanWarLogList.stream().map(ClanWarLog::getWarTag).distinct().collect(Collectors.toList());
 		List<ClanWarMember> clanWarMemberList = clanWarMemberMapper.getClanWarMemberInfo(warTags);
+		Map<String, ClanWarMember> clanWarMemberMap =
+			clanWarMemberList.stream().collect(Collectors.toMap(ClanWarMember::getMemberTag, s -> s));
 		Map<String, List<ClanWarLog>> attackerMap =
 			clanWarLogList.stream().collect(Collectors.groupingBy(ClanWarLog::getAttackerTag));
 		Map<String, List<ClanWarLog>> defenderMap =
 			clanWarLogList.stream().collect(Collectors.groupingBy(ClanWarLog::getDefenderTag));
 		Map<String, List<ClanWarLog>> memberWarLogListMap = Maps.newLinkedHashMap();
-		for (ClanWarMember clanWarMember : clanWarMemberList) {
-			String memberTag = clanWarMember.getMemberTag();
+		clanWarMemberMap.forEach((memberTag, clanWarMember) -> {
 			memberWarLogListMap.put(memberTag, attackerMap.getOrDefault(memberTag,
 				new ArrayList<>()));
 			memberWarLogListMap.get(memberTag).addAll(defenderMap.getOrDefault(memberTag,
 				new ArrayList<>()));
-		}
-		Map<String, ClanWarMember> clanWarMemberMap =
-			clanWarMemberList.stream().collect(Collectors.toMap(ClanWarMember::getMemberTag, s -> s));
+		});
+
 		List<ReportDataVO.MemberReport> reportList = Lists.newLinkedList();
 		memberWarLogListMap.forEach((memberTag, warLogList) -> {
 			reportList.add(ReportDataVO.MemberReport.compute(warLogList, clanWarMemberMap.get(memberTag)));

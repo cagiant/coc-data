@@ -129,7 +129,8 @@ public class ReportDataVO {
 							break;
 					}
 					report.setAttackStar(report.getAttackStar() + clanWarLog.getStar());
-				} else {
+					report.setAttackPercentage(report.getAttackPercentage() + Integer.parseInt(clanWarLog.getDestructionPercentage()));
+				} else if (clanWarLog.getDefenderTag().equals(clanWarMember.getMemberTag())) {
 					switch (clanWarLog.getStar()) {
 						case 0:
 							report.setDefenseNoStar(report.getDefenseOneStar() + 1);
@@ -147,6 +148,7 @@ public class ReportDataVO {
 							break;
 					}
 					report.setDefenseStar(report.getDefenseStar() + clanWarLog.getStar());
+					report.setDefensePercentage(report.getDefensePercentage() + Integer.parseInt(clanWarLog.getDestructionPercentage()));
 				}
 			}
 			report.calculate();

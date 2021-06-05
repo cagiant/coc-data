@@ -11,7 +11,7 @@
         </foreach>
     </insert>
     <select id="getWarLogs" resultMap="BaseResultMap">
-        select * from clan_war cw
+        select cwl.* from clan_war cw
         join clan_war_log cwl on cw.tag = cwl.war_tag
         where cw.clan_tag = #{request.clanTag}
               and cw.season = #{request.season}
