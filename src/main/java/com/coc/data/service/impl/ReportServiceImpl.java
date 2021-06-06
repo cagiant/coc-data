@@ -16,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -107,7 +108,7 @@ public class ReportServiceImpl implements ReportService {
 
 		return ReportDataVO.builder()
 			.season(request.getSeason())
-			.reports(reportList)
+			.reports(reportList.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()))
 			.build();
 	}
 
