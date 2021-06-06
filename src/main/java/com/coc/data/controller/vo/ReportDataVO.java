@@ -32,6 +32,11 @@ public class ReportDataVO {
 	public static class MemberReport implements Comparable<MemberReport>{
 
 		/**
+		 * 排名信息
+		 **/
+		private String rankInfo;
+
+		/**
 		 * 玩家昵称
 		 **/
 		private String name;

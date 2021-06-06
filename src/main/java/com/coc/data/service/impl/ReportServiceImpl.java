@@ -101,14 +101,20 @@ public class ReportServiceImpl implements ReportService {
 				new ArrayList<>()));
 		});
 
-		List<ReportDataVO.MemberReport> reportList = Lists.newLinkedList();
+		List<ReportDataVO.MemberReport> reportListTmp = Lists.newLinkedList();
 		memberWarLogListMap.forEach((memberTag, warLogList) -> {
-			reportList.add(ReportDataVO.MemberReport.compute(warLogList, clanWarMemberMap.get(memberTag)));
+			reportListTmp.add(ReportDataVO.MemberReport.compute(warLogList, clanWarMemberMap.get(memberTag)));
 		});
+		List<ReportDataVO.MemberReport> reportList =
+			reportListTmp.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+		int i = 0;
+		for (ReportDataVO.MemberReport memberReport : reportList) {
+			memberReport.setRankInfo(String.format("%s/%s", ++i, reportList.size()));
+		}
 
 		return ReportDataVO.builder()
 			.season(request.getSeason())
-			.reports(reportList.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()))
+			.reports(reportList)
 			.build();
 	}
 
