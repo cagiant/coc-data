@@ -23,6 +23,6 @@
         select * from clan_war_member where war_tag in
         (<foreach collection="list" item="item" separator=",">
             #{item}
-        </foreach>)
+        </foreach>) and clan_tag = #{clanTag}
     </select>
 </mapper>

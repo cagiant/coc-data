@@ -85,9 +85,9 @@ public class ReportServiceImpl implements ReportService {
 				.build();
 		}
 		List<String> warTags = clanWarLogList.stream().map(ClanWarLog::getWarTag).distinct().collect(Collectors.toList());
-		List<ClanWarMember> clanWarMemberList = clanWarMemberMapper.getClanWarMemberInfo(warTags);
+		List<ClanWarMember> clanWarMemberList = clanWarMemberMapper.getClanWarMemberInfo(warTags, request.getClanTag());
 		Map<String, ClanWarMember> clanWarMemberMap =
-			clanWarMemberList.stream().collect(Collectors.toMap(ClanWarMember::getMemberTag, s -> s));
+			clanWarMemberList.stream().collect(Collectors.toMap(ClanWarMember::getMemberTag, s -> s, (v1, v2) -> v1));
 		Map<String, List<ClanWarLog>> attackerMap =
 			clanWarLogList.stream().collect(Collectors.groupingBy(ClanWarLog::getAttackerTag));
 		Map<String, List<ClanWarLog>> defenderMap =
