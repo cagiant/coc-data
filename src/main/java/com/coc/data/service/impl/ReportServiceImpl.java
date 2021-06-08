@@ -85,6 +85,23 @@ public class ReportServiceImpl implements ReportService {
 				.reports(new ArrayList<>())
 				.build();
 		}
+		// 过滤对战日志，把每场每个人最差的防守拿出来
+		Map<String, List<ClanWarLog>> clanWarLogWarTagMap =
+			clanWarLogList.stream().collect(Collectors.groupingBy(ClanWarLog::getWarTag));
+		clanWarLogList.clear();
+		clanWarLogWarTagMap.forEach((warTag, warClanLogs) -> {
+			// 防守映射列表
+			Map<String, List<ClanWarLog>> defenderMapList =
+				warClanLogs.stream().collect(Collectors.groupingBy(ClanWarLog::getDefenderTag));
+			defenderMapList.forEach((defenderTag, clanWarLogListTmp) -> {
+				if (clanWarLogListTmp.size() > 1) {
+					clanWarLogListTmp =
+						clanWarLogListTmp.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()).subList(0,1);
+				}
+				clanWarLogList.addAll(clanWarLogListTmp);
+			});
+		});
+
 		List<String> warTags = clanWarLogList.stream().map(ClanWarLog::getWarTag).distinct().collect(Collectors.toList());
 		List<ClanWarMember> clanWarMemberList = clanWarMemberMapper.getClanWarMemberInfo(warTags, request.getClanTag());
 		Map<String, ClanWarMember> clanWarMemberMap =

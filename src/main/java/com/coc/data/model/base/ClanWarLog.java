@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.util.Date;
 
 @Builder
-public class ClanWarLog {
+public class ClanWarLog implements Comparable<ClanWarLog>{
     private Long id;
 
     private String warTag;
@@ -84,5 +84,13 @@ public class ClanWarLog {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    @Override
+    public int compareTo(ClanWarLog o) {
+        if (this.getStar().equals(o.getStar())) {
+            return this.getDestructionPercentage().compareTo(o.getDestructionPercentage());
+        }
+        return this.getStar().compareTo(o.getStar());
     }
 }
