@@ -51,7 +51,7 @@ public class Schedule {
 		}
 	}
 
-	@Scheduled(cron = "0 */10 * * * *")
+	@Scheduled(cron = "0 */5 * * * *")
 	@GetMapping("/currentWarInfo")
 	public void syncClanCurrentWarInfo() {
 		List<Clan> clanList = clanMapper.selectByExample(null);

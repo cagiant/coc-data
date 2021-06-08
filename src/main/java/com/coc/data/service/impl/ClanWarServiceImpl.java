@@ -90,7 +90,7 @@ public class ClanWarServiceImpl implements ClanWarService {
         log.info("更新对战详细信息");
         if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
             log.info("战争已结束，更新参战人员");
-            refreshLeagueGroupWarMembers(warInfo, clanTag);
+            refreshLeagueGroupWarMembers(warInfo, warTag);
         }
         recWarMemberAndWarLogs(warInfo, clanTag);
     }
@@ -105,22 +105,18 @@ public class ClanWarServiceImpl implements ClanWarService {
     /**
      * 防止上场后被系统抓到，开战后又替换下去
      * @param warInfo
-     * @param clanTag
+     * @param warTag
      * @return void
      * @author guokaiqiang
      * @date 2020/9/6 11:20
      **/
-    private void refreshLeagueGroupWarMembers(WarInfoDTO warInfo, String clanTag) {
-        ClanWarInfoDTO clanWarInfo;
-        if (clanTag.equals(warInfo.getClan().getTag())) {
-            clanWarInfo = warInfo.getClan();
-        } else {
-            clanWarInfo = warInfo.getOpponent();
-        }
-
-        List<ClanWarMemberDTO> clanWarMemberList = clanWarInfo.getMembers();
-        List<String> clanWarMemberTagList = clanWarMemberList.stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
-        clanWarMemberMapper.deleteNotInClanWarMember(warInfo.getTag(), clanTag, clanWarMemberTagList);
+    private void refreshLeagueGroupWarMembers(WarInfoDTO warInfo, String warTag) {
+        ClanWarInfoDTO clanWarInfo = warInfo.getClan();
+        ClanWarInfoDTO opponentWarInfo = warInfo.getOpponent();
+        List<String> clanWarMemberTagList = clanWarInfo.getMembers().stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
+        clanWarMemberMapper.deleteNotInClanWarMember(warTag, clanWarInfo.getTag(), clanWarMemberTagList);
+        clanWarMemberTagList = opponentWarInfo.getMembers().stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
+        clanWarMemberMapper.deleteNotInClanWarMember(warTag, opponentWarInfo.getTag(), clanWarMemberTagList);
     }
 
     String getWarSeason(Date startTime) {
