@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.coc.data.model.base.ClanWar">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
+    <result column="opponent_clan_tag" jdbcType="VARCHAR" property="opponentClanTag" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
     <result column="season" jdbcType="VARCHAR" property="season" />
     <result column="state" jdbcType="VARCHAR" property="state" />
@@ -74,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, clan_tag, tag, season, state, team_size, preparation_start_time, start_time, 
-    end_time, type, create_time, update_time
+    id, clan_tag, opponent_clan_tag, tag, season, state, team_size, preparation_start_time, 
+    start_time, end_time, type, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarExample" resultMap="BaseResultMap">
     select
@@ -108,16 +109,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.base.ClanWar">
-    insert into clan_war (id, clan_tag, tag, 
-      season, state, team_size, 
-      preparation_start_time, start_time, end_time, 
-      type, create_time, update_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
-      #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT}, 
-      #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
-      #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into clan_war (id, clan_tag, opponent_clan_tag, 
+      tag, season, state, 
+      team_size, preparation_start_time, start_time, 
+      end_time, type, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{opponentClanTag,jdbcType=VARCHAR}, 
+      #{tag,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{teamSize,jdbcType=SMALLINT}, #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanWar">
     insert into clan_war
@@ -127,6 +128,9 @@
       </if>
       <if test="clanTag != null">
         clan_tag,
+      </if>
+      <if test="opponentClanTag != null">
+        opponent_clan_tag,
       </if>
       <if test="tag != null">
         tag,
@@ -165,6 +169,9 @@
       </if>
       <if test="clanTag != null">
         #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="opponentClanTag != null">
+        #{opponentClanTag,jdbcType=VARCHAR},
       </if>
       <if test="tag != null">
         #{tag,jdbcType=VARCHAR},
@@ -213,6 +220,9 @@
       <if test="record.clanTag != null">
         clan_tag = #{record.clanTag,jdbcType=VARCHAR},
       </if>
+      <if test="record.opponentClanTag != null">
+        opponent_clan_tag = #{record.opponentClanTag,jdbcType=VARCHAR},
+      </if>
       <if test="record.tag != null">
         tag = #{record.tag,jdbcType=VARCHAR},
       </if>
@@ -252,6 +262,7 @@
     update clan_war
     set id = #{record.id,jdbcType=BIGINT},
       clan_tag = #{record.clanTag,jdbcType=VARCHAR},
+      opponent_clan_tag = #{record.opponentClanTag,jdbcType=VARCHAR},
       tag = #{record.tag,jdbcType=VARCHAR},
       season = #{record.season,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=VARCHAR},
@@ -271,6 +282,9 @@
     <set>
       <if test="clanTag != null">
         clan_tag = #{clanTag,jdbcType=VARCHAR},
+      </if>
+      <if test="opponentClanTag != null">
+        opponent_clan_tag = #{opponentClanTag,jdbcType=VARCHAR},
       </if>
       <if test="tag != null">
         tag = #{tag,jdbcType=VARCHAR},
@@ -308,6 +322,7 @@
   <update id="updateByPrimaryKey" parameterType="com.coc.data.model.base.ClanWar">
     update clan_war
     set clan_tag = #{clanTag,jdbcType=VARCHAR},
+      opponent_clan_tag = #{opponentClanTag,jdbcType=VARCHAR},
       tag = #{tag,jdbcType=VARCHAR},
       season = #{season,jdbcType=VARCHAR},
       state = #{state,jdbcType=VARCHAR},

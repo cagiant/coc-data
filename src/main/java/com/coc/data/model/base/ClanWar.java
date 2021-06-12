@@ -10,6 +10,8 @@ public class ClanWar {
 
     private String clanTag;
 
+    private String opponentClanTag;
+
     private String tag;
 
     private String season;
@@ -44,6 +46,14 @@ public class ClanWar {
 
     public void setClanTag(String clanTag) {
         this.clanTag = clanTag == null ? null : clanTag.trim();
+    }
+
+    public String getOpponentClanTag() {
+        return opponentClanTag;
+    }
+
+    public void setOpponentClanTag(String opponentClanTag) {
+        this.opponentClanTag = opponentClanTag == null ? null : opponentClanTag.trim();
     }
 
     public String getTag() {

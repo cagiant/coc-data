@@ -235,6 +235,76 @@ public class ClanWarExample {
             return (Criteria) this;
         }
 
+        public Criteria andOpponentClanTagIsNull() {
+            addCriterion("opponent_clan_tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagIsNotNull() {
+            addCriterion("opponent_clan_tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagEqualTo(String value) {
+            addCriterion("opponent_clan_tag =", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagNotEqualTo(String value) {
+            addCriterion("opponent_clan_tag <>", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagGreaterThan(String value) {
+            addCriterion("opponent_clan_tag >", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagGreaterThanOrEqualTo(String value) {
+            addCriterion("opponent_clan_tag >=", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagLessThan(String value) {
+            addCriterion("opponent_clan_tag <", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagLessThanOrEqualTo(String value) {
+            addCriterion("opponent_clan_tag <=", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagLike(String value) {
+            addCriterion("opponent_clan_tag like", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagNotLike(String value) {
+            addCriterion("opponent_clan_tag not like", value, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagIn(List<String> values) {
+            addCriterion("opponent_clan_tag in", values, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagNotIn(List<String> values) {
+            addCriterion("opponent_clan_tag not in", values, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagBetween(String value1, String value2) {
+            addCriterion("opponent_clan_tag between", value1, value2, "opponentClanTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentClanTagNotBetween(String value1, String value2) {
+            addCriterion("opponent_clan_tag not between", value1, value2, "opponentClanTag");
+            return (Criteria) this;
+        }
+
         public Criteria andTagIsNull() {
             addCriterion("tag is null");
             return (Criteria) this;
