@@ -120,7 +120,10 @@ public class ReportServiceImpl implements ReportService {
 
 		List<ReportDataVO.MemberReport> reportListTmp = Lists.newLinkedList();
 		memberWarLogListMap.forEach((memberTag, warLogList) -> {
-			reportListTmp.add(ReportDataVO.MemberReport.compute(warLogList, clanWarMemberMap.get(memberTag)));
+			ReportDataVO.MemberReport memberReport = ReportDataVO.MemberReport.compute(warLogList,
+				clanWarMemberMap.get(memberTag));
+			memberReport.setLeague(request.getLeague());
+			reportListTmp.add(memberReport);
 		});
 		List<ReportDataVO.MemberReport> reportList =
 			reportListTmp.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());

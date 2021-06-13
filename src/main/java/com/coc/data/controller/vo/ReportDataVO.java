@@ -32,6 +32,11 @@ public class ReportDataVO {
 	public static class MemberReport implements Comparable<MemberReport>{
 
 		/**
+		 * 是否联赛
+		 **/
+		private Boolean league;
+
+		/**
 		 * 排名信息
 		 **/
 		private String rankInfo;
@@ -186,27 +191,48 @@ public class ReportDataVO {
 
 		@Override
 		public int compareTo(MemberReport o) {
-			// 先比较净星
-			if (this.netStar.equals(o.netStar)) {
-				// 再比较三星次数
-				if (this.attackThreeStar.equals(o.attackThreeStar)) {
-					// 再比较进攻百分比
-					if (this.attackPercentage.equals(o.attackPercentage)) {
-						// 再比较防守百分比
-						if (this.defensePercentage.equals(o.defensePercentage)) {
-							return 0;
+			// 联赛比较规则
+			if (this.league) {
+				// 先比较净星
+				if (this.netStar.equals(o.netStar)) {
+					// 再比较三星次数
+					if (this.attackThreeStar.equals(o.attackThreeStar)) {
+						// 再比较进攻百分比
+						if (this.attackPercentage.equals(o.attackPercentage)) {
+							// 再比较防守百分比
+							if (this.defensePercentage.equals(o.defensePercentage)) {
+								return 0;
+							} else {
+								return o.attackPercentage.compareTo(this.attackPercentage);
+							}
 						} else {
-							return o.attackPercentage.compareTo(this.attackPercentage);
+							return this.attackPercentage.compareTo(o.attackPercentage);
 						}
 					} else {
-						return this.attackPercentage.compareTo(o.attackPercentage);
+						return this.attackThreeStar.compareTo(o.attackThreeStar);
 					}
-				} else {
-					return this.attackThreeStar.compareTo(o.attackThreeStar);
 				}
+
+				return this.netStar.compareTo(o.netStar);
 			}
 
-			return this.netStar.compareTo(o.netStar);
+			// 日常比较规则
+			// 先比较三星次数
+			if (this.attackThreeStar.equals(o.attackThreeStar)) {
+				// 再比较两星次数
+				if (this.attackTwoStar.equals(o.attackTwoStar)) {
+					// 再比较被三次数
+					if (this.defenseThreeStar.equals(o.defenseThreeStar)) {
+						return 0;
+					} else {
+						return o.defenseThreeStar.compareTo(this.defenseThreeStar);
+					}
+				} else {
+					return this.attackTwoStar.compareTo(o.attackTwoStar);
+				}
+			} else {
+				return this.attackThreeStar.compareTo(o.attackThreeStar);
+			}
 		}
 	}
 }
