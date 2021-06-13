@@ -7,6 +7,7 @@
     <result column="opponent_clan_tag" jdbcType="VARCHAR" property="opponentClanTag" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
     <result column="season" jdbcType="VARCHAR" property="season" />
+    <result column="league_tag" jdbcType="VARCHAR" property="leagueTag" />
     <result column="state" jdbcType="VARCHAR" property="state" />
     <result column="team_size" jdbcType="SMALLINT" property="teamSize" />
     <result column="preparation_start_time" jdbcType="TIMESTAMP" property="preparationStartTime" />
@@ -75,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, clan_tag, opponent_clan_tag, tag, season, state, team_size, preparation_start_time, 
+    id, clan_tag, opponent_clan_tag, tag, season, league_tag, state, team_size, preparation_start_time, 
     start_time, end_time, type, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarExample" resultMap="BaseResultMap">
@@ -110,15 +111,15 @@
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.base.ClanWar">
     insert into clan_war (id, clan_tag, opponent_clan_tag, 
-      tag, season, state, 
-      team_size, preparation_start_time, start_time, 
-      end_time, type, create_time, 
-      update_time)
+      tag, season, league_tag, 
+      state, team_size, preparation_start_time, 
+      start_time, end_time, type, 
+      create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{clanTag,jdbcType=VARCHAR}, #{opponentClanTag,jdbcType=VARCHAR}, 
-      #{tag,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
-      #{teamSize,jdbcType=SMALLINT}, #{preparationStartTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{tag,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{leagueTag,jdbcType=VARCHAR}, 
+      #{state,jdbcType=VARCHAR}, #{teamSize,jdbcType=SMALLINT}, #{preparationStartTime,jdbcType=TIMESTAMP}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanWar">
     insert into clan_war
@@ -137,6 +138,9 @@
       </if>
       <if test="season != null">
         season,
+      </if>
+      <if test="leagueTag != null">
+        league_tag,
       </if>
       <if test="state != null">
         state,
@@ -178,6 +182,9 @@
       </if>
       <if test="season != null">
         #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="leagueTag != null">
+        #{leagueTag,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
         #{state,jdbcType=VARCHAR},
@@ -229,6 +236,9 @@
       <if test="record.season != null">
         season = #{record.season,jdbcType=VARCHAR},
       </if>
+      <if test="record.leagueTag != null">
+        league_tag = #{record.leagueTag,jdbcType=VARCHAR},
+      </if>
       <if test="record.state != null">
         state = #{record.state,jdbcType=VARCHAR},
       </if>
@@ -265,6 +275,7 @@
       opponent_clan_tag = #{record.opponentClanTag,jdbcType=VARCHAR},
       tag = #{record.tag,jdbcType=VARCHAR},
       season = #{record.season,jdbcType=VARCHAR},
+      league_tag = #{record.leagueTag,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=VARCHAR},
       team_size = #{record.teamSize,jdbcType=SMALLINT},
       preparation_start_time = #{record.preparationStartTime,jdbcType=TIMESTAMP},
@@ -291,6 +302,9 @@
       </if>
       <if test="season != null">
         season = #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="leagueTag != null">
+        league_tag = #{leagueTag,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
         state = #{state,jdbcType=VARCHAR},
@@ -325,6 +339,7 @@
       opponent_clan_tag = #{opponentClanTag,jdbcType=VARCHAR},
       tag = #{tag,jdbcType=VARCHAR},
       season = #{season,jdbcType=VARCHAR},
+      league_tag = #{leagueTag,jdbcType=VARCHAR},
       state = #{state,jdbcType=VARCHAR},
       team_size = #{teamSize,jdbcType=SMALLINT},
       preparation_start_time = #{preparationStartTime,jdbcType=TIMESTAMP},

@@ -16,6 +16,8 @@ public class ClanWar {
 
     private String season;
 
+    private String leagueTag;
+
     private String state;
 
     private Short teamSize;
@@ -70,6 +72,14 @@ public class ClanWar {
 
     public void setSeason(String season) {
         this.season = season == null ? null : season.trim();
+    }
+
+    public String getLeagueTag() {
+        return leagueTag;
+    }
+
+    public void setLeagueTag(String leagueTag) {
+        this.leagueTag = leagueTag == null ? null : leagueTag.trim();
     }
 
     public String getState() {

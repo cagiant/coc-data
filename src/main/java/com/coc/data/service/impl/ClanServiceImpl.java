@@ -13,12 +13,14 @@ import com.coc.data.model.base.ClanWar;
 import com.coc.data.service.ClanService;
 import com.coc.data.service.ClanWarService;
 import com.coc.data.service.PlayerService;
+import com.coc.data.util.FormatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -72,34 +74,43 @@ public class ClanServiceImpl implements ClanService {
         }
         log.info("获取部落 {} 的联赛信息完毕",clan.getName());
         List<LeagueGroupRoundDTO> rounds = leagueGroupInfo.getRounds();
+        String leagueTag = getLeagueTag(leagueGroupInfo);
         for (LeagueGroupRoundDTO round : rounds) {
             List<String> warTags = round.getWarTags();
             if (ClanTagConstants.DEFAULT_LEAGUE_GROUP_WAR_TAG.equals(warTags.get(0))) {
                 continue;
             }
-            List<ClanWar> warList = clanWarMapper.getWarsByWarTagList(warTags);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            if (!ObjectUtils.isEmpty(warList)) {
-                ClanWar war = warList.get(0);
-                log.info(
-                    "战争 {} 已经被同步，开始时间{}， 结束时间{},状态：{}",
-                    war.getTag(),
-                    dateFormat.format(war.getStartTime()),
-                    dateFormat.format(war.getEndTime()),
-                    war.getState()
-                );
-                continue;
+            for (String warTag : warTags) {
+                List<ClanWar> warList =
+                    clanWarMapper.getWarsByWarTagList(Collections.singletonList(warTag));
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                if (!ObjectUtils.isEmpty(warList)) {
+                    ClanWar war = warList.get(0);
+                    log.info(
+                        "战争 {} 已经被同步，开始时间{}， 结束时间{},状态：{}",
+                        war.getTag(),
+                        dateFormat.format(war.getStartTime()),
+                        dateFormat.format(war.getEndTime()),
+                        war.getState()
+                    );
+                    continue;
+                }
+                WarInfoDTO warInfo = getLeagueGroupWarBelongsToClan(warTags, clan.getTag());
+                if (ObjectUtils.isEmpty(warInfo)) {
+                    continue;
+                }
+                warInfo.setSeason(leagueGroupInfo.getSeason());
+                // 先记录下对战信息
+                clanWarService.recLeagueWarInfo(warInfo, clan.getTag(), leagueTag);
+                // 记录下对战详细信息
+                clanWarService.recWarMemberAndWarLogs(warInfo, clan.getTag());
             }
-            WarInfoDTO warInfo = getLeagueGroupWarBelongsToClan(warTags, clan.getTag());
-            if (ObjectUtils.isEmpty(warInfo)) {
-                continue;
-            }
-            warInfo.setSeason(leagueGroupInfo.getSeason());
-            // 先记录下对战信息
-            clanWarService.recLeagueWarInfo(warInfo,  clan.getTag());
-            // 记录下对战详细信息
-            clanWarService.recWarMemberAndWarLogs(warInfo, clan.getTag());
         }
+    }
+
+    String getLeagueTag(LeagueGroupInfoDTO leagueGroupInfoDTO) {
+        return FormatUtil.formatLeagueTag(leagueGroupInfoDTO);
     }
 
     @Override

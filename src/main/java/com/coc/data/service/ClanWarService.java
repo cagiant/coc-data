@@ -34,7 +34,7 @@ public interface ClanWarService {
 
     void recNormalWarInfo(WarInfoDTO currentWarInfo, String clanTag);
 
-    void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag);
+    void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag, String leagueTag);
 
     void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag);
 

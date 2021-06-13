@@ -445,6 +445,76 @@ public class ClanWarExample {
             return (Criteria) this;
         }
 
+        public Criteria andLeagueTagIsNull() {
+            addCriterion("league_tag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagIsNotNull() {
+            addCriterion("league_tag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagEqualTo(String value) {
+            addCriterion("league_tag =", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagNotEqualTo(String value) {
+            addCriterion("league_tag <>", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagGreaterThan(String value) {
+            addCriterion("league_tag >", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagGreaterThanOrEqualTo(String value) {
+            addCriterion("league_tag >=", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagLessThan(String value) {
+            addCriterion("league_tag <", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagLessThanOrEqualTo(String value) {
+            addCriterion("league_tag <=", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagLike(String value) {
+            addCriterion("league_tag like", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagNotLike(String value) {
+            addCriterion("league_tag not like", value, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagIn(List<String> values) {
+            addCriterion("league_tag in", values, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagNotIn(List<String> values) {
+            addCriterion("league_tag not in", values, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagBetween(String value1, String value2) {
+            addCriterion("league_tag between", value1, value2, "leagueTag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeagueTagNotBetween(String value1, String value2) {
+            addCriterion("league_tag not between", value1, value2, "leagueTag");
+            return (Criteria) this;
+        }
+
         public Criteria andStateIsNull() {
             addCriterion("state is null");
             return (Criteria) this;

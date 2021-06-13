@@ -9,10 +9,18 @@
     </select>
     <insert id="insertOnDuplicateKeyUpdate" parameterType="com.coc.data.model.ClanWars">
         insert into clan_war
-            (clan_tag, tag, season, state,
+            (clan_tag, opponent_clan_tag,
+             <if test="warInfo.leagueTag != null">
+                 league_tag,
+             </if>
+             tag, season, state,
              team_size, preparation_start_time, start_time,
              end_time, type)
-        values (#{warInfo.clanTag}, #{warInfo.tag}, #{warInfo.season}, #{warInfo.state},
+        values (#{warInfo.clanTag}, #{warInfo.opponentClanTag},
+                <if test="warInfo.leagueTag != null">
+                    #{warInfo.leagueTag},
+                </if>
+                #{warInfo.tag}, #{warInfo.season}, #{warInfo.state},
                 #{warInfo.teamSize}, #{warInfo.preparationStartTime}, #{warInfo.startTime},
                 #{warInfo.endTime}, #{warInfo.type})
         on duplicate key update `state` = values(state), `update_time` = now()

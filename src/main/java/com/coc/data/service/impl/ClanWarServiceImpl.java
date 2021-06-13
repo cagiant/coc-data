@@ -86,7 +86,7 @@ public class ClanWarServiceImpl implements ClanWarService {
         warInfo.setTag(warTag);
         // 记录下对战信息
         log.info("更新战争信息");
-        recLeagueWarInfo(warInfo, clanTag);
+        recLeagueWarInfo(warInfo, clanTag, null);
         // 记录下对战详细信息
         log.info("更新对战详细信息");
         if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
@@ -180,15 +180,15 @@ public class ClanWarServiceImpl implements ClanWarService {
 
     @Override
     public void recNormalWarInfo(WarInfoDTO currentWarInfo, String clanTag) {
-        recWarInfo(currentWarInfo, clanTag, ClanWarTypeEnum.NORMAL.code);
+        recWarInfo(currentWarInfo, clanTag, ClanWarTypeEnum.NORMAL.code, null);
     }
 
     @Override
-    public void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag) {
-        recWarInfo(currentWarInfo, clanTag, ClanWarTypeEnum.LEAGUE.code);
+    public void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag, String leagueTag) {
+        recWarInfo(currentWarInfo, clanTag, ClanWarTypeEnum.LEAGUE.code, leagueTag);
     }
 
-    private void recWarInfo(WarInfoDTO warInfo, String clanTag, String type) {
+    private void recWarInfo(WarInfoDTO warInfo, String clanTag, String type, String leagueTag) {
         ClanWar currentWar = ClanWar.builder()
             .clanTag(clanTag)
             .tag(warInfo.getTag())
@@ -201,6 +201,10 @@ public class ClanWarServiceImpl implements ClanWarService {
             .endTime(warInfo.getEndTime())
             .type(type)
             .build();
+
+        if (leagueTag != null) {
+            currentWar.setLeagueTag(leagueTag);
+        }
 
         clanWarMapper.insertOnDuplicateKeyUpdate(currentWar);
     }
