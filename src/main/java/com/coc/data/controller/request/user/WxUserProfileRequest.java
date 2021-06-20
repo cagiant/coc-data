@@ -1,19 +1,19 @@
-package com.coc.data.controller.vo.user;
+package com.coc.data.controller.request.user;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * @author guokaiqiang
- * @date 2021/6/14 21:34
+ * @date 2021/6/20 10:53
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WxUserInfoVO {
+public class WxUserProfileRequest {
+
+	private String code;
 
 	private String nickName;
 
@@ -28,6 +28,4 @@ public class WxUserInfoVO {
 	private String city;
 
 	private String avatarUrl;
-
-	private String openId;
 }

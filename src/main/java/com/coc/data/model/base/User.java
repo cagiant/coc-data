@@ -1,8 +1,12 @@
 package com.coc.data.model.base;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private Long id;
 

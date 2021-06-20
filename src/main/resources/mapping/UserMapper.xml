@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.UserMapper">
-    <select id="selectValidUser" resultMap="BaseResultMap">
+    <select id="selectValidUser" resultMap="ResultMapWithBLOBs">
         select * from user where open_id = #{openId} and session_key = #{sessionKey}
     </select>
+    <insert id="insertOnDuplicateKeyUpdate">
+        insert into user (
+          nick_name, male,
+          lang, country, province, city,
+          avatar_url, open_id, union_id, session_key) VALUES
+        (#{user.nickName}, #{user.male},
+         #{user.lang}, #{user.country}, #{user.province}, #{user.city},
+         #{user.avatarUrl}, #{user.openId}, #{user.unionId}, #{user.sessionKey})
+         on duplicate key update
+            nick_name = values(nick_name),
+            male = values(male),
+            lang = values(lang),
+            country = values(country),
+            province = values(province),
+            city = values(city),
+            avatar_url = values(avatar_url),
+            open_id = values(open_id),
+            union_id = values(union_id),
+            session_key = values(session_key)
+    </insert>
 </mapper>
