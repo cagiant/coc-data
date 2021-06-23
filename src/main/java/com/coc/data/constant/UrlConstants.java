@@ -12,6 +12,7 @@ public class UrlConstants {
     public static final String CLAN_WAR_INFO = "/clans/{clanTag}/currentwar";
     public static final String CLAN_LEAGUE_GROUP_INFO = "/clans/{clanTag}/currentwar/leaguegroup";
     public static final String CLAN_LEAGUE_GROUP_WAR_INFO = "/clanwarleagues/wars/{warTag}";
+    public static final String PLAYER_INFO = "/players/{playerTag}";
 
     public static final String PROXY_URL = "https://coc.guokaiqiang.com/proxy";
     public static final String PROXY_OPTION_GET_CURRENT_WAR_INFO = "current_war";

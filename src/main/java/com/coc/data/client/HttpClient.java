@@ -2,8 +2,8 @@ package com.coc.data.client;
 
 import com.coc.data.dto.ClanInfoDTO;
 import com.coc.data.dto.LeagueGroupInfoDTO;
+import com.coc.data.dto.PlayerDTO;
 import com.coc.data.dto.WarInfoDTO;
-import org.springframework.web.reactive.function.client.WebClient;
 
 public interface HttpClient {
 
@@ -14,4 +14,6 @@ public interface HttpClient {
     LeagueGroupInfoDTO getClanLeagueGroupInfoByClanTag(String tag);
 
     WarInfoDTO getClanLeagueGroupWarInfoByTag(String warTag);
+
+    PlayerDTO getPlayerInfoByTag(String playerTag);
 }

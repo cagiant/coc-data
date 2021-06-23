@@ -30,4 +30,6 @@ public class WxUserInfoVO {
 	private String avatarUrl;
 
 	private String openId;
+
+	private String unionId;
 }

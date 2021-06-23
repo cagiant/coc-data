@@ -3,11 +3,10 @@ package com.coc.data.controller;
 import com.coc.data.controller.request.user.MiniProgramLoginRequest;
 import com.coc.data.controller.request.user.WxUserProfileRequest;
 import com.coc.data.controller.vo.user.WxUserInfoVO;
+import com.coc.data.dto.PlayerDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
 import com.coc.data.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -36,6 +35,7 @@ public class UserController {
 			.avatarUrl(dto.getAvatarUrl())
 			.nickName(dto.getNickName())
 			.openId(dto.getOpenId())
+			.unionId(dto.getUnionId())
 			.build();
 	}
 
@@ -47,7 +47,14 @@ public class UserController {
 			.avatarUrl(dto.getAvatarUrl())
 			.nickName(dto.getNickName())
 			.openId(dto.getOpenId())
+			.unionId(dto.getUnionId())
 			.build();
+	}
+
+	@GetMapping("/getPlayerInfo")
+	public PlayerDTO getPlayerInfo(@RequestParam("tag") String tag) {
+
+		return userService.getPlayerInfo(tag);
 	}
 
 }

@@ -1,8 +1,10 @@
 package com.coc.data.service.impl;
 
+import com.coc.data.client.CocApiHttpClient;
 import com.coc.data.constant.WxConfig;
 import com.coc.data.controller.convert.WxMappingJackson2HttpMessageConverter;
 import com.coc.data.controller.request.user.WxUserProfileRequest;
+import com.coc.data.dto.PlayerDTO;
 import com.coc.data.dto.user.WxCode2SessionDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
 import com.coc.data.mapper.UserMapper;
@@ -24,6 +26,9 @@ public class UserServiceImpl implements UserService {
 	private WxConfig wxConfig;
 	@Resource
 	private UserMapper userMapper;
+
+	@Resource
+	private CocApiHttpClient httpClient;
 
 	private static final String MINIPROGRAM_CODE2SESSION_URL = "https://api.weixin.qq" +
 		".com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
@@ -75,6 +80,11 @@ public class UserServiceImpl implements UserService {
 		userMapper.insertOnDuplicateKeyUpdate(user);
 
 		return user2WxUserInfo(user);
+	}
+
+	@Override
+	public PlayerDTO getPlayerInfo(String tag) {
+		return httpClient.getPlayerInfoByTag(tag);
 	}
 
 	WxCode2SessionDTO getSessionResult(String code) {
