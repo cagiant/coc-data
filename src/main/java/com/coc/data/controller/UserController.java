@@ -1,7 +1,10 @@
 package com.coc.data.controller;
 
+import com.coc.data.controller.request.user.MiniProgramBindPlayerRequest;
 import com.coc.data.controller.request.user.MiniProgramLoginRequest;
 import com.coc.data.controller.request.user.WxUserProfileRequest;
+import com.coc.data.controller.vo.user.MiniProgramBindPlayerVO;
+import com.coc.data.controller.vo.user.PlayerBriefVO;
 import com.coc.data.controller.vo.user.WxUserInfoVO;
 import com.coc.data.dto.PlayerDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
@@ -9,6 +12,7 @@ import com.coc.data.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author guokaiqiang
@@ -57,4 +61,16 @@ public class UserController {
 		return userService.getPlayerInfo(tag);
 	}
 
+	@PostMapping("/bindPlayer")
+	public MiniProgramBindPlayerVO bindPlayer(MiniProgramBindPlayerRequest bindPlayerRequest) {
+		String openId = bindPlayerRequest.getOpenId();
+		String playerTag = bindPlayerRequest.getPlayerTag();
+
+		return userService.bindPlayer(openId, playerTag);
+	}
+
+	@GetMapping("/getBindPlayers")
+	public List<PlayerBriefVO> getBindPlayers(@RequestParam("openId") String openId) {
+		return userService.getBindPlayers(openId);
+	}
 }

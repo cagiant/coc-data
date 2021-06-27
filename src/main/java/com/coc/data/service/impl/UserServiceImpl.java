@@ -4,16 +4,22 @@ import com.coc.data.client.CocApiHttpClient;
 import com.coc.data.constant.WxConfig;
 import com.coc.data.controller.convert.WxMappingJackson2HttpMessageConverter;
 import com.coc.data.controller.request.user.WxUserProfileRequest;
+import com.coc.data.controller.vo.user.MiniProgramBindPlayerVO;
+import com.coc.data.controller.vo.user.PlayerBriefVO;
 import com.coc.data.dto.PlayerDTO;
 import com.coc.data.dto.user.WxCode2SessionDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
+import com.coc.data.mapper.PlayerMapper;
 import com.coc.data.mapper.UserMapper;
-import com.coc.data.model.base.User;
+import com.coc.data.mapper.UserPlayerRelationMapper;
+import com.coc.data.model.base.*;
 import com.coc.data.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author guokaiqiang
@@ -26,6 +32,10 @@ public class UserServiceImpl implements UserService {
 	private WxConfig wxConfig;
 	@Resource
 	private UserMapper userMapper;
+	@Resource
+	private PlayerMapper playerMapper;
+	@Resource
+	private UserPlayerRelationMapper userPlayerRelationMapper;
 
 	@Resource
 	private CocApiHttpClient httpClient;
@@ -85,6 +95,57 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public PlayerDTO getPlayerInfo(String tag) {
 		return httpClient.getPlayerInfoByTag(tag);
+	}
+
+	@Override
+	public MiniProgramBindPlayerVO bindPlayer(String openId, String playerTag) {
+		User user = userMapper.selectByOpenId(openId);
+
+		if (ObjectUtils.isEmpty(user)) {
+			return MiniProgramBindPlayerVO.builder()
+				.bindSuccess(false)
+				.msg(String.format("不存在的用户：%s", openId))
+				.build();
+		}
+
+		try {
+			Player player =  playerMapper.selectByTag(playerTag);
+			if (ObjectUtils.isEmpty(player)) {
+				PlayerDTO playerDTO = getPlayerInfo(playerTag);
+				player = Player.builder()
+					.tag(playerTag)
+					.name(playerDTO.getName())
+					.build();
+				playerMapper.insertSelective(player);
+			}
+			UserPlayerRelation relation =
+				userPlayerRelationMapper.getUserPlayerRelation(user.getId(), player.getId());
+			if (relation != null) {
+				return MiniProgramBindPlayerVO.builder()
+					.bindSuccess(false)
+					.msg(String.format("标签%s已经被绑定",  playerTag))
+					.build();
+			}
+			UserPlayerRelation userPlayerRelation = UserPlayerRelation.builder()
+				.userId(user.getId())
+				.playerId(player.getId())
+				.build();
+			userPlayerRelationMapper.insertSelective(userPlayerRelation);
+
+			return MiniProgramBindPlayerVO.builder()
+				.bindSuccess(true)
+				.build();
+		} catch (Exception e) {
+			return MiniProgramBindPlayerVO.builder()
+				.bindSuccess(false)
+				.msg(e.getMessage())
+				.build();
+		}
+	}
+
+	@Override
+	public List<PlayerBriefVO> getBindPlayers(String openId) {
+		return playerMapper.selectBriefPlayer(openId);
 	}
 
 	WxCode2SessionDTO getSessionResult(String code) {

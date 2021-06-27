@@ -7,4 +7,13 @@
             (#{item.tag}, #{item.name})
         </foreach>
     </insert>
+    <select id="selectByTag" resultMap="BaseResultMap">
+        select * from player where tag = #{playerTag} and is_deleted = 0
+    </select>
+    <select id="selectBriefPlayer" resultMap="BaseResultMap">
+        select * from player p
+            join user_player_relation upr on p.id = upr.player_id and upr.is_deleted = 0
+            join user u on upr.user_id = u.id
+        where u.open_id = #{openId}
+    </select>
 </mapper>

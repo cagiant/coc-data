@@ -24,4 +24,7 @@
             union_id = values(union_id),
             session_key = values(session_key)
     </insert>
+    <select id="selectByOpenId" resultMap="BaseResultMap">
+        select * from user where open_id = #{openId}
+    </select>
 </mapper>

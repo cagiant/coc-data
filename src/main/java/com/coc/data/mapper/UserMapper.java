@@ -10,4 +10,6 @@ public interface UserMapper extends BaseDao<User, UserExample> {
 	User selectValidUser(@Param("openId") String openId, @Param("sessionKey") String sessionKey);
 
 	void insertOnDuplicateKeyUpdate(@Param("user") User user);
+
+	User selectByOpenId(@Param("openId") String openId);
 }
