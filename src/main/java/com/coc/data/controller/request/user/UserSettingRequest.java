@@ -1,6 +1,7 @@
 package com.coc.data.controller.request.user;
 
 import com.coc.data.dto.user.UserSettingDTO;
+import com.coc.data.util.FormatUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +20,9 @@ public class UserSettingRequest {
 	private String openId;
 
 	private UserSettingDTO userOption;
+
+	public void setUserOption(String userOption) {
+		this.userOption = FormatUtil.deserializeCamelCaseJson2Object(userOption,
+			UserSettingDTO.class);
+	}
 }
