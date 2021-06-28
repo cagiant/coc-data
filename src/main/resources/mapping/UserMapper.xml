@@ -24,7 +24,10 @@
             union_id = values(union_id),
             session_key = values(session_key)
     </insert>
-    <select id="selectByOpenId" resultMap="BaseResultMap">
+    <select id="selectByOpenId" resultMap="ResultMapWithBLOBs">
         select * from user where open_id = #{openId}
     </select>
+    <update id="saveUserSetting">
+        update user set setting = #{setting} where open_id = #{openId} and is_deleted = 0
+    </update>
 </mapper>

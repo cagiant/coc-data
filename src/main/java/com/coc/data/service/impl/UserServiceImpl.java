@@ -7,6 +7,7 @@ import com.coc.data.controller.request.user.WxUserProfileRequest;
 import com.coc.data.controller.vo.user.MiniProgramBindPlayerVO;
 import com.coc.data.controller.vo.user.PlayerBriefVO;
 import com.coc.data.dto.PlayerDTO;
+import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.dto.user.WxCode2SessionDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
 import com.coc.data.mapper.PlayerMapper;
@@ -14,6 +15,8 @@ import com.coc.data.mapper.UserMapper;
 import com.coc.data.mapper.UserPlayerRelationMapper;
 import com.coc.data.model.base.*;
 import com.coc.data.service.UserService;
+import com.coc.data.util.FormatUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
@@ -47,7 +50,8 @@ public class UserServiceImpl implements UserService {
 	public WxUserInfoDTO miniProgramLogin(String code) {
 		WxCode2SessionDTO sessionResult = getSessionResult(code);
 
-		User user = userMapper.selectValidUser(sessionResult.getOpenId(), sessionResult.getSessionKey());
+		UserWithBLOBs user = userMapper.selectValidUser(sessionResult.getOpenId(),
+			sessionResult.getSessionKey());
 
 		if (user == null) {
 			// 说明session过期了或者是从未登录过，需要前端刷新当前用户的用户信息
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
 		return user2WxUserInfo(user);
 	}
 
-	private WxUserInfoDTO user2WxUserInfo(User user) {
+	private WxUserInfoDTO user2WxUserInfo(UserWithBLOBs user) {
 		return  WxUserInfoDTO.builder()
 			.nickName(user.getNickName())
 			.avatarUrl(user.getAvatarUrl())
@@ -75,7 +79,6 @@ public class UserServiceImpl implements UserService {
 	public WxUserInfoDTO refreshUser(WxUserProfileRequest userProfileRequest) {
 		WxCode2SessionDTO sessionResult = getSessionResult(userProfileRequest.getCode());
 		User user = User.builder()
-			.avatarUrl(userProfileRequest.getAvatarUrl())
 			.city(userProfileRequest.getCity())
 			.country(userProfileRequest.getCountry())
 			.lang(userProfileRequest.getLanguage())
@@ -87,9 +90,13 @@ public class UserServiceImpl implements UserService {
 			.province(userProfileRequest.getProvince())
 			.build();
 
-		userMapper.insertOnDuplicateKeyUpdate(user);
+		UserWithBLOBs userWithBLOBs = new UserWithBLOBs();
+		BeanUtils.copyProperties(user, userWithBLOBs);
+		userWithBLOBs.setAvatarUrl(userWithBLOBs.getAvatarUrl());
 
-		return user2WxUserInfo(user);
+		userMapper.insertOnDuplicateKeyUpdate(userWithBLOBs);
+
+		return user2WxUserInfo(userWithBLOBs);
 	}
 
 	@Override
@@ -146,6 +153,50 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<PlayerBriefVO> getBindPlayers(String openId) {
 		return playerMapper.selectBriefPlayer(openId);
+	}
+
+	@Override
+	public MiniProgramBindPlayerVO unbindPlayer(String openId, String playerTag) {
+		User user = userMapper.selectByOpenId(openId);
+
+		if (ObjectUtils.isEmpty(user)) {
+			return MiniProgramBindPlayerVO.builder()
+				.bindSuccess(false)
+				.msg(String.format("不存在的用户：%s", openId))
+				.build();
+		}
+
+		Player player = playerMapper.selectByTag(playerTag);
+		if (ObjectUtils.isEmpty(player)) {
+			return MiniProgramBindPlayerVO.builder()
+				.bindSuccess(false)
+				.msg(String.format("不存在的首领：%s", playerTag))
+				.build();
+		}
+
+		UserPlayerRelationExample example = new UserPlayerRelationExample();
+		example.createCriteria().andUserIdEqualTo(user.getId()).andPlayerIdEqualTo(player.getId()).andIsDeletedEqualTo((byte) 0);
+		UserPlayerRelation record = new UserPlayerRelation();
+		record.setIsDeleted((byte) 1);
+		userPlayerRelationMapper.updateByExampleSelective(record, example);
+
+		return MiniProgramBindPlayerVO.builder()
+			.bindSuccess(true)
+			.build();
+	}
+
+	@Override
+	public UserSettingDTO saveUserSetting(String openId, UserSettingDTO setting) {
+		userMapper.saveUserSetting(openId, FormatUtil.serializeObject2JsonStr(setting));
+
+		return setting;
+	}
+
+	@Override
+	public UserSettingDTO getUserSetting(String openId) {
+		UserWithBLOBs user = userMapper.selectByOpenId(openId);
+
+		return FormatUtil.deserializeCamelCaseJson2Object(user.getSetting(), UserSettingDTO.class);
 	}
 
 	WxCode2SessionDTO getSessionResult(String code) {

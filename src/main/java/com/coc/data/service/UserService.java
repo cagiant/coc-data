@@ -4,6 +4,7 @@ import com.coc.data.controller.request.user.WxUserProfileRequest;
 import com.coc.data.controller.vo.user.MiniProgramBindPlayerVO;
 import com.coc.data.controller.vo.user.PlayerBriefVO;
 import com.coc.data.dto.PlayerDTO;
+import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
 
 import java.util.List;
@@ -23,4 +24,10 @@ public interface UserService {
 	MiniProgramBindPlayerVO bindPlayer(String openId, String playerTag);
 
 	List<PlayerBriefVO> getBindPlayers(String openId);
+
+	MiniProgramBindPlayerVO unbindPlayer(String openId, String playerTag);
+
+	UserSettingDTO saveUserSetting(String openId, UserSettingDTO setting);
+
+	UserSettingDTO getUserSetting(String openId);
 }

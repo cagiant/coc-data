@@ -12,9 +12,13 @@
     <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="union_id" jdbcType="VARCHAR" property="unionId" />
     <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.coc.data.model.base.User">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.coc.data.model.base.UserWithBLOBs">
     <result column="avatar_url" jdbcType="LONGVARCHAR" property="avatarUrl" />
+    <result column="setting" jdbcType="LONGVARCHAR" property="setting" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -75,10 +79,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, nick_name, male, lang, country, province, city, open_id, union_id, session_key
+    id, nick_name, male, lang, country, province, city, open_id, union_id, session_key, 
+    is_deleted, create_time, update_time
   </sql>
   <sql id="Blob_Column_List">
-    avatar_url
+    avatar_url, setting
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="com.coc.data.model.base.UserExample" resultMap="ResultMapWithBLOBs">
     select
@@ -128,17 +133,21 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.coc.data.model.base.User">
+  <insert id="insert" parameterType="com.coc.data.model.base.UserWithBLOBs">
     insert into user (id, nick_name, male, 
       lang, country, province, 
       city, open_id, union_id, 
-      session_key, avatar_url)
+      session_key, is_deleted, create_time, 
+      update_time, avatar_url, setting
+      )
     values (#{id,jdbcType=BIGINT}, #{nickName,jdbcType=VARCHAR}, #{male,jdbcType=BIT}, 
       #{lang,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, #{unionId,jdbcType=VARCHAR}, 
-      #{sessionKey,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=LONGVARCHAR})
+      #{sessionKey,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{avatarUrl,jdbcType=LONGVARCHAR}, #{setting,jdbcType=LONGVARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.coc.data.model.base.User">
+  <insert id="insertSelective" parameterType="com.coc.data.model.base.UserWithBLOBs">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -171,8 +180,20 @@
       <if test="sessionKey != null">
         session_key,
       </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
       <if test="avatarUrl != null">
         avatar_url,
+      </if>
+      <if test="setting != null">
+        setting,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -206,8 +227,20 @@
       <if test="sessionKey != null">
         #{sessionKey,jdbcType=VARCHAR},
       </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="avatarUrl != null">
         #{avatarUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setting != null">
+        #{setting,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -250,8 +283,20 @@
       <if test="record.sessionKey != null">
         session_key = #{record.sessionKey,jdbcType=VARCHAR},
       </if>
+      <if test="record.isDeleted != null">
+        is_deleted = #{record.isDeleted,jdbcType=BIT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.avatarUrl != null">
         avatar_url = #{record.avatarUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.setting != null">
+        setting = #{record.setting,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -270,7 +315,11 @@
       open_id = #{record.openId,jdbcType=VARCHAR},
       union_id = #{record.unionId,jdbcType=VARCHAR},
       session_key = #{record.sessionKey,jdbcType=VARCHAR},
-      avatar_url = #{record.avatarUrl,jdbcType=LONGVARCHAR}
+      is_deleted = #{record.isDeleted,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      avatar_url = #{record.avatarUrl,jdbcType=LONGVARCHAR},
+      setting = #{record.setting,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,12 +335,15 @@
       city = #{record.city,jdbcType=VARCHAR},
       open_id = #{record.openId,jdbcType=VARCHAR},
       union_id = #{record.unionId,jdbcType=VARCHAR},
-      session_key = #{record.sessionKey,jdbcType=VARCHAR}
+      session_key = #{record.sessionKey,jdbcType=VARCHAR},
+      is_deleted = #{record.isDeleted,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.coc.data.model.base.User">
+  <update id="updateByPrimaryKeySelective" parameterType="com.coc.data.model.base.UserWithBLOBs">
     update user
     <set>
       <if test="nickName != null">
@@ -321,13 +373,25 @@
       <if test="sessionKey != null">
         session_key = #{sessionKey,jdbcType=VARCHAR},
       </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="avatarUrl != null">
         avatar_url = #{avatarUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="setting != null">
+        setting = #{setting,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.coc.data.model.base.User">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.coc.data.model.base.UserWithBLOBs">
     update user
     set nick_name = #{nickName,jdbcType=VARCHAR},
       male = #{male,jdbcType=BIT},
@@ -338,7 +402,11 @@
       open_id = #{openId,jdbcType=VARCHAR},
       union_id = #{unionId,jdbcType=VARCHAR},
       session_key = #{sessionKey,jdbcType=VARCHAR},
-      avatar_url = #{avatarUrl,jdbcType=LONGVARCHAR}
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      avatar_url = #{avatarUrl,jdbcType=LONGVARCHAR},
+      setting = #{setting,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.coc.data.model.base.User">
@@ -351,7 +419,10 @@
       city = #{city,jdbcType=VARCHAR},
       open_id = #{openId,jdbcType=VARCHAR},
       union_id = #{unionId,jdbcType=VARCHAR},
-      session_key = #{sessionKey,jdbcType=VARCHAR}
+      session_key = #{sessionKey,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

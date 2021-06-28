@@ -2,11 +2,13 @@ package com.coc.data.controller;
 
 import com.coc.data.controller.request.user.MiniProgramBindPlayerRequest;
 import com.coc.data.controller.request.user.MiniProgramLoginRequest;
+import com.coc.data.controller.request.user.UserSettingRequest;
 import com.coc.data.controller.request.user.WxUserProfileRequest;
 import com.coc.data.controller.vo.user.MiniProgramBindPlayerVO;
 import com.coc.data.controller.vo.user.PlayerBriefVO;
 import com.coc.data.controller.vo.user.WxUserInfoVO;
 import com.coc.data.dto.PlayerDTO;
+import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
 import com.coc.data.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +69,28 @@ public class UserController {
 		String playerTag = bindPlayerRequest.getPlayerTag();
 
 		return userService.bindPlayer(openId, playerTag);
+	}
+
+	@PostMapping("/unbindPlayer")
+	public MiniProgramBindPlayerVO unbindPlayer(MiniProgramBindPlayerRequest bindPlayerRequest) {
+		String openId = bindPlayerRequest.getOpenId();
+		String playerTag = bindPlayerRequest.getPlayerTag();
+
+		return userService.unbindPlayer(openId, playerTag);
+	}
+
+	@PostMapping("saveUserSetting")
+	public UserSettingDTO saveUserSetting(UserSettingRequest userSettingRequest) {
+		String openId = userSettingRequest.getOpenId();
+		UserSettingDTO setting = userSettingRequest.getUserOption();
+
+		return userService.saveUserSetting(openId, setting);
+	}
+
+	@GetMapping("/getUserSetting")
+	public UserSettingDTO getUserSetting(@RequestParam("openId") String openId) {
+
+		return userService.getUserSetting(openId);
 	}
 
 	@GetMapping("/getBindPlayers")
