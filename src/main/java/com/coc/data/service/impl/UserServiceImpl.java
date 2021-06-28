@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
 		UserWithBLOBs userWithBLOBs = new UserWithBLOBs();
 		BeanUtils.copyProperties(user, userWithBLOBs);
-		userWithBLOBs.setAvatarUrl(userWithBLOBs.getAvatarUrl());
+		userWithBLOBs.setAvatarUrl(userProfileRequest.getAvatarUrl());
 
 		userMapper.insertOnDuplicateKeyUpdate(userWithBLOBs);
 
