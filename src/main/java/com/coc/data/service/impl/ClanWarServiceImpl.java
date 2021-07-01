@@ -9,6 +9,7 @@ import com.coc.data.enums.ClanWarTypeEnum;
 import com.coc.data.mapper.*;
 import com.coc.data.model.base.*;
 import com.coc.data.service.ClanWarService;
+import com.coc.data.service.MiniProgramMessageService;
 import com.coc.data.util.DateUtil;
 import com.coc.data.util.FormatUtil;
 import com.google.common.collect.Lists;
@@ -31,6 +32,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ClanWarServiceImpl implements ClanWarService {
 
+    /**
+     * mapper
+     **/
     @Resource
     private ClanWarMapper clanWarMapper;
     @Resource
@@ -40,6 +44,14 @@ public class ClanWarServiceImpl implements ClanWarService {
     @Resource
     private PlayerMapper playerMapper;
 
+    /**
+     * service
+     **/
+    private MiniProgramMessageService miniProgramMessageService;
+
+    /**
+     * others
+     **/
     @Resource
     private CocApiHttpClient httpClient;
 

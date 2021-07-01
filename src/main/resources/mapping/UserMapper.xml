@@ -30,4 +30,19 @@
     <update id="saveUserSetting">
         update user set setting = #{setting} where open_id = #{openId} and is_deleted = 0
     </update>
+    <select id="selectByMemberTags" resultType="com.coc.data.dto.user.PlayerUserInfoDTO">
+        select u.nick_name `userName`,
+               u.open_id `openId`,
+               p.tag `playerTag`,
+               p.name `playerName`,
+               u.setting `userSetting`
+        from user u
+            join user_player_relation upr on u.id = upr.user_id and u.is_deleted = 0
+            join player p on p.id = upr.player_id
+            where p.tag in (
+                <foreach collection="list" item="item" separator=",">
+                    #{item}
+                </foreach>)
+            and u.is_deleted = 0
+    </select>
 </mapper>
