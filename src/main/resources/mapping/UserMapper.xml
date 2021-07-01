@@ -30,7 +30,7 @@
     <update id="saveUserSetting">
         update user set setting = #{setting} where open_id = #{openId} and is_deleted = 0
     </update>
-    <select id="selectByMemberTags" resultType="com.coc.data.dto.user.PlayerUserInfoDTO">
+    <select id="selectByMemberTags" resultType="com.coc.data.dto.user.PlayerUserWarInfoDTO">
         select u.nick_name `userName`,
                u.open_id `openId`,
                p.tag `playerTag`,
@@ -44,5 +44,18 @@
                     #{item}
                 </foreach>)
             and u.is_deleted = 0
+    </select>
+    <select id="getThreeStarPlayerInfoInCertainTime" resultType="com.coc.data.dto.user.PlayerUserWarInfoDTO">
+        select u.nick_name `userName`,
+               u.open_id `openId`,
+               p.tag `playerTag`,
+               p.name `playerName`,
+               u.setting `userSetting`,
+               cwl.attack_order `attackOrder`
+        from clan_war_log cwl
+            join player p on cwl.attacker_tag = p.tag
+            join user_player_relation upr on p.id = upr.player_id and p.is_deleted = 0 and upr.is_deleted = 0
+            join user u on upr.user_id = u.id and u.is_deleted = 0
+        where cwl.war_tag = #{warTag} and cwl.create_time > #{date}
     </select>
 </mapper>

@@ -6,7 +6,10 @@ import com.coc.data.controller.convert.WxMappingJackson2HttpMessageConverter;
 import com.coc.data.controller.request.user.WxUserProfileRequest;
 import com.coc.data.controller.vo.user.MiniProgramBindPlayerVO;
 import com.coc.data.controller.vo.user.PlayerBriefVO;
+import com.coc.data.dto.ClanWarMemberDTO;
 import com.coc.data.dto.PlayerDTO;
+import com.coc.data.dto.WarInfoDTO;
+import com.coc.data.dto.user.PlayerUserWarInfoDTO;
 import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.dto.user.WxCode2SessionDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
@@ -16,13 +19,16 @@ import com.coc.data.mapper.UserPlayerRelationMapper;
 import com.coc.data.model.base.*;
 import com.coc.data.service.UserService;
 import com.coc.data.util.FormatUtil;
+import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author guokaiqiang
@@ -197,6 +203,19 @@ public class UserServiceImpl implements UserService {
 		UserWithBLOBs user = userMapper.selectByOpenId(openId);
 
 		return FormatUtil.deserializeCamelCaseJson2Object(user.getSetting(), UserSettingDTO.class);
+	}
+
+	@Override
+	public List<PlayerUserWarInfoDTO> getWarRelatedUsers(WarInfoDTO warInfo) {
+		List<String> memberTags = Lists.newLinkedList();
+		memberTags.addAll(warInfo.getClan().getMembers().stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList()));
+		memberTags.addAll(warInfo.getOpponent().getMembers().stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList()));
+		return userMapper.selectByMemberTags(memberTags);
+	}
+
+	@Override
+	public List<PlayerUserWarInfoDTO> getThreeStarPlayerInfoInCertainTime(String warTag, Date startDate) {
+		return userMapper.getThreeStarPlayerInfoInCertainTime(warTag, startDate);
 	}
 
 	WxCode2SessionDTO getSessionResult(String code) {

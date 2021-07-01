@@ -2,6 +2,7 @@ package com.coc.data.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class ClanWarInfoDTO {
 
     private Long stars;
 
-    private String destructionPercentage;
+    private BigDecimal destructionPercentage;
 
     private List<ClanWarMemberDTO> members;
 }

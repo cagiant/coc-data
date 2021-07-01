@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerUserInfoDTO {
+public class PlayerUserWarInfoDTO {
 
 	private String playerName;
 
@@ -24,4 +24,8 @@ public class PlayerUserInfoDTO {
 	private String openId;
 
 	private String userSetting;
+
+	private String attackOrder;
+
+	private String opponentRankToAttack;
 }

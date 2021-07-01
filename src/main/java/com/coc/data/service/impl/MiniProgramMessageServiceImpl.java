@@ -3,17 +3,29 @@ package com.coc.data.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.coc.data.constant.WxConfig;
+import com.coc.data.dto.WarInfoDTO;
 import com.coc.data.dto.user.MiniProgramMessageDTO;
+import com.coc.data.dto.user.PlayerUserWarInfoDTO;
+import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.enums.MiniProgramTemplateEnum;
+import com.coc.data.enums.MiniprogramMessageSenderEnum;
 import com.coc.data.service.MiniProgramMessageService;
+import com.coc.data.service.UserService;
+import com.coc.data.util.DateUtil;
+import com.coc.data.util.FormatUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author guokaiqiang
@@ -24,6 +36,9 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	@Resource
 	private WxConfig wxConfig;
+
+	@Resource
+	private UserService userService;
 
 	@Override
 	public String sendWarInfoMessage(String title, String msg, String openId,
@@ -57,6 +72,71 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 				.page(pageUrl == null ? "pages/report/index" : pageUrl)
 				.build()
 		);
+	}
+
+	@Override
+	public void sendClanLeagueStartMessage(WarInfoDTO warInfo) {
+		List<PlayerUserWarInfoDTO> memberRelatedUsers = userService.getWarRelatedUsers(warInfo);
+		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
+		if (memberRelatedUsers.size() == 0) {
+			return;
+		}
+		memberRelatedUsers.forEach(this::sendClanLeagueStartMessage);
+	}
+
+	@Override
+	public void sendWarStartMessage(WarInfoDTO warInfo) {
+		List<PlayerUserWarInfoDTO> memberRelatedUsers = userService.getWarRelatedUsers(warInfo);
+		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
+		if (memberRelatedUsers.size() == 0) {
+			return;
+		}
+		memberRelatedUsers.forEach(this::sendWarStartMessage);
+	}
+
+	@Override
+	public void sendThreeStarMessage(WarInfoDTO warInfo) {
+		List<PlayerUserWarInfoDTO> memberRelatedUsers =
+			userService.getThreeStarPlayerInfoInCertainTime(warInfo.getTag(),
+				DateUtil.asDate(LocalDateTime.now().minusMinutes(5)));
+		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
+		if (memberRelatedUsers.size() == 0) {
+			return;
+		}
+		memberRelatedUsers.forEach(this::sendThreeStartMessage);
+	}
+
+	void sendThreeStartMessage(PlayerUserWarInfoDTO u) {
+		String title = "三星通知";
+		String msg = String.format("%s 第 %s 个发起进攻，获得三星", u.getPlayerName(), u.getAttackOrder());
+		sendWarResultMessage(title, msg, null, u.getOpenId());
+	}
+
+	void sendWarStartMessage(PlayerUserWarInfoDTO u) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:ii");
+		String title = "部落战即将开始";
+		String msg = String.format("%s 参加的部落战即将在20分钟内开始", u.getPlayerName());
+		sendWarInfoMessage(title, msg, u.getOpenId(), null,
+			format.format(new Date()), MiniprogramMessageSenderEnum.SYSTEM.code);
+	}
+
+	void sendClanLeagueStartMessage(PlayerUserWarInfoDTO u) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:ii");
+		String title = "联赛开始通知";
+		String msg = String.format("%s参加的部落联赛已经开始", u.getPlayerName());
+		sendWarInfoMessage(title, msg,u.getOpenId(), null,
+			format.format(new Date()), MiniprogramMessageSenderEnum.SYSTEM.code);
+	}
+
+	boolean userAcceptWarInfoMessage(PlayerUserWarInfoDTO u) {
+		String userSetting = u.getUserSetting();
+		if (StringUtils.isEmpty(userSetting)) {
+			return false;
+		}
+		UserSettingDTO dto = FormatUtil.deserializeCamelCaseJson2Object(userSetting,
+			UserSettingDTO.class);
+
+		return dto.getWarInfoMessage() != null && dto.getWarInfoMessage();
 	}
 
 	String sendMessage(MiniProgramMessageDTO msgDTO) {

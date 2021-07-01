@@ -10,6 +10,7 @@ import com.coc.data.mapper.*;
 import com.coc.data.model.base.*;
 import com.coc.data.service.ClanWarService;
 import com.coc.data.service.MiniProgramMessageService;
+import com.coc.data.service.UserService;
 import com.coc.data.util.DateUtil;
 import com.coc.data.util.FormatUtil;
 import com.google.common.collect.Lists;
@@ -19,6 +20,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +49,11 @@ public class ClanWarServiceImpl implements ClanWarService {
     /**
      * service
      **/
+    @Resource
     private MiniProgramMessageService miniProgramMessageService;
+    @Resource
+    private UserService userService;
+
 
     /**
      * others
@@ -223,6 +229,12 @@ public class ClanWarServiceImpl implements ClanWarService {
 
     @Override
     public void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag) {
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        if (DateUtil.asDate(nowDateTime.minusMinutes(20)).before(warInfo.getStartTime())
+            && DateUtil.asDate(nowDateTime.minusMinutes(15)).after(warInfo.getStartTime())
+        ) {
+            miniProgramMessageService.sendWarStartMessage(warInfo);
+        }
         List<ClanWarMember> currentClanWarMemberDOList = Lists.newLinkedList();
         List<ClanWarLog> clanWarLogList = Lists.newLinkedList();
         ClanWarInfoDTO clanWithWarInfo;
@@ -275,6 +287,7 @@ public class ClanWarServiceImpl implements ClanWarService {
         if(!clanWarLogList.isEmpty()) {
             log.info("部落 {}, 正在保存对战记录信息", clanWithWarInfo.getName());
             clanWarLogMapper.batchInsert(clanWarLogList);
+            miniProgramMessageService.sendThreeStarMessage(warInfo);
         }
     }
 
