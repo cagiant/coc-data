@@ -21,7 +21,7 @@ public class DataSyncTask {
     @Resource
     private DataSyncService dataSyncService;
 
-    @Scheduled(cron = "0 */5 * * * *")
+//    @Scheduled(cron = "0 */5 * * * *")
     public void syncClanWarInfo() {
         dataSyncService.syncClanInfo();
 //        dataSyncService.syncClanCurrentWarInfo();
@@ -30,7 +30,7 @@ public class DataSyncTask {
         dataSyncService.generateSeasonReports();
     }
 
-    @Scheduled(cron = "0 7 */1 * * *")
+//    @Scheduled(cron = "0 7 */1 * * *")
     public void syncLeagueGroupWarInfo() {
         dataSyncService.syncLeagueGroupInfo();
     }
