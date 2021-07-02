@@ -106,15 +106,16 @@ public class ClanServiceImpl implements ClanService {
                     );
                     continue;
                 }
-                WarInfoDTO warInfo = getLeagueGroupWarBelongsToClan(warTags, clan.getTag());
+                WarInfoDTO warInfo = httpClient.getClanLeagueGroupWarInfoByTag(warTag);;
+                warInfo.setTag(warTag);
                 if (ObjectUtils.isEmpty(warInfo)) {
                     continue;
                 }
                 warInfo.setSeason(leagueGroupInfo.getSeason());
                 // 先记录下对战信息
-                clanWarService.recLeagueWarInfo(warInfo, clan.getTag(), leagueTag);
+                clanWarService.recLeagueWarInfo(warInfo, warInfo.getClan().getTag(), leagueTag);
                 // 记录下对战详细信息
-                clanWarService.recWarMemberAndWarLogs(warInfo, clan.getTag());
+                clanWarService.recWarMemberAndWarLogs(warInfo, warInfo.getClan().getTag());
                 if (i == 0) {
                     miniProgramMessageService.sendClanLeagueStartMessage(warInfo);
                 }

@@ -113,7 +113,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 	}
 
 	void sendWarStartMessage(PlayerUserWarInfoDTO u) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:ii");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String title = "部落战即将开始";
 		String msg = String.format("%s 参加的部落战即将在20分钟内开始", u.getPlayerName());
 		sendWarInfoMessage(title, msg, u.getOpenId(), null,
@@ -121,7 +121,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 	}
 
 	void sendClanLeagueStartMessage(PlayerUserWarInfoDTO u) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:ii");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String title = "联赛开始通知";
 		String msg = String.format("%s参加的部落联赛已经开始", u.getPlayerName());
 		sendWarInfoMessage(title, msg,u.getOpenId(), null,
