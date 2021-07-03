@@ -13,7 +13,9 @@
     <select id="getWarLogs" resultMap="BaseResultMap">
         select cwl.* from clan_war cw
         join clan_war_log cwl on cw.tag = cwl.war_tag
-        where cw.clan_tag = #{request.clanTag}
+        where (cw.clan_tag = #{request.clanTag}
+                or cw.opponent_clan_tag = #{request.clanTag}
+            )
               and cw.season = #{request.season}
               <if test="request.league">
                   and cw.type = 'league'
