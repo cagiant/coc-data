@@ -1,10 +1,14 @@
 package com.coc.data.model.base;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClanWarMember {
     private Long id;
 
@@ -16,7 +20,9 @@ public class ClanWarMember {
 
     private String memberName;
 
-    private Byte isDeleted;
+    private Byte mapPosition;
+
+    private Boolean isDeleted;
 
     private Date createTime;
 
@@ -62,11 +68,19 @@ public class ClanWarMember {
         this.memberName = memberName == null ? null : memberName.trim();
     }
 
-    public Byte getIsDeleted() {
+    public Byte getMapPosition() {
+        return mapPosition;
+    }
+
+    public void setMapPosition(Byte mapPosition) {
+        this.mapPosition = mapPosition;
+    }
+
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(Byte isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 

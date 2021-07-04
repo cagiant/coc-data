@@ -96,9 +96,10 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	@Override
 	public void sendThreeStarMessage(WarInfoDTO warInfo) {
+		int minute = LocalDateTime.now().getMinute() / 5 * 5;
 		List<PlayerUserWarInfoDTO> memberRelatedUsers =
 			userService.getThreeStarPlayerInfoInCertainTime(warInfo.getTag(),
-				DateUtil.asDate(LocalDateTime.now().minusMinutes(5)));
+				DateUtil.asDate(LocalDateTime.now().withMinute(minute)));
 		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
 		if (memberRelatedUsers.size() == 0) {
 			return;

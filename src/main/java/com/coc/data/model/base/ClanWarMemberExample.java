@@ -445,6 +445,66 @@ public class ClanWarMemberExample {
             return (Criteria) this;
         }
 
+        public Criteria andMapPositionIsNull() {
+            addCriterion("map_position is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionIsNotNull() {
+            addCriterion("map_position is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionEqualTo(Byte value) {
+            addCriterion("map_position =", value, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionNotEqualTo(Byte value) {
+            addCriterion("map_position <>", value, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionGreaterThan(Byte value) {
+            addCriterion("map_position >", value, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionGreaterThanOrEqualTo(Byte value) {
+            addCriterion("map_position >=", value, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionLessThan(Byte value) {
+            addCriterion("map_position <", value, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionLessThanOrEqualTo(Byte value) {
+            addCriterion("map_position <=", value, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionIn(List<Byte> values) {
+            addCriterion("map_position in", values, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionNotIn(List<Byte> values) {
+            addCriterion("map_position not in", values, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionBetween(Byte value1, Byte value2) {
+            addCriterion("map_position between", value1, value2, "mapPosition");
+            return (Criteria) this;
+        }
+
+        public Criteria andMapPositionNotBetween(Byte value1, Byte value2) {
+            addCriterion("map_position not between", value1, value2, "mapPosition");
+            return (Criteria) this;
+        }
+
         public Criteria andIsDeletedIsNull() {
             addCriterion("is_deleted is null");
             return (Criteria) this;
@@ -455,52 +515,52 @@ public class ClanWarMemberExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedEqualTo(Byte value) {
+        public Criteria andIsDeletedEqualTo(Boolean value) {
             addCriterion("is_deleted =", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedNotEqualTo(Byte value) {
+        public Criteria andIsDeletedNotEqualTo(Boolean value) {
             addCriterion("is_deleted <>", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedGreaterThan(Byte value) {
+        public Criteria andIsDeletedGreaterThan(Boolean value) {
             addCriterion("is_deleted >", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedGreaterThanOrEqualTo(Byte value) {
+        public Criteria andIsDeletedGreaterThanOrEqualTo(Boolean value) {
             addCriterion("is_deleted >=", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedLessThan(Byte value) {
+        public Criteria andIsDeletedLessThan(Boolean value) {
             addCriterion("is_deleted <", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedLessThanOrEqualTo(Byte value) {
+        public Criteria andIsDeletedLessThanOrEqualTo(Boolean value) {
             addCriterion("is_deleted <=", value, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedIn(List<Byte> values) {
+        public Criteria andIsDeletedIn(List<Boolean> values) {
             addCriterion("is_deleted in", values, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedNotIn(List<Byte> values) {
+        public Criteria andIsDeletedNotIn(List<Boolean> values) {
             addCriterion("is_deleted not in", values, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedBetween(Byte value1, Byte value2) {
+        public Criteria andIsDeletedBetween(Boolean value1, Boolean value2) {
             addCriterion("is_deleted between", value1, value2, "isDeleted");
             return (Criteria) this;
         }
 
-        public Criteria andIsDeletedNotBetween(Byte value1, Byte value2) {
+        public Criteria andIsDeletedNotBetween(Boolean value1, Boolean value2) {
             addCriterion("is_deleted not between", value1, value2, "isDeleted");
             return (Criteria) this;
         }

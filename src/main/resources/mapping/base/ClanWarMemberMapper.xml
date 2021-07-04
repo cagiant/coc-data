@@ -7,7 +7,8 @@
     <result column="member_tag" jdbcType="VARCHAR" property="memberTag" />
     <result column="clan_tag" jdbcType="VARCHAR" property="clanTag" />
     <result column="member_name" jdbcType="VARCHAR" property="memberName" />
-    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+    <result column="map_position" jdbcType="TINYINT" property="mapPosition" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -70,7 +71,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, war_tag, member_tag, clan_tag, member_name, is_deleted, create_time, update_time
+    id, war_tag, member_tag, clan_tag, member_name, map_position, is_deleted, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarMemberExample" resultMap="BaseResultMap">
     select
@@ -104,11 +106,13 @@
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.base.ClanWarMember">
     insert into clan_war_member (id, war_tag, member_tag, 
-      clan_tag, member_name, is_deleted, 
-      create_time, update_time)
+      clan_tag, member_name, map_position, 
+      is_deleted, create_time, update_time
+      )
     values (#{id,jdbcType=BIGINT}, #{warTag,jdbcType=VARCHAR}, #{memberTag,jdbcType=VARCHAR}, 
-      #{clanTag,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{clanTag,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR}, #{mapPosition,jdbcType=TINYINT}, 
+      #{isDeleted,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanWarMember">
     insert into clan_war_member
@@ -127,6 +131,9 @@
       </if>
       <if test="memberName != null">
         member_name,
+      </if>
+      <if test="mapPosition != null">
+        map_position,
       </if>
       <if test="isDeleted != null">
         is_deleted,
@@ -154,8 +161,11 @@
       <if test="memberName != null">
         #{memberName,jdbcType=VARCHAR},
       </if>
+      <if test="mapPosition != null">
+        #{mapPosition,jdbcType=TINYINT},
+      </if>
       <if test="isDeleted != null">
-        #{isDeleted,jdbcType=TINYINT},
+        #{isDeleted,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -189,8 +199,11 @@
       <if test="record.memberName != null">
         member_name = #{record.memberName,jdbcType=VARCHAR},
       </if>
+      <if test="record.mapPosition != null">
+        map_position = #{record.mapPosition,jdbcType=TINYINT},
+      </if>
       <if test="record.isDeleted != null">
-        is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+        is_deleted = #{record.isDeleted,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -210,7 +223,8 @@
       member_tag = #{record.memberTag,jdbcType=VARCHAR},
       clan_tag = #{record.clanTag,jdbcType=VARCHAR},
       member_name = #{record.memberName,jdbcType=VARCHAR},
-      is_deleted = #{record.isDeleted,jdbcType=TINYINT},
+      map_position = #{record.mapPosition,jdbcType=TINYINT},
+      is_deleted = #{record.isDeleted,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -232,8 +246,11 @@
       <if test="memberName != null">
         member_name = #{memberName,jdbcType=VARCHAR},
       </if>
+      <if test="mapPosition != null">
+        map_position = #{mapPosition,jdbcType=TINYINT},
+      </if>
       <if test="isDeleted != null">
-        is_deleted = #{isDeleted,jdbcType=TINYINT},
+        is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -250,7 +267,8 @@
       member_tag = #{memberTag,jdbcType=VARCHAR},
       clan_tag = #{clanTag,jdbcType=VARCHAR},
       member_name = #{memberName,jdbcType=VARCHAR},
-      is_deleted = #{isDeleted,jdbcType=TINYINT},
+      map_position = #{mapPosition,jdbcType=TINYINT},
+      is_deleted = #{isDeleted,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
