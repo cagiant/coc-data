@@ -96,6 +96,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	@Override
 	public void sendThreeStarMessage(WarInfoDTO warInfo) {
+		// 获取这次新增的三星记录
 		int minute = LocalDateTime.now().getMinute() / 5 * 5;
 		List<PlayerUserWarInfoDTO> memberRelatedUsers =
 			userService.getThreeStarPlayerInfoInCertainTime(warInfo.getTag(),
@@ -109,7 +110,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	void sendThreeStartMessage(PlayerUserWarInfoDTO u) {
 		String title = "三星通知";
-		String msg = String.format("%s 第 %s 个发起进攻，获得三星", u.getPlayerName(), u.getAttackOrder());
+		String msg = String.format("%s 进攻对方 %s 号，获得三星", u.getPlayerName(), u.getOpponentRankToAttack());
 		sendWarResultMessage(title, msg, null, u.getOpenId());
 	}
 

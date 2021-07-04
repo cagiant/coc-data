@@ -46,16 +46,31 @@
             and u.is_deleted = 0
     </select>
     <select id="getThreeStarPlayerInfoInCertainTime" resultType="com.coc.data.dto.user.PlayerUserWarInfoDTO">
-        select u.nick_name `userName`,
-               u.open_id `openId`,
-               p.tag `playerTag`,
-               p.name `playerName`,
-               u.setting `userSetting`,
-               cwl.attack_order `attackOrder`
-        from clan_war_log cwl
-            join player p on cwl.attacker_tag = p.tag
-            join user_player_relation upr on p.id = upr.player_id and p.is_deleted = 0 and upr.is_deleted = 0
-            join user u on upr.user_id = u.id and u.is_deleted = 0
-        where cwl.war_tag = #{warTag} and cwl.create_time > #{date}
+        select u.nick_name      `userName`,
+               u.open_id        `openId`,
+               u.setting        `userSetting`,
+               tmp.attack_order `attackOrder`,
+               tmp.map_position `opponentRankToAttack`,
+               tmp.tag          `playerTag`,
+               tmp.name         `playerName`
+        from (select cwl.attack_order,
+                     opponent.map_position,
+                     attacker.member_tag,
+                     attacker.clan_tag,
+                     p.tag,
+                     p.name
+              from clan_war_log cwl
+                       join clan_war_member attacker
+                            on attacker.war_tag = cwl.war_tag and attacker.member_tag = cwl.attacker_tag
+                       join player p on p.tag = attacker.member_tag
+                       join clan_war_member opponent
+                            on opponent.war_tag = cwl.war_tag and opponent.member_tag = cwl.defender_tag
+              where cwl.war_tag = #{warTag}
+                and cwl.create_time > #{date}
+                and cwl.star = 3) tmp
+                 join clan_war_member friends on friends.war_tag = #{warTag} and friends.clan_tag = tmp.clan_tag
+                 join player p on friends.member_tag = p.tag
+                 join user_player_relation upr on p.id = upr.player_id and p.is_deleted = 0 and upr.is_deleted = 0
+                 join user u on upr.user_id = u.id and u.is_deleted = 0
     </select>
 </mapper>
