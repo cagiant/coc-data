@@ -15,4 +15,6 @@ public interface PlayerMapper extends BaseDao<Player, PlayerExample> {
 	Player selectByTag(String playerTag);
 
 	List<PlayerBriefVO> selectBriefPlayer(@Param("openId") String openId);
+
+	void batchDelete(@Param("list") List<Player> playerList);
 }

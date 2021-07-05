@@ -109,8 +109,9 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 	}
 
 	void sendThreeStartMessage(PlayerUserWarInfoDTO u) {
-		String title = "三星通知";
-		String msg = String.format("%s 进攻对方 %s 号，获得三星",getMessagePlayerName(u.getPlayerName()), u.getOpponentRankToAttack());
+		String title = String.format("%s 战况通报", u.getClanName());
+		String msg = String.format("%s 三星对方 %s 号", u.getPlayerName(),
+			u.getOpponentRankToAttack());
 		sendWarResultMessage(title, msg, null, u.getOpenId());
 	}
 

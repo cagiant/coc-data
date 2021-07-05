@@ -32,7 +32,7 @@ public class PlayerServiceImpl implements PlayerService {
             return;
         }
         List<ClanMember> clanMembersList = Lists.newLinkedList();
-        List<Player> playersList = Lists.newLinkedList();
+        List<Player> playerList = Lists.newLinkedList();
         clanMemberDTOList.forEach(clanMemberDTO -> {
             clanMembersList.add(ClanMember.builder()
                 .clanTag(clanTag)
@@ -40,12 +40,17 @@ public class PlayerServiceImpl implements PlayerService {
                 .name(clanMemberDTO.getName())
                 .build()
             );
-            playersList.add(Player.builder()
+            playerList.add(Player.builder()
                 .name(clanMemberDTO.getName())
                 .tag(clanMemberDTO.getTag())
                 .build());
         });
-        clanMemberMapper.batchInsert(clanMembersList);
-        playerMapper.batchInsert(playersList);
+        if (clanMembersList.size() > 0) {
+            clanMemberMapper.batchInsert(clanMembersList);
+        }
+        if (playerList.size() > 0) {
+            playerMapper.batchDelete(playerList);
+            playerMapper.batchInsert(playerList);
+        }
     }
 }

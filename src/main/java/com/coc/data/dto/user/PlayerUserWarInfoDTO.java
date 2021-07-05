@@ -28,4 +28,6 @@ public class PlayerUserWarInfoDTO {
 	private String attackOrder;
 
 	private String opponentRankToAttack;
+
+	private String clanName;
 }

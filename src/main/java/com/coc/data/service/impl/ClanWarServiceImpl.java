@@ -284,6 +284,7 @@ public class ClanWarServiceImpl implements ClanWarService {
         if (!currentClanWarMemberDOList.isEmpty()) {
             log.info("部落 {}, 正在保存参战成员信息", clanWithWarInfo.getName());
             clanWarMemberMapper.batchInsert(currentClanWarMemberDOList);
+            playerMapper.batchDelete(playerList);
             playerMapper.batchInsert(playerList);
         }
         if(!clanWarLogList.isEmpty()) {
