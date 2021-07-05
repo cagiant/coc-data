@@ -121,8 +121,8 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	void sendWarStartMessage(PlayerUserWarInfoDTO u) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String title = "部落战即将开始";
-		String msg = String.format("%s 参加的部落战即将在20分钟内开始", getMessagePlayerName(u.getPlayerName()));
+		String title = "部落战信息通告";
+		String msg = String.format("%s 所在的部落20分钟内即将开战", getMessagePlayerName(u.getPlayerName()));
 		sendWarInfoMessage(title, msg, u.getOpenId(), null,
 			format.format(new Date()), MiniprogramMessageSenderEnum.SYSTEM.code);
 	}
