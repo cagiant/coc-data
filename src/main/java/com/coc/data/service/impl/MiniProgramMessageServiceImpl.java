@@ -100,7 +100,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		int minute = LocalDateTime.now().getMinute() / 5 * 5;
 		List<PlayerUserWarInfoDTO> memberRelatedUsers =
 			userService.getThreeStarPlayerInfoInCertainTime(warInfo.getTag(),
-				DateUtil.asDate(LocalDateTime.now().withMinute(minute)));
+				DateUtil.asDate(LocalDateTime.now().withMinute(minute).withSecond(0)));
 		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
 		if (memberRelatedUsers.size() == 0) {
 			return;
@@ -110,14 +110,18 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	void sendThreeStartMessage(PlayerUserWarInfoDTO u) {
 		String title = "三星通知";
-		String msg = String.format("%s 进攻对方 %s 号，获得三星", u.getPlayerName(), u.getOpponentRankToAttack());
+		String msg = String.format("%s 进攻对方 %s 号，获得三星",getMessagePlayerName(u.getPlayerName()), u.getOpponentRankToAttack());
 		sendWarResultMessage(title, msg, null, u.getOpenId());
+	}
+
+	String getMessagePlayerName(String playerName) {
+		return playerName.length() > 5 ? playerName.substring(0, 5) : playerName;
 	}
 
 	void sendWarStartMessage(PlayerUserWarInfoDTO u) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String title = "部落战即将开始";
-		String msg = String.format("%s 参加的部落战即将在20分钟内开始", u.getPlayerName());
+		String msg = String.format("%s 参加的部落战即将在20分钟内开始", getMessagePlayerName(u.getPlayerName()));
 		sendWarInfoMessage(title, msg, u.getOpenId(), null,
 			format.format(new Date()), MiniprogramMessageSenderEnum.SYSTEM.code);
 	}
@@ -125,7 +129,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 	void sendClanLeagueStartMessage(PlayerUserWarInfoDTO u) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String title = "联赛开始通知";
-		String msg = String.format("%s参加的部落联赛已经开始", u.getPlayerName());
+		String msg = String.format("%s参加的部落联赛已经开始", getMessagePlayerName(u.getPlayerName()));
 		sendWarInfoMessage(title, msg,u.getOpenId(), null,
 			format.format(new Date()), MiniprogramMessageSenderEnum.SYSTEM.code);
 	}
