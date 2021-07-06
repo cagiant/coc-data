@@ -10,4 +10,6 @@ import java.util.List;
 public interface ClanMemberMapper extends BaseDao<ClanMember, ClanMemberExample> {
 
     void batchInsert(@Param("list") List<ClanMember> clanMembersList);
+
+    void batchDelete(@Param("list") List<ClanMember> clanMembersList);
 }

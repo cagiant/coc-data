@@ -8,6 +8,14 @@
             (#{item.tag}, #{item.clanTag}, #{item.name})
         </foreach>
         on duplicate key update
-            name = values(name)
+            name = values(name),
+            is_deleted = 0
     </insert>
+    <update id="batchDelete">
+        update clan_member set is_deleted = 1
+        where tag in (
+        <foreach collection="list" separator="," item="item">
+            #{item.tag}
+        </foreach>)
+    </update>
 </mapper>

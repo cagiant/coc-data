@@ -46,6 +46,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .build());
         });
         if (clanMembersList.size() > 0) {
+            clanMemberMapper.batchDelete(clanMembersList);
             clanMemberMapper.batchInsert(clanMembersList);
         }
         if (playerList.size() > 0) {
