@@ -13,6 +13,7 @@ import com.coc.data.service.MiniProgramMessageService;
 import com.coc.data.service.UserService;
 import com.coc.data.util.DateUtil;
 import com.coc.data.util.FormatUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
  * @date 2021/6/30 22:13
  */
 @Service
+@Slf4j
 public class MiniProgramMessageServiceImpl implements MiniProgramMessageService {
 
 	@Resource
@@ -151,8 +153,10 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		String url = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + getAccessToken();
 		ResponseEntity<String> responseEntity =
 			restTemplate.postForEntity(url, msgDTO, String.class);
+		String result = responseEntity.getBody();
+		log.info(String.format("miniprogram message info: %s, result: %s", FormatUtil.serializeObject2JsonStr(msgDTO), result));
 
-		return responseEntity.getBody();
+		return result;
 	}
 
 	String getAccessToken() {

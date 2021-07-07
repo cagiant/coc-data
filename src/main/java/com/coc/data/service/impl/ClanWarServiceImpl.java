@@ -230,8 +230,8 @@ public class ClanWarServiceImpl implements ClanWarService {
     @Override
     public void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag) {
         LocalDateTime nowDateTime = LocalDateTime.now();
-        if (DateUtil.asDate(nowDateTime.minusMinutes(20)).before(warInfo.getStartTime())
-            && DateUtil.asDate(nowDateTime.minusMinutes(15)).after(warInfo.getStartTime())
+        if (DateUtil.asDate(nowDateTime.plusMinutes(20)).after(warInfo.getStartTime())
+            && DateUtil.asDate(nowDateTime.plusMinutes(15)).before(warInfo.getStartTime())
         ) {
             miniProgramMessageService.sendWarStartMessage(warInfo);
         }
