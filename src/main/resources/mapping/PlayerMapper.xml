@@ -12,11 +12,25 @@
     <select id="selectByTag" resultMap="BaseResultMap">
         select * from player where tag = #{playerTag} and is_deleted = 0
     </select>
-    <select id="selectBriefPlayer" resultMap="BaseResultMap">
-        select * from player p
+    <select id="selectBriefPlayer" resultType="com.coc.data.controller.vo.user.PlayerBriefVO">
+        select u.open_id `openId`,
+               p.tag `tag`,
+               p.name `name`
+        from player p
             join user_player_relation upr on p.id = upr.player_id and upr.is_deleted = 0
             join user u on upr.user_id = u.id
         where u.open_id = #{openId}
+    </select>
+    <select id="selectUserIdListByPlayerTagList" resultType="long">
+        select distinct (u.id)
+        from player p
+          join user_player_relation upr on p.id = upr.player_id and upr.is_deleted = 0
+          join user u on upr.user_id = u.id
+        where p.tag in (
+            <foreach collection="list" item="item" separator=",">
+              #{item}
+            </foreach>
+            )
     </select>
     <insert id="batchDelete">
         update player set is_deleted = 1 where tag in
