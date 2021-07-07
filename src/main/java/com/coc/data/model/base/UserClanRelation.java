@@ -1,7 +1,10 @@
 package com.coc.data.model.base;
 
+import lombok.Builder;
+
 import java.util.Date;
 
+@Builder
 public class UserClanRelation {
     private Long id;
 
