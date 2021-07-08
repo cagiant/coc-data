@@ -13,6 +13,8 @@ import com.coc.data.service.MiniProgramMessageService;
 import com.coc.data.service.UserService;
 import com.coc.data.util.DateUtil;
 import com.coc.data.util.FormatUtil;
+import com.coc.data.util.RedisKeyBuilder;
+import com.coc.data.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	@Resource
 	private WxConfig wxConfig;
+	@Resource
+	private RedisUtil redisUtil;
 
 	@Resource
 	private UserService userService;
@@ -160,20 +164,21 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 	}
 
 	String getAccessToken() {
-		if (WxConfig.tokenExipres != null && WxConfig.tokenExipres.before(new Date())) {
-			return WxConfig.accessToken;
+		String miniProgramToken = redisUtil.get(RedisKeyBuilder.getMiniprogramToken());
+		if (miniProgramToken == null) {
+			RestTemplate restTemplate = new RestTemplate();
+			Map<String, String> params = new HashMap<>();
+			params.put("APPID", wxConfig.getAppId());
+			params.put("APPSECRET", wxConfig.getAppSecret());
+			ResponseEntity<String> responseEntity = restTemplate.getForEntity(
+				"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={APPID}&secret={APPSECRET}", String.class, params);
+			String body = responseEntity.getBody();
+			JSONObject object = JSON.parseObject(body);
+			miniProgramToken = object.getString("access_token");
+			redisUtil.setex(RedisKeyBuilder.getMiniprogramToken(), miniProgramToken,
+				Integer.parseInt(object.getString("expires_in")));
 		}
-		RestTemplate restTemplate = new RestTemplate();
-		Map<String, String> params = new HashMap<>();
-		params.put("APPID", wxConfig.getAppId());
-		params.put("APPSECRET", wxConfig.getAppSecret());
-		ResponseEntity<String> responseEntity = restTemplate.getForEntity(
-			"https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={APPID}&secret={APPSECRET}", String.class, params);
-		String body = responseEntity.getBody();
-		JSONObject object = JSON.parseObject(body);
-		WxConfig.accessToken = object.getString("access_token");
-		WxConfig.tokenExipres = new Date(System.currentTimeMillis() + Long.parseLong(object.getString("expires_in")));
 
-		return WxConfig.accessToken;
+		return miniProgramToken;
 	}
 }
