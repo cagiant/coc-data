@@ -24,10 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -96,6 +93,16 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
 		if (memberRelatedUsers.size() == 0) {
 			return;
+		}
+		Map<String, Integer> tempMap = new HashMap<>();
+		Iterator<PlayerUserWarInfoDTO> iterator = memberRelatedUsers.iterator();
+		while (iterator.hasNext()) {
+			PlayerUserWarInfoDTO tempPlayer = iterator.next();
+			if (tempMap.containsKey(tempPlayer.getOpenId())) {
+				iterator.remove();
+			} else {
+				tempMap.put(tempPlayer.getOpenId(), 1);
+			}
 		}
 		memberRelatedUsers.forEach(this::sendWarStartMessage);
 	}
