@@ -28,15 +28,15 @@ public interface ClanWarService {
      * @author guokaiqiang
      * @date 2021/3/7 17:21
      **/
-    void syncClanLeagueWarInfo(String warTag, String clanTag);
+    void syncClanLeagueWarInfo(String warTag);
 
-    void syncClanLeagueWarInfos(List<ClanWar> clanWarList, String clanTag);
+    void syncClanLeagueWarInfos(List<ClanWar> clanWarList);
 
-    void recNormalWarInfo(WarInfoDTO currentWarInfo, String clanTag);
+    void recNormalWarInfo(WarInfoDTO currentWarInfo);
 
-    void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag, String leagueTag);
+    void recLeagueWarInfo(WarInfoDTO currentWarInfo, String leagueTag);
 
-    void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag);
+    void recWarMemberAndWarLogs(WarInfoDTO warInfo);
 
     /**
      * 同步部落当前进行中的战争信息

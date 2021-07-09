@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.google.common.collect.Lists;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class FormatUtil {
             // 创建一个MessageDigest实例:
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             // 反复调用update输入数据:
-            md.update(stringToHash.getBytes("UTF-8"));
+            md.update(stringToHash.getBytes(StandardCharsets.UTF_8));
             byte[] result = md.digest();
             return new BigInteger(1, result).toString(16);
         } catch (Exception e) {

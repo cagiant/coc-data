@@ -113,9 +113,9 @@ public class ClanServiceImpl implements ClanService {
                 }
                 warInfo.setSeason(leagueGroupInfo.getSeason());
                 // 先记录下对战信息
-                clanWarService.recLeagueWarInfo(warInfo, warInfo.getClan().getTag(), leagueTag);
+                clanWarService.recLeagueWarInfo(warInfo, leagueTag);
                 // 记录下对战详细信息
-                clanWarService.recWarMemberAndWarLogs(warInfo, warInfo.getClan().getTag());
+                clanWarService.recWarMemberAndWarLogs(warInfo);
                 if (i == 0) {
                     miniProgramMessageService.sendClanLeagueStartMessage(warInfo);
                 }

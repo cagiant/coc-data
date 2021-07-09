@@ -78,15 +78,15 @@ public class ClanWarServiceImpl implements ClanWarService {
             }
             currentWarInfo.setTag(getNormalWarTag(currentWarInfo.getPreparationStartTime(), currentWarInfo.getClan().getTag(), currentWarInfo.getOpponent().getTag()));
             currentWarInfo.setSeason(getWarSeason(currentWarInfo.getPreparationStartTime()));
-            recNormalWarInfo(currentWarInfo, clanTag);
-            recWarMemberAndWarLogs(currentWarInfo, clanTag);
+            recNormalWarInfo(currentWarInfo);
+            recWarMemberAndWarLogs(currentWarInfo);
         } catch (Exception e) {
             log.error("部落标签{}, 获取当前对战信息失败。", clanTag);
         }
     }
 
     @Override
-    public void syncClanLeagueWarInfo(String warTag, String clanTag) {
+    public void syncClanLeagueWarInfo(String warTag) {
         WarInfoDTO warInfo;
         try {
             warInfo = httpClient.getClanLeagueGroupWarInfoByTag(warTag);
@@ -104,20 +104,20 @@ public class ClanWarServiceImpl implements ClanWarService {
         warInfo.setTag(warTag);
         // 记录下对战信息
         log.info("更新战争信息");
-        recLeagueWarInfo(warInfo, clanTag, null);
+        recLeagueWarInfo(warInfo, null);
         // 记录下对战详细信息
         log.info("更新对战详细信息");
         if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
             log.info("战争已结束，更新参战人员");
             refreshLeagueGroupWarMembers(warInfo, warTag);
         }
-        recWarMemberAndWarLogs(warInfo, clanTag);
+        recWarMemberAndWarLogs(warInfo);
     }
 
     @Override
-    public void syncClanLeagueWarInfos(List<ClanWar> clanWarList, String clanTag) {
+    public void syncClanLeagueWarInfos(List<ClanWar> clanWarList) {
         for (ClanWar clanWar : clanWarList) {
-            syncClanLeagueWarInfo(clanWar.getTag(), clanTag);
+            syncClanLeagueWarInfo(clanWar.getTag());
         }
     }
 
@@ -197,18 +197,18 @@ public class ClanWarServiceImpl implements ClanWarService {
     }
 
     @Override
-    public void recNormalWarInfo(WarInfoDTO currentWarInfo, String clanTag) {
-        recWarInfo(currentWarInfo, clanTag, ClanWarTypeEnum.NORMAL.code, null);
+    public void recNormalWarInfo(WarInfoDTO currentWarInfo) {
+        recWarInfo(currentWarInfo, ClanWarTypeEnum.NORMAL.code, null);
     }
 
     @Override
-    public void recLeagueWarInfo(WarInfoDTO currentWarInfo, String clanTag, String leagueTag) {
-        recWarInfo(currentWarInfo, clanTag, ClanWarTypeEnum.LEAGUE.code, leagueTag);
+    public void recLeagueWarInfo(WarInfoDTO currentWarInfo, String leagueTag) {
+        recWarInfo(currentWarInfo, ClanWarTypeEnum.LEAGUE.code, leagueTag);
     }
 
-    private void recWarInfo(WarInfoDTO warInfo, String clanTag, String type, String leagueTag) {
+    private void recWarInfo(WarInfoDTO warInfo, String type, String leagueTag) {
         ClanWar currentWar = ClanWar.builder()
-            .clanTag(clanTag)
+            .clanTag(warInfo.getClan().getTag())
             .tag(warInfo.getTag())
             .season(warInfo.getSeason())
             .opponentClanTag(warInfo.getOpponent().getTag())
@@ -228,7 +228,7 @@ public class ClanWarServiceImpl implements ClanWarService {
     }
 
     @Override
-    public void recWarMemberAndWarLogs(WarInfoDTO warInfo, String clanTag) {
+    public void recWarMemberAndWarLogs(WarInfoDTO warInfo) {
         LocalDateTime nowDateTime = LocalDateTime.now();
         if (DateUtil.asDate(nowDateTime.plusMinutes(20)).after(warInfo.getStartTime())
             && DateUtil.asDate(nowDateTime.plusMinutes(15)).before(warInfo.getStartTime())
@@ -237,16 +237,11 @@ public class ClanWarServiceImpl implements ClanWarService {
         }
         List<ClanWarMember> currentClanWarMemberDOList = Lists.newLinkedList();
         List<ClanWarLog> clanWarLogList = Lists.newLinkedList();
-        ClanWarInfoDTO clanWithWarInfo;
-        ClanWarInfoDTO opponentClanWithWarInfo;
-        if (clanTag.equals(warInfo.getClan().getTag())) {
-            clanWithWarInfo = warInfo.getClan();
-            opponentClanWithWarInfo = warInfo.getOpponent();
-        } else {
-            clanWithWarInfo = warInfo.getOpponent();
-            opponentClanWithWarInfo = warInfo.getClan();
-        }
-        log.info("部落 {}, 正在处理参战成员及对战记录信息，战争标签：{}", clanWithWarInfo.getName(), warInfo.getTag());
+        ClanWarInfoDTO clanWithWarInfo = warInfo.getClan();
+        ClanWarInfoDTO opponentClanWithWarInfo =  warInfo.getOpponent();
+
+        log.info("部落 {}v.s.{} 正在处理参战成员及对战记录信息，战争标签：{}", clanWithWarInfo.getName(),
+            opponentClanWithWarInfo.getName(), warInfo.getTag());
         List<ClanWarMemberDTO> clanWarMemberDTOList = clanWithWarInfo.getMembers();
         List<Player> playerList = Lists.newLinkedList();
 
@@ -305,7 +300,7 @@ public class ClanWarServiceImpl implements ClanWarService {
         // 有未结束的联赛战争，就去获取联赛信息
         List<ClanWar> clanWars = clanWarMapper.getUnendedLeagueWarByClanTag(clan.getTag());
         if (!ObjectUtils.isEmpty(clanWars) && clan.getProvideLeagueWarReport() == 1) {
-            syncClanLeagueWarInfos(clanWars, clan.getTag());
+            syncClanLeagueWarInfos(clanWars);
         } else if (clan.getProvideClanWarReport() == 1) {
             syncClanNormalWarInfo(clan.getTag());
         }
