@@ -35,10 +35,10 @@
     <select id="getUnendedLeagueWarByClanTag" resultMap="BaseResultMap">
         select cw2.*
         from clan_war cw
-        join clan_war cw2 on cw.league_tag = cw2.league_tag and cw2.state != 'warEnded'
-        where cw.state != 'warEnded'
-          and (cw.clan_tag = #{tag} or cw.opponent_clan_tag = #{tag})
+        join clan_war cw2 on cw.league_tag = cw2.league_tag and cw2.state != 'warEnded' and cw2.type = 'league'
+        where (cw.clan_tag = #{tag} or cw.opponent_clan_tag = #{tag})
           and cw.type = 'league'
+          group by cw2.tag
     </select>
     <select id="getSeasons" resultType="string">
         select season from clan_war group by season
