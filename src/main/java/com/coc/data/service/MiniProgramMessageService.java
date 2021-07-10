@@ -19,4 +19,6 @@ public interface MiniProgramMessageService {
 	void sendWarStartMessage(WarInfoDTO warInfo);
 
 	void sendThreeStarMessage(WarInfoDTO warInfo);
+
+	void sendWarEndMessage(WarInfoDTO warInfo);
 }

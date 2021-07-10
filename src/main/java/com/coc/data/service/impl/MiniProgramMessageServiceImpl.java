@@ -121,6 +121,11 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		memberRelatedUsers.forEach(this::sendThreeStartMessage);
 	}
 
+	@Override
+	public void sendWarEndMessage(WarInfoDTO warInfo) {
+		// 等战争结果信息能查了再填写
+	}
+
 	void sendThreeStartMessage(PlayerUserWarInfoDTO u) {
 		String title = String.format("%s 战况通报", u.getClanName());
 		String msg = String.format("%s 三星对方 %s 号", u.getPlayerName(),

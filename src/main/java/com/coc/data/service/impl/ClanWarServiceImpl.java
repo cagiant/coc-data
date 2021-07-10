@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -223,8 +224,26 @@ public class ClanWarServiceImpl implements ClanWarService {
         if (leagueTag != null) {
             currentWar.setLeagueTag(leagueTag);
         }
+        // 如果当前战争已经结束，判断是否需要发送战争消息
+        if (ClanWarStateEnum.WAR_ENDED.code.equals(currentWar.getState())) {
+            noticeWarEnd(warInfo);
+        }
 
         clanWarMapper.insertOnDuplicateKeyUpdate(currentWar);
+    }
+
+    private void noticeWarEnd(WarInfoDTO warInfo) {
+        List<ClanWar> clanWars =
+            clanWarMapper.getWarsByWarTagList(Collections.singletonList(warInfo.getTag()));
+        if (ObjectUtils.isEmpty(clanWars)) {
+            return;
+        }
+        ClanWar clanWar = clanWars.get(0);
+        // 说明不是第一次捕捉到战争结束消息
+        if (ClanWarStateEnum.WAR_ENDED.code.equals(clanWar.getState())) {
+            return;
+        }
+        miniProgramMessageService.sendWarEndMessage(warInfo);
     }
 
     @Override
