@@ -311,8 +311,8 @@ public class ClanWarServiceImpl implements ClanWarService {
     @Override
     public void syncClanCurrentWarInfo(Clan clan) {
         // 没有报告需求的，直接不同步，返回
-        if (clan.getProvideClanWarReport()
-            && clan.getProvideLeagueWarReport()
+        if (!clan.getProvideClanWarReport()
+            && !clan.getProvideLeagueWarReport()
         ) {
             return;
         }
