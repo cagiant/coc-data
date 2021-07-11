@@ -115,52 +115,52 @@ public class ClanExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdEqualTo(Integer value) {
+        public Criteria andIdEqualTo(Long value) {
             addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotEqualTo(Integer value) {
+        public Criteria andIdNotEqualTo(Long value) {
             addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThan(Integer value) {
+        public Criteria andIdGreaterThan(Long value) {
             addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andIdGreaterThanOrEqualTo(Long value) {
             addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThan(Integer value) {
+        public Criteria andIdLessThan(Long value) {
             addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThanOrEqualTo(Integer value) {
+        public Criteria andIdLessThanOrEqualTo(Long value) {
             addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<Integer> values) {
+        public Criteria andIdIn(List<Long> values) {
             addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotIn(List<Integer> values) {
+        public Criteria andIdNotIn(List<Long> values) {
             addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdBetween(Integer value1, Integer value2) {
+        public Criteria andIdBetween(Long value1, Long value2) {
             addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andIdNotBetween(Long value1, Long value2) {
             addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
@@ -315,52 +315,52 @@ public class ClanExample {
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportEqualTo(Byte value) {
+        public Criteria andProvideClanWarReportEqualTo(Boolean value) {
             addCriterion("provide_clan_war_report =", value, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportNotEqualTo(Byte value) {
+        public Criteria andProvideClanWarReportNotEqualTo(Boolean value) {
             addCriterion("provide_clan_war_report <>", value, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportGreaterThan(Byte value) {
+        public Criteria andProvideClanWarReportGreaterThan(Boolean value) {
             addCriterion("provide_clan_war_report >", value, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportGreaterThanOrEqualTo(Byte value) {
+        public Criteria andProvideClanWarReportGreaterThanOrEqualTo(Boolean value) {
             addCriterion("provide_clan_war_report >=", value, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportLessThan(Byte value) {
+        public Criteria andProvideClanWarReportLessThan(Boolean value) {
             addCriterion("provide_clan_war_report <", value, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportLessThanOrEqualTo(Byte value) {
+        public Criteria andProvideClanWarReportLessThanOrEqualTo(Boolean value) {
             addCriterion("provide_clan_war_report <=", value, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportIn(List<Byte> values) {
+        public Criteria andProvideClanWarReportIn(List<Boolean> values) {
             addCriterion("provide_clan_war_report in", values, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportNotIn(List<Byte> values) {
+        public Criteria andProvideClanWarReportNotIn(List<Boolean> values) {
             addCriterion("provide_clan_war_report not in", values, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportBetween(Byte value1, Byte value2) {
+        public Criteria andProvideClanWarReportBetween(Boolean value1, Boolean value2) {
             addCriterion("provide_clan_war_report between", value1, value2, "provideClanWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideClanWarReportNotBetween(Byte value1, Byte value2) {
+        public Criteria andProvideClanWarReportNotBetween(Boolean value1, Boolean value2) {
             addCriterion("provide_clan_war_report not between", value1, value2, "provideClanWarReport");
             return (Criteria) this;
         }
@@ -375,52 +375,52 @@ public class ClanExample {
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportEqualTo(Byte value) {
+        public Criteria andProvideLeagueWarReportEqualTo(Boolean value) {
             addCriterion("provide_league_war_report =", value, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportNotEqualTo(Byte value) {
+        public Criteria andProvideLeagueWarReportNotEqualTo(Boolean value) {
             addCriterion("provide_league_war_report <>", value, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportGreaterThan(Byte value) {
+        public Criteria andProvideLeagueWarReportGreaterThan(Boolean value) {
             addCriterion("provide_league_war_report >", value, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportGreaterThanOrEqualTo(Byte value) {
+        public Criteria andProvideLeagueWarReportGreaterThanOrEqualTo(Boolean value) {
             addCriterion("provide_league_war_report >=", value, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportLessThan(Byte value) {
+        public Criteria andProvideLeagueWarReportLessThan(Boolean value) {
             addCriterion("provide_league_war_report <", value, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportLessThanOrEqualTo(Byte value) {
+        public Criteria andProvideLeagueWarReportLessThanOrEqualTo(Boolean value) {
             addCriterion("provide_league_war_report <=", value, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportIn(List<Byte> values) {
+        public Criteria andProvideLeagueWarReportIn(List<Boolean> values) {
             addCriterion("provide_league_war_report in", values, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportNotIn(List<Byte> values) {
+        public Criteria andProvideLeagueWarReportNotIn(List<Boolean> values) {
             addCriterion("provide_league_war_report not in", values, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportBetween(Byte value1, Byte value2) {
+        public Criteria andProvideLeagueWarReportBetween(Boolean value1, Boolean value2) {
             addCriterion("provide_league_war_report between", value1, value2, "provideLeagueWarReport");
             return (Criteria) this;
         }
 
-        public Criteria andProvideLeagueWarReportNotBetween(Byte value1, Byte value2) {
+        public Criteria andProvideLeagueWarReportNotBetween(Boolean value1, Boolean value2) {
             addCriterion("provide_league_war_report not between", value1, value2, "provideLeagueWarReport");
             return (Criteria) this;
         }

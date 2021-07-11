@@ -311,16 +311,16 @@ public class ClanWarServiceImpl implements ClanWarService {
     @Override
     public void syncClanCurrentWarInfo(Clan clan) {
         // 没有报告需求的，直接不同步，返回
-        if (clan.getProvideClanWarReport() == 0
-            && clan.getProvideLeagueWarReport() == 0
+        if (clan.getProvideClanWarReport()
+            && clan.getProvideLeagueWarReport()
         ) {
             return;
         }
         // 有未结束的联赛战争，就去获取联赛信息
         List<ClanWar> clanWars = clanWarMapper.getUnendedLeagueWarByClanTag(clan.getTag());
-        if (!ObjectUtils.isEmpty(clanWars) && clan.getProvideLeagueWarReport() == 1) {
+        if (!ObjectUtils.isEmpty(clanWars) && clan.getProvideLeagueWarReport()) {
             syncClanLeagueWarInfos(clanWars);
-        } else if (clan.getProvideClanWarReport() == 1) {
+        } else if (clan.getProvideClanWarReport()) {
             syncClanNormalWarInfo(clan.getTag());
         }
     }

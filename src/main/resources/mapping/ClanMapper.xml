@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.ClanMapper">
     <insert id="insertOnDuplicateKeyUpdate">
-        insert into clan (tag, name) VALUES
-            (#{clan.tag}, #{clan.name})
-        on duplicate key update name = values(name);
+        insert into clan (tag, name, extra_info) VALUES
+            (#{clan.tag}, #{clan.name}, #{clan.extraInfo})
+        on duplicate key update name = values(name), extra_info = values(extra_info);
     </insert>
     <select id="selectByClanTag" resultType="com.coc.data.model.base.Clan">
         select * from clan where tag = #{tag}

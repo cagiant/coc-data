@@ -63,6 +63,7 @@ public class ClanServiceImpl implements ClanService {
         Clan clan = Clan.builder()
             .name(clanInfo.getName())
             .tag(clanTag)
+            .extraInfo(FormatUtil.serializeObject2JsonStr(clanInfo))
             .build();
         clanMapper.insertOnDuplicateKeyUpdate(clan);
         playerService.refreshClanMembers(clanInfo.getMemberList(), clanTag);

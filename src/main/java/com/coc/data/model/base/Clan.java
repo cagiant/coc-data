@@ -1,20 +1,24 @@
 package com.coc.data.model.base;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Clan {
-    private Integer id;
+    private Long id;
 
     private String tag;
 
     private String name;
 
-    private Byte provideClanWarReport;
+    private Boolean provideClanWarReport;
 
-    private Byte provideLeagueWarReport;
+    private Boolean provideLeagueWarReport;
 
     private Date expireTime;
 
@@ -22,11 +26,13 @@ public class Clan {
 
     private Date updateTime;
 
-    public Integer getId() {
+    private String extraInfo;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,19 +52,19 @@ public class Clan {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getProvideClanWarReport() {
+    public Boolean getProvideClanWarReport() {
         return provideClanWarReport;
     }
 
-    public void setProvideClanWarReport(Byte provideClanWarReport) {
+    public void setProvideClanWarReport(Boolean provideClanWarReport) {
         this.provideClanWarReport = provideClanWarReport;
     }
 
-    public Byte getProvideLeagueWarReport() {
+    public Boolean getProvideLeagueWarReport() {
         return provideLeagueWarReport;
     }
 
-    public void setProvideLeagueWarReport(Byte provideLeagueWarReport) {
+    public void setProvideLeagueWarReport(Boolean provideLeagueWarReport) {
         this.provideLeagueWarReport = provideLeagueWarReport;
     }
 
@@ -84,5 +90,13 @@ public class Clan {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getExtraInfo() {
+        return extraInfo;
+    }
+
+    public void setExtraInfo(String extraInfo) {
+        this.extraInfo = extraInfo == null ? null : extraInfo.trim();
     }
 }

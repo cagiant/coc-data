@@ -2,14 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coc.data.mapper.ClanMapper">
   <resultMap id="BaseResultMap" type="com.coc.data.model.base.Clan">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="provide_clan_war_report" jdbcType="TINYINT" property="provideClanWarReport" />
-    <result column="provide_league_war_report" jdbcType="TINYINT" property="provideLeagueWarReport" />
+    <result column="provide_clan_war_report" jdbcType="BIT" property="provideClanWarReport" />
+    <result column="provide_league_war_report" jdbcType="BIT" property="provideLeagueWarReport" />
     <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.coc.data.model.base.Clan">
+    <result column="extra_info" jdbcType="LONGVARCHAR" property="extraInfo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,6 +76,25 @@
     id, tag, name, provide_clan_war_report, provide_league_war_report, expire_time, create_time, 
     update_time
   </sql>
+  <sql id="Blob_Column_List">
+    extra_info
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.coc.data.model.base.ClanExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from clan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -87,15 +109,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from clan
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from clan
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.coc.data.model.base.ClanExample">
     delete from clan
@@ -105,12 +129,12 @@
   </delete>
   <insert id="insert" parameterType="com.coc.data.model.base.Clan">
     insert into clan (id, tag, name, 
-      provide_clan_war_report, provide_league_war_report, 
-      expire_time, create_time, update_time
+      provide_clan_war_report, provide_league_war_report, expire_time, 
+      create_time, update_time, extra_info
       )
-    values (#{id,jdbcType=INTEGER}, #{tag,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{provideClanWarReport,jdbcType=TINYINT}, #{provideLeagueWarReport,jdbcType=TINYINT}, 
-      #{expireTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=BIGINT}, #{tag,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{provideClanWarReport,jdbcType=BIT}, #{provideLeagueWarReport,jdbcType=BIT}, #{expireTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{extraInfo,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.Clan">
@@ -140,10 +164,13 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="extraInfo != null">
+        extra_info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="tag != null">
         #{tag,jdbcType=VARCHAR},
@@ -152,10 +179,10 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="provideClanWarReport != null">
-        #{provideClanWarReport,jdbcType=TINYINT},
+        #{provideClanWarReport,jdbcType=BIT},
       </if>
       <if test="provideLeagueWarReport != null">
-        #{provideLeagueWarReport,jdbcType=TINYINT},
+        #{provideLeagueWarReport,jdbcType=BIT},
       </if>
       <if test="expireTime != null">
         #{expireTime,jdbcType=TIMESTAMP},
@@ -165,6 +192,9 @@
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extraInfo != null">
+        #{extraInfo,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -178,7 +208,7 @@
     update clan
     <set>
       <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
+        id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.tag != null">
         tag = #{record.tag,jdbcType=VARCHAR},
@@ -187,10 +217,10 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.provideClanWarReport != null">
-        provide_clan_war_report = #{record.provideClanWarReport,jdbcType=TINYINT},
+        provide_clan_war_report = #{record.provideClanWarReport,jdbcType=BIT},
       </if>
       <if test="record.provideLeagueWarReport != null">
-        provide_league_war_report = #{record.provideLeagueWarReport,jdbcType=TINYINT},
+        provide_league_war_report = #{record.provideLeagueWarReport,jdbcType=BIT},
       </if>
       <if test="record.expireTime != null">
         expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
@@ -201,18 +231,36 @@
       <if test="record.updateTime != null">
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.extraInfo != null">
+        extra_info = #{record.extraInfo,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update clan
+    set id = #{record.id,jdbcType=BIGINT},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      provide_clan_war_report = #{record.provideClanWarReport,jdbcType=BIT},
+      provide_league_war_report = #{record.provideLeagueWarReport,jdbcType=BIT},
+      expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      extra_info = #{record.extraInfo,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
     update clan
-    set id = #{record.id,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=BIGINT},
       tag = #{record.tag,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
-      provide_clan_war_report = #{record.provideClanWarReport,jdbcType=TINYINT},
-      provide_league_war_report = #{record.provideLeagueWarReport,jdbcType=TINYINT},
+      provide_clan_war_report = #{record.provideClanWarReport,jdbcType=BIT},
+      provide_league_war_report = #{record.provideLeagueWarReport,jdbcType=BIT},
       expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
@@ -230,10 +278,10 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="provideClanWarReport != null">
-        provide_clan_war_report = #{provideClanWarReport,jdbcType=TINYINT},
+        provide_clan_war_report = #{provideClanWarReport,jdbcType=BIT},
       </if>
       <if test="provideLeagueWarReport != null">
-        provide_league_war_report = #{provideLeagueWarReport,jdbcType=TINYINT},
+        provide_league_war_report = #{provideLeagueWarReport,jdbcType=BIT},
       </if>
       <if test="expireTime != null">
         expire_time = #{expireTime,jdbcType=TIMESTAMP},
@@ -244,18 +292,33 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="extraInfo != null">
+        extra_info = #{extraInfo,jdbcType=LONGVARCHAR},
+      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.coc.data.model.base.Clan">
+    update clan
+    set tag = #{tag,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      provide_clan_war_report = #{provideClanWarReport,jdbcType=BIT},
+      provide_league_war_report = #{provideLeagueWarReport,jdbcType=BIT},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      extra_info = #{extraInfo,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.coc.data.model.base.Clan">
     update clan
     set tag = #{tag,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      provide_clan_war_report = #{provideClanWarReport,jdbcType=TINYINT},
-      provide_league_war_report = #{provideLeagueWarReport,jdbcType=TINYINT},
+      provide_clan_war_report = #{provideClanWarReport,jdbcType=BIT},
+      provide_league_war_report = #{provideLeagueWarReport,jdbcType=BIT},
       expire_time = #{expireTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
