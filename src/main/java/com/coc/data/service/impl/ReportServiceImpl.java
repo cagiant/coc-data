@@ -135,7 +135,7 @@ public class ReportServiceImpl implements ReportService {
 			reportListTmp.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
 		int i = 0;
 		for (ReportDataVO.MemberReport memberReport : reportList) {
-			memberReport.setRankInfo(String.format("%s/%s", ++i, reportList.size()));
+			memberReport.setRankInfo(String.format("%s", ++i));
 		}
 
 		return ReportDataVO.builder()

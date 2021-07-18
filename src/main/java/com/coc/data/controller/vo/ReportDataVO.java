@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,11 @@ public class ReportDataVO {
 		 * 玩家标签
 		 **/
 		private String tag;
+
+		/**
+		 * 总进攻次数
+		 **/
+		private Integer attackTime;
 
 		/**
 		 * 黑三次数
@@ -116,6 +122,11 @@ public class ReportDataVO {
 		 **/
 		private Integer netStar;
 
+		/**
+		 * 三星率
+		 **/
+		private BigDecimal threeStarRate;
+
 		public static MemberReport compute(List<ClanWarLog> warLogList, ClanWarMember clanWarMember) {
 			MemberReport report = mockReport();
 			report.setName(clanWarMember.getMemberName());
@@ -139,6 +150,7 @@ public class ReportDataVO {
 							break;
 					}
 					report.setAttackStar(report.getAttackStar() + clanWarLog.getStar());
+					report.setAttackTime(report.getAttackTime() + 1);
 					report.setAttackPercentage(report.getAttackPercentage() + Integer.parseInt(clanWarLog.getDestructionPercentage()));
 				} else if (clanWarLog.getDefenderTag().equals(clanWarMember.getMemberTag())) {
 					switch (clanWarLog.getStar()) {
@@ -168,10 +180,13 @@ public class ReportDataVO {
 
 		public void calculate() {
 			this.netStar = this.attackStar - this.defenseStar;
+			this.threeStarRate = this.attackTime == 0 ?  BigDecimal.ZERO :
+				BigDecimal.valueOf(this.attackThreeStar).divide(BigDecimal.valueOf(this.attackTime), 2, BigDecimal.ROUND_HALF_UP);
 		}
 
 		public static MemberReport mockReport() {
 			MemberReport report = new MemberReport();
+			report.setAttackTime(0);
 			report.setAttackNoStar(0);
 			report.setAttackOneStar(0);
 			report.setAttackTwoStar(0);
