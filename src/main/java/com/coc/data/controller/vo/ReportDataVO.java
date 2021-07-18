@@ -123,9 +123,14 @@ public class ReportDataVO {
 		private Integer netStar;
 
 		/**
+		 * 三星率的数值
+		 **/
+		private BigDecimal threeStarRateV;
+
+		/**
 		 * 三星率
 		 **/
-		private BigDecimal threeStarRate;
+		private String threeStarRate;
 
 		public static MemberReport compute(List<ClanWarLog> warLogList, ClanWarMember clanWarMember) {
 			MemberReport report = mockReport();
@@ -180,8 +185,10 @@ public class ReportDataVO {
 
 		public void calculate() {
 			this.netStar = this.attackStar - this.defenseStar;
-			this.threeStarRate = this.attackTime == 0 ?  BigDecimal.ZERO :
-				BigDecimal.valueOf(this.attackThreeStar).divide(BigDecimal.valueOf(this.attackTime), 2, BigDecimal.ROUND_HALF_UP);
+			this.threeStarRateV = this.attackTime == 0 ?  BigDecimal.ZERO :
+				BigDecimal.valueOf(this.attackThreeStar).divide(BigDecimal.valueOf(this.attackTime), 4, BigDecimal.ROUND_HALF_UP);
+			this.threeStarRate =
+				String.format("%.2f%%", this.threeStarRateV.multiply(BigDecimal.valueOf(100)));
 		}
 
 		public static MemberReport mockReport() {
@@ -234,16 +241,21 @@ public class ReportDataVO {
 			// 日常比较规则
 			// 先比较三星次数
 			if (this.attackThreeStar.equals(o.attackThreeStar)) {
-				// 再比较两星次数
-				if (this.attackTwoStar.equals(o.attackTwoStar)) {
-					// 再比较被三次数
-					if (this.defenseThreeStar.equals(o.defenseThreeStar)) {
-						return 0;
+				// 再比较三星率
+				if (this.threeStarRateV.compareTo(o.threeStarRateV) == 0) {
+					// 再比较两星次数
+					if (this.attackTwoStar.equals(o.attackTwoStar)) {
+						// 再比较被三次数
+						if (this.defenseThreeStar.equals(o.defenseThreeStar)) {
+							return 0;
+						} else {
+							return o.defenseThreeStar.compareTo(this.defenseThreeStar);
+						}
 					} else {
-						return o.defenseThreeStar.compareTo(this.defenseThreeStar);
+						return this.attackTwoStar.compareTo(o.attackTwoStar);
 					}
 				} else {
-					return this.attackTwoStar.compareTo(o.attackTwoStar);
+					return this.threeStarRateV.compareTo(o.threeStarRateV);
 				}
 			} else {
 				return this.attackThreeStar.compareTo(o.attackThreeStar);
