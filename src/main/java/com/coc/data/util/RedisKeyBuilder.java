@@ -10,4 +10,8 @@ public class RedisKeyBuilder {
 	public static String getMiniprogramToken() {
 		return "MINI_TOKEN";
 	}
+
+	public static String buildClanInfoKey(String clanTag) {
+		return String.format("CLAN_INFO:%s", clanTag);
+	}
 }

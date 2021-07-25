@@ -1,5 +1,6 @@
 package com.coc.data.service;
 
+import com.coc.data.controller.vo.war.WarDetailVO;
 import com.coc.data.dto.WarInfoDTO;
 import com.coc.data.model.base.Clan;
 import com.coc.data.model.base.ClanWar;
@@ -46,4 +47,6 @@ public interface ClanWarService {
      * @date 2021/3/28 21:11
      **/
     void syncClanCurrentWarInfo(Clan clan);
+
+    WarDetailVO getWarDetail(String warTag, String clanTag);
 }

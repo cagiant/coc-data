@@ -3,28 +3,39 @@ package com.coc.data.service.impl;
 import com.coc.data.client.CocApiHttpClient;
 import com.coc.data.constant.ClanTagConstants;
 import com.coc.data.constant.ClanWarConstants;
+import com.coc.data.controller.vo.war.WarDetailVO;
+import com.coc.data.controller.vo.war.WarLogVO;
 import com.coc.data.dto.*;
+import com.coc.data.dto.war.ClanWarLogDetailDTO;
 import com.coc.data.enums.ClanWarStateEnum;
 import com.coc.data.enums.ClanWarTypeEnum;
 import com.coc.data.mapper.*;
 import com.coc.data.model.base.*;
+import com.coc.data.service.ClanService;
 import com.coc.data.service.ClanWarService;
 import com.coc.data.service.MiniProgramMessageService;
 import com.coc.data.service.UserService;
 import com.coc.data.util.DateUtil;
 import com.coc.data.util.FormatUtil;
+import com.coc.data.util.RedisKeyBuilder;
+import com.coc.data.util.RedisUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +57,8 @@ public class ClanWarServiceImpl implements ClanWarService {
     private ClanWarLogMapper clanWarLogMapper;
     @Resource
     private PlayerMapper playerMapper;
+    @Resource
+    private ClanMapper clanMapper;
 
     /**
      * service
@@ -54,6 +67,8 @@ public class ClanWarServiceImpl implements ClanWarService {
     private MiniProgramMessageService miniProgramMessageService;
     @Resource
     private UserService userService;
+    @Resource
+    private ClanService clanService;
 
 
     /**
@@ -61,6 +76,13 @@ public class ClanWarServiceImpl implements ClanWarService {
      **/
     @Resource
     private CocApiHttpClient httpClient;
+    @Resource
+    private RedisUtil redisUtil;
+
+    private static final ThreadFactory CLAN_REFRESH_FACTORY =
+        new ThreadFactoryBuilder().setNameFormat("clanRefresh-pool-%d").build();
+    private static final ExecutorService CLAN_REFRESH_THREADS = new ThreadPoolExecutor(1, 1,
+        0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(2000), CLAN_REFRESH_FACTORY, new ThreadPoolExecutor.AbortPolicy());
 
     @Override
     public void syncClanNormalWarInfo(String clanTag) {
@@ -228,8 +250,29 @@ public class ClanWarServiceImpl implements ClanWarService {
         if (ClanWarStateEnum.WAR_ENDED.code.equals(currentWar.getState())) {
             noticeWarEnd(warInfo);
         }
+        CLAN_REFRESH_THREADS.submit(() -> {
+           refreshClanInfo(warInfo.getClan().getTag());
+           refreshClanInfo(warInfo.getOpponent().getTag());
+        });
 
         clanWarMapper.insertOnDuplicateKeyUpdate(currentWar);
+    }
+
+    /**
+     * 如果部落不在系统中，则同步到系统
+     * @param clanTag
+     * @return void
+     * @author guokaiqiang
+     * @date 2021/7/11 10:28
+     **/
+    private void refreshClanInfo(String clanTag) {
+        if (!redisUtil.setnxWithMilliseconds(RedisKeyBuilder.buildClanInfoKey(clanTag), "1", 5 * 60 * 1000)) {
+            return;
+        }
+        Clan clan = clanMapper.selectByClanTag(clanTag);
+        if (clan == null) {
+            clanService.syncClanBaseInfo(clanTag);
+        }
     }
 
     private void noticeWarEnd(WarInfoDTO warInfo) {
@@ -323,6 +366,128 @@ public class ClanWarServiceImpl implements ClanWarService {
         } else if (clan.getProvideClanWarReport()) {
             syncClanNormalWarInfo(clan.getTag());
         }
+    }
+
+    @Override
+    public WarDetailVO getWarDetail(String warTag, String clanTag) {
+        List<ClanWarLogDetailDTO> clanWarLogList = clanWarLogMapper.getWarLogDetail(warTag);
+        ClanWar clanWar = clanWarMapper.selectByWarTag(warTag);
+        String opponentClanTag;
+        if (clanTag.equals(clanWar.getClanTag())) {
+            opponentClanTag = clanWar.getOpponentClanTag();
+        } else {
+            opponentClanTag = clanWar.getClanTag();
+        }
+        Clan clan = clanMapper.selectByClanTag(clanTag);
+        ClanInfoDTO clanInfo = FormatUtil.deserializeCamelCaseJson2Object(clan.getExtraInfo(),
+            ClanInfoDTO.class);
+        Clan opponentClan = clanMapper.selectByClanTag(opponentClanTag);
+        ClanInfoDTO opponentClanInfo =
+            FormatUtil.deserializeCamelCaseJson2Object(opponentClan.getExtraInfo(), ClanInfoDTO.class);
+        Map<String, List<ClanWarLogDetailDTO>> clanTagDetailMap =
+            clanWarLogList.stream().collect(Collectors.groupingBy(ClanWarLogDetailDTO::getAttackerClanTag));
+        List<WarLogVO> warLogVOList = Lists.newLinkedList();
+        List<ClanWarLogDetailDTO> clanWarLogDetails = clanTagDetailMap.computeIfAbsent(clanTag,
+            k -> Lists.newLinkedList());
+        extractWarLogToVO(warLogVOList, clanWarLogDetails, true);
+
+        List<ClanWarLogDetailDTO> opponentClanWarLogDetails =
+            clanTagDetailMap.computeIfAbsent(opponentClanTag, k -> Lists.newLinkedList());
+        extractWarLogToVO(warLogVOList, opponentClanWarLogDetails, false);
+
+        return WarDetailVO.builder()
+            .clanIconUrl(clanInfo.getBadgeUrls().getTiny())
+            .clanName(clanInfo.getName())
+            .clanTag(clanInfo.getTag())
+            .stars(clanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getStar).sum())
+            .destructionPercentage(
+                BigDecimal.valueOf(clanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
+                .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 2, BigDecimal.ROUND_HALF_UP)
+            )
+            .opponentStars(opponentClanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getStar).sum())
+            .opponentDestructionPercentage(
+                BigDecimal.valueOf(opponentClanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
+                    .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 2, BigDecimal.ROUND_HALF_UP)
+            )
+            .opponentClanIconUrl(opponentClanInfo.getBadgeUrls().getTiny())
+            .opponentClanName(opponentClanInfo.getName())
+            .opponentClanTag(opponentClanInfo.getTag())
+            .warTimeLeft(getWarTimeLeft(clanWar))
+            .state(clanWar.getState())
+            .warLogs(warLogVOList)
+            .build();
+    }
+
+    Long getWarTimeLeft(ClanWar clanWar) {
+        Date date = null;
+        // 准备日算开始时间
+        if (ClanWarStateEnum.PREPARATION.code.equals(clanWar.getState())) {
+            date = clanWar.getStartTime();
+        } else if (ClanWarStateEnum.IN_WAR.code.equals(clanWar.getState())) {
+            date = clanWar.getEndTime();
+        }
+        if (date == null) {
+            return -1L;
+        }
+        return date.getTime() - System.currentTimeMillis();
+    }
+
+    private void extractWarLogToVO(List<WarLogVO> warLogVOList,
+                                   List<ClanWarLogDetailDTO> clanWarLogDetails,
+                                   Boolean isAttack) {
+        Map<String, Long> bestAttackStar = Maps.newHashMap();
+        Map<String, Long> bestAttackPercent = Maps.newHashMap();
+        Map<String, Date> bestAttackTime = Maps.newHashMap();
+        Map<String, ClanWarLogDetailDTO> bestWarLogDetail = Maps.newLinkedHashMap();
+        clanWarLogDetails.forEach(warLogDetail -> {
+            // 星星多，或者星星相等但摧毁率高，或星星相等，摧毁率也相等，但时间靠前
+            if (bestAttackStar.computeIfAbsent(warLogDetail.getDefenderTag(), k -> 0L) < warLogDetail.getStar()
+                ||
+                (
+                    bestAttackStar.get(warLogDetail.getDefenderTag()).equals(warLogDetail.getStar())
+                        && bestAttackPercent.computeIfAbsent(warLogDetail.getDefenderTag(),
+                        k -> 0L) < warLogDetail.getDestructionPercentage()
+                )
+                ||
+                (
+                    bestAttackStar.get(warLogDetail.getDefenderTag()).equals(warLogDetail.getStar())
+                        && bestAttackPercent.get(warLogDetail.getDefenderTag()) < warLogDetail.getDestructionPercentage()
+                    && bestAttackTime.get(warLogDetail.getDefenderTag()).after(warLogDetail.getCreateTime())
+                )
+            ) {
+                 bestAttackPercent.put(warLogDetail.getDefenderTag(),
+                     warLogDetail.getDestructionPercentage());
+                 bestAttackStar.put(warLogDetail.getDefenderTag(), warLogDetail.getStar());
+                 bestAttackTime.put(warLogDetail.getDefenderTag(), warLogDetail.getCreateTime());
+                bestWarLogDetail.put(warLogDetail.getDefenderTag(), warLogDetail);
+            }
+
+            warLogVOList.add(WarLogVO.builder()
+                .attackerMapPosition(warLogDetail.getAttackerMapPosition())
+                .attackerName(warLogDetail.getAttackerName())
+                .attackerTag(warLogDetail.getAttackerTag())
+                .defenderMapPosition(warLogDetail.getDefenderMapPosition())
+                .defenderName(warLogDetail.getDefenderName())
+                .defenderTag(warLogDetail.getDefenderTag())
+                .timeAnchor(getWarLogTimeAnchor(warLogDetail.getCreateTime()))
+                .isAttack(isAttack)
+                .build());
+        });
+        bestWarLogDetail.forEach((k, warLogDetail) -> {
+            warLogDetail.setIsBestAttack(true);
+        });
+    }
+
+    String getWarLogTimeAnchor(Date createTime) {
+        long millSeconds = System.currentTimeMillis() - createTime.getTime();
+        // 多少分钟之前
+        long minutes = millSeconds / 1000 / 60;
+        if (minutes < 60) {
+            return String.format("%s 分钟之前", minutes);
+        }
+        long hour = minutes / 60;
+
+        return String.format("%s 小时之前", hour);
     }
 
     private void buildClanWarLog(WarInfoDTO warInfo, List<ClanWarLog> clanWarLogList, ClanWarMemberDTO memberDTO) {
