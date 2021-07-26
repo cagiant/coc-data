@@ -31,10 +31,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -396,25 +393,25 @@ public class ClanWarServiceImpl implements ClanWarService {
         extractWarLogToVO(warLogVOList, opponentClanWarLogDetails, false);
 
         return WarDetailVO.builder()
-            .clanIconUrl(clanInfo.getBadgeUrls().getTiny())
+            .clanIconUrl(clanInfo.getBadgeUrls().getSmall())
             .clanName(clanInfo.getName())
             .clanTag(clanInfo.getTag())
-            .stars(clanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getStar).sum())
+            .stars(clanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getStar).sum())
             .destructionPercentage(
-                BigDecimal.valueOf(clanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
+                BigDecimal.valueOf(clanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
                 .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 2, BigDecimal.ROUND_HALF_UP)
             )
-            .opponentStars(opponentClanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getStar).sum())
+            .opponentStars(opponentClanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getStar).sum())
             .opponentDestructionPercentage(
-                BigDecimal.valueOf(opponentClanWarLogDetails.stream().filter(ClanWarLogDetailDTO::getIsBestAttack).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
+                BigDecimal.valueOf(opponentClanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
                     .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 2, BigDecimal.ROUND_HALF_UP)
             )
-            .opponentClanIconUrl(opponentClanInfo.getBadgeUrls().getTiny())
+            .opponentClanIconUrl(opponentClanInfo.getBadgeUrls().getSmall())
             .opponentClanName(opponentClanInfo.getName())
             .opponentClanTag(opponentClanInfo.getTag())
             .warTimeLeft(getWarTimeLeft(clanWar))
             .state(clanWar.getState())
-            .warLogs(warLogVOList)
+            .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList()))
             .build();
     }
 
@@ -459,7 +456,7 @@ public class ClanWarServiceImpl implements ClanWarService {
                      warLogDetail.getDestructionPercentage());
                  bestAttackStar.put(warLogDetail.getDefenderTag(), warLogDetail.getStar());
                  bestAttackTime.put(warLogDetail.getDefenderTag(), warLogDetail.getCreateTime());
-                bestWarLogDetail.put(warLogDetail.getDefenderTag(), warLogDetail);
+                 bestWarLogDetail.put(warLogDetail.getDefenderTag(), warLogDetail);
             }
 
             warLogVOList.add(WarLogVO.builder()
@@ -470,6 +467,8 @@ public class ClanWarServiceImpl implements ClanWarService {
                 .defenderName(warLogDetail.getDefenderName())
                 .defenderTag(warLogDetail.getDefenderTag())
                 .timeAnchor(getWarLogTimeAnchor(warLogDetail.getCreateTime()))
+                .createTime(warLogDetail.getCreateTime())
+                .attackStar(warLogDetail.getStar())
                 .isAttack(isAttack)
                 .build());
         });

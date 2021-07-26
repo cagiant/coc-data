@@ -24,4 +24,24 @@
                   and cw.type != 'league'
               </if>
     </select>
+    <select id="getWarLogDetail" resultType="com.coc.data.dto.war.ClanWarLogDetailDTO">
+        select
+          cwma.member_tag  attackerTag,
+          cwma.clan_tag attackerClanTag,
+          cwma.member_name attackerName,
+          cwma.map_position attackerMapPosition,
+          cwmd.member_tag defenderTag,
+          cwmd.clan_tag defenderClanTag,
+          cwmd.member_name defenderName,
+          cwmd.map_position defenderMapPosition,
+          cwl.create_time createTime,
+          cwl.attack_order attackOrder,
+          cwl.star star,
+          cwl.destruction_percentage destructionPercentage,
+          cwl.war_tag warTag
+        from clan_war_log cwl
+        join clan_war_member cwma on cwl.war_tag = cwma.war_tag and cwma.member_tag = cwl.attacker_tag
+        join clan_war_member cwmd on cwl.war_tag = cwmd.war_tag and cwmd.member_tag = cwl.defender_tag
+        where cwl.war_tag = #{warTag}
+    </select>
 </mapper>

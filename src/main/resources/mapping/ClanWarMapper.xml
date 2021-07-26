@@ -32,6 +32,9 @@
         #{item}
     </foreach>)
     </select>
+    <select id="selectByWarTag" resultMap="BaseResultMap">
+        select * from clan_war where tag  = #{warTag}
+    </select>
     <select id="getUnendedLeagueWarByClanTag" resultMap="BaseResultMap">
         select cw2.*
         from clan_war cw

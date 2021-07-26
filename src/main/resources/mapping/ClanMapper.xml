@@ -6,16 +6,16 @@
             (#{clan.tag}, #{clan.name}, #{clan.extraInfo})
         on duplicate key update name = values(name), extra_info = values(extra_info);
     </insert>
-    <select id="selectByClanTag" resultType="com.coc.data.model.base.Clan">
+    <select id="selectByClanTag" resultMap="ResultMapWithBLOBs">
         select * from clan where tag = #{tag}
     </select>
-    <select id="getClansNeedLeagueReport" resultMap="BaseResultMap">
+    <select id="getClansNeedLeagueReport" resultMap="ResultMapWithBLOBs">
         select * from clan where provide_league_war_report = 1;
     </select>
-    <select id="getClansNeedNormalWarReport" resultMap="BaseResultMap">
+    <select id="getClansNeedNormalWarReport" resultMap="ResultMapWithBLOBs">
         select * from clan where provide_clan_war_report = 1;
     </select>
-    <select id="getNormalClans" resultMap="BaseResultMap">
+    <select id="getNormalClans" resultMap="ResultMapWithBLOBs">
         select * from clan where expire_time is null or expire_time > now()
     </select>
 </mapper>
