@@ -13,6 +13,7 @@ import com.coc.data.dto.user.PlayerUserWarInfoDTO;
 import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.dto.user.WxCode2SessionDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
+import com.coc.data.mapper.ClanWarMapper;
 import com.coc.data.mapper.PlayerMapper;
 import com.coc.data.mapper.UserMapper;
 import com.coc.data.mapper.UserPlayerRelationMapper;
@@ -45,6 +46,8 @@ public class UserServiceImpl implements UserService {
 	private PlayerMapper playerMapper;
 	@Resource
 	private UserPlayerRelationMapper userPlayerRelationMapper;
+	@Resource
+	private ClanWarMapper clanWarMapper;
 
 	@Resource
 	private CocApiHttpClient httpClient;
@@ -158,7 +161,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<PlayerBriefVO> getBindPlayers(String openId) {
-		return playerMapper.selectBriefPlayer(openId);
+		List<PlayerBriefVO> playerList = playerMapper.selectBriefPlayer(openId);
+		for (PlayerBriefVO playerBriefVO : playerList) {
+			ClanWar war = clanWarMapper.selectLatestClanWar(playerBriefVO.getClanTag());
+			playerBriefVO.setWarTag(war.getTag());
+			playerBriefVO.setClanWarState(war.getState());
+		}
+
+		return playerList;
 	}
 
 	@Override

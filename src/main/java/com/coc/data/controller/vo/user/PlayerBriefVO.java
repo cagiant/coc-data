@@ -20,4 +20,10 @@ public class PlayerBriefVO {
 	private String tag;
 
 	private String name;
+
+	private String clanWarState;
+
+	private String clanTag;
+
+	private String warTag;
 }

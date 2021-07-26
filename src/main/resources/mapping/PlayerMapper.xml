@@ -15,10 +15,12 @@
     <select id="selectBriefPlayer" resultType="com.coc.data.controller.vo.user.PlayerBriefVO">
         select u.open_id `openId`,
                p.tag `tag`,
-               p.name `name`
+               p.name `name`,
+               cm.clan_tag `clanTag`
         from player p
             join user_player_relation upr on p.id = upr.player_id and upr.is_deleted = 0
             join user u on upr.user_id = u.id
+            join clan_member cm on cm.tag = p.tag and cm.is_deleted = 0
         where u.open_id = #{openId}
     </select>
     <select id="selectUserIdListByPlayerTagList" resultType="long">

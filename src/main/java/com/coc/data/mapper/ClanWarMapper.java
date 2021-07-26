@@ -21,4 +21,6 @@ public interface ClanWarMapper extends BaseDao<ClanWar, ClanWarExample> {
 	List<String> getSeasons();
 
 	ClanWar selectByWarTag(@Param("warTag") String warTag);
+
+	ClanWar selectLatestClanWar(@Param("clanTag") String clanTag);
 }

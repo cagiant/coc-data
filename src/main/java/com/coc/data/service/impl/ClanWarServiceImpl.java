@@ -399,12 +399,13 @@ public class ClanWarServiceImpl implements ClanWarService {
             .stars(clanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getStar).sum())
             .destructionPercentage(
                 BigDecimal.valueOf(clanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
-                .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 2, BigDecimal.ROUND_HALF_UP)
+                .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 4,
+                    BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100))
             )
             .opponentStars(opponentClanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getStar).sum())
             .opponentDestructionPercentage(
                 BigDecimal.valueOf(opponentClanWarLogDetails.stream().filter(s -> s.getIsBestAttack() != null && s.getIsBestAttack()).mapToLong(ClanWarLogDetailDTO::getDestructionPercentage).sum())
-                    .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 2, BigDecimal.ROUND_HALF_UP)
+                    .divide(BigDecimal.valueOf(100 * clanWar.getTeamSize()), 4, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100))
             )
             .opponentClanIconUrl(opponentClanInfo.getBadgeUrls().getSmall())
             .opponentClanName(opponentClanInfo.getName())
