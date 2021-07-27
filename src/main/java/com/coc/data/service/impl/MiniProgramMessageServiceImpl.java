@@ -116,9 +116,11 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		LocalDateTime startTime;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String startDateRedis = redisUtil.get(threeStarRedisKey);
+		int minute = LocalDateTime.now().getMinute() / 5 * 5;
+		// 本次定时任务起来的时间
+		LocalDateTime taskTime = LocalDateTime.now().withMinute(minute).withSecond(0);
 		if (ObjectUtils.isEmpty(startDateRedis)) {
-			int minute = LocalDateTime.now().getMinute() / 5 * 5;
-			startTime = LocalDateTime.now().withMinute(minute).withSecond(0);
+			startTime = taskTime;
 		} else {
 			startTime = LocalDateTime.parse(startDateRedis, formatter);
 		}
@@ -129,6 +131,7 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 				DateUtil.asDate(startTime));
 		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
 		if (memberRelatedUsers.size() == 0) {
+			redisUtil.setex(threeStarRedisKey, taskTime.format(formatter), 60 * 60 * 24);
 			return;
 		}
 		memberRelatedUsers.forEach(this::sendThreeStartMessage);
