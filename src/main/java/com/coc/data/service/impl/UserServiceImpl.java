@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:ii:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String lastLoginTimeStr = redisUtil.get(sessionResult.getOpenId());
 		if (ObjectUtils.isEmpty(lastLoginTimeStr)) {
 			return null;
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
 		userMapper.insertOnDuplicateKeyUpdate(userWithBLOBs);
 		redisUtil.set(sessionResult.getOpenId(),
-			LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:ii:ss")));
+			LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
 		return user2WxUserInfo(userWithBLOBs);
 	}
@@ -228,6 +228,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserSettingDTO getUserSetting(String openId) {
 		UserWithBLOBs user = userMapper.selectByOpenId(openId);
+		if (ObjectUtils.isEmpty(user.getSetting())) {
+			return new UserSettingDTO();
+		}
 
 		return FormatUtil.deserializeCamelCaseJson2Object(user.getSetting(), UserSettingDTO.class);
 	}
