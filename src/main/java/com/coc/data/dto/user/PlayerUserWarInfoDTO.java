@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * @author guokaiqiang
  * @date 2021/7/1 12:57
@@ -30,4 +32,6 @@ public class PlayerUserWarInfoDTO {
 	private String opponentRankToAttack;
 
 	private String clanName;
+
+	private Date createTime;
 }

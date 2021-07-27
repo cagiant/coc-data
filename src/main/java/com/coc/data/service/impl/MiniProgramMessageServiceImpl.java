@@ -18,12 +18,15 @@ import com.coc.data.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,16 +112,33 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 
 	@Override
 	public void sendThreeStarMessage(WarInfoDTO warInfo) {
+		String threeStarRedisKey = RedisKeyBuilder.buildThreeStarWarTagKey(warInfo.getTag());
+		LocalDateTime startTime;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		String startDateRedis = redisUtil.get(threeStarRedisKey);
+		if (ObjectUtils.isEmpty(startDateRedis)) {
+			int minute = LocalDateTime.now().getMinute() / 5 * 5;
+			startTime = LocalDateTime.now().withMinute(minute).withSecond(0);
+		} else {
+			startTime = LocalDateTime.parse(startDateRedis, formatter);
+		}
+
 		// 获取这次新增的三星记录
-		int minute = LocalDateTime.now().getMinute() / 5 * 5;
 		List<PlayerUserWarInfoDTO> memberRelatedUsers =
 			userService.getThreeStarPlayerInfoInCertainTime(warInfo.getTag(),
-				DateUtil.asDate(LocalDateTime.now().withMinute(minute).withSecond(0)));
+				DateUtil.asDate(startTime));
 		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
 		if (memberRelatedUsers.size() == 0) {
 			return;
 		}
 		memberRelatedUsers.forEach(this::sendThreeStartMessage);
+		Optional<PlayerUserWarInfoDTO> maxCreateTimeInfo =
+			memberRelatedUsers.stream().max(Comparator.comparing(PlayerUserWarInfoDTO::getCreateTime));
+		maxCreateTimeInfo.ifPresent(playerUserWarInfoDTO -> redisUtil.setex(
+			threeStarRedisKey,
+			playerUserWarInfoDTO.getCreateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(formatter),
+			60 * 60 * 24)
+		);
 	}
 
 	@Override

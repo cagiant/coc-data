@@ -14,4 +14,8 @@ public class RedisKeyBuilder {
 	public static String buildClanInfoKey(String clanTag) {
 		return String.format("CLAN_INFO:%s", clanTag);
 	}
+
+	public static String buildThreeStarWarTagKey(String warTag) {
+		return String.format("THREE_STAR_WAR_INFO:%s",warTag);
+	}
 }

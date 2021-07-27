@@ -53,11 +53,13 @@
                tmp.map_position `opponentRankToAttack`,
                tmp.tag          `playerTag`,
                tmp.name         `playerName`,
-               c.name           `clanName`
+               c.name           `clanName`,
+               tmp.create_time  `createTime`
         from (select cwl.attack_order,
                      opponent.map_position,
                      attacker.member_tag,
                      attacker.clan_tag,
+                     cwl.create_time,
                      p.tag,
                      p.name
               from clan_war_log cwl
