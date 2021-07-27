@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface UserMapper extends BaseDao<UserWithBLOBs, UserExample> {
 
-	UserWithBLOBs selectValidUser(@Param("openId") String openId, @Param("sessionKey") String sessionKey);
+	UserWithBLOBs selectValidUser(@Param("openId") String openId);
 
 	void insertOnDuplicateKeyUpdate(@Param("user") User user);
 

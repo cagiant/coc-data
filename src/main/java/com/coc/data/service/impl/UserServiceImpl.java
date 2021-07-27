@@ -20,6 +20,7 @@ import com.coc.data.mapper.UserPlayerRelationMapper;
 import com.coc.data.model.base.*;
 import com.coc.data.service.UserService;
 import com.coc.data.util.FormatUtil;
+import com.coc.data.util.RedisUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +54,8 @@ public class UserServiceImpl implements UserService {
 
 	@Resource
 	private CocApiHttpClient httpClient;
+	@Resource
+	private RedisUtil redisUtil;
 
 	private static final String MINIPROGRAM_CODE2SESSION_URL = "https://api.weixin.qq" +
 		".com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
@@ -59,13 +64,23 @@ public class UserServiceImpl implements UserService {
 	public WxUserInfoDTO miniProgramLogin(String code) {
 		WxCode2SessionDTO sessionResult = getSessionResult(code);
 
-		UserWithBLOBs user = userMapper.selectValidUser(sessionResult.getOpenId(),
-			sessionResult.getSessionKey());
-
+		UserWithBLOBs user = userMapper.selectValidUser(sessionResult.getOpenId());
 		if (user == null) {
-			// 说明session过期了或者是从未登录过，需要前端刷新当前用户的用户信息
+			// 说明从未登录过，需要前端刷新当前用户的用户信息
 			return null;
 		}
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:ii:ss");
+		String lastLoginTimeStr = redisUtil.get(sessionResult.getOpenId());
+		if (ObjectUtils.isEmpty(lastLoginTimeStr)) {
+			return null;
+		}
+		LocalDateTime lastLoginTime = LocalDateTime.parse(lastLoginTimeStr, formatter);
+		// 12小时之前登录的
+		if (!lastLoginTime.plusHours(12).isAfter(LocalDateTime.now())) {
+			return null;
+		}
+		redisUtil.set(sessionResult.getOpenId(),LocalDateTime.now().format(formatter));
 
 		return user2WxUserInfo(user);
 	}
@@ -104,6 +119,8 @@ public class UserServiceImpl implements UserService {
 		userWithBLOBs.setAvatarUrl(userProfileRequest.getAvatarUrl());
 
 		userMapper.insertOnDuplicateKeyUpdate(userWithBLOBs);
+		redisUtil.set(sessionResult.getOpenId(),
+			LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:ii:ss")));
 
 		return user2WxUserInfo(userWithBLOBs);
 	}
