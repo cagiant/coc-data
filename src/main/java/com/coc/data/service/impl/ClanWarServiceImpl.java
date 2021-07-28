@@ -392,9 +392,19 @@ public class ClanWarServiceImpl implements ClanWarService {
             clanTagDetailMap.computeIfAbsent(opponentClanTag, k -> Lists.newLinkedList());
         extractWarLogToVO(warLogVOList, opponentClanWarLogDetails, false);
         int index = 0;
+        List<WarLogVO> threeStarWarLogs = Lists.newLinkedList();
         for (WarLogVO warLogVO : warLogVOList) {
             warLogVO.setWxKey(String.valueOf(++index));
+            // 我方半小时内的进攻三星
+            if (warLogVO.getIsAttack()
+                && warLogVO.getAttackStar() == 3
+                && warLogVO.getCreateTime().after(DateUtil.asDate(LocalDateTime.now().minusMinutes(30)))
+            ) {
+                threeStarWarLogs.add(warLogVO);
+            }
         }
+        threeStarWarLogs =
+            threeStarWarLogs.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList());
 
         return WarDetailVO.builder()
             .clanIconUrl(clanInfo.getBadgeUrls().getSmall())
@@ -418,6 +428,7 @@ public class ClanWarServiceImpl implements ClanWarService {
             .state(clanWar.getState())
             .stateMsg(ClanWarStateEnum.getEnumByCode(clanWar.getState()).msg)
             .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList()))
+            .recentThreeStarWarLogs(threeStarWarLogs)
             .build();
     }
 

@@ -46,4 +46,6 @@ public class WarDetailVO {
 	private String stateMsg;
 
 	private List<WarLogVO> warLogs;
+
+	private List<WarLogVO> recentThreeStarWarLogs;
 }
