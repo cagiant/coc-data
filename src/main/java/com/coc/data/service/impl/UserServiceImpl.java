@@ -13,6 +13,7 @@ import com.coc.data.dto.user.PlayerUserWarInfoDTO;
 import com.coc.data.dto.user.UserSettingDTO;
 import com.coc.data.dto.user.WxCode2SessionDTO;
 import com.coc.data.dto.user.WxUserInfoDTO;
+import com.coc.data.enums.ClanWarStateEnum;
 import com.coc.data.mapper.ClanWarMapper;
 import com.coc.data.mapper.PlayerMapper;
 import com.coc.data.mapper.UserMapper;
@@ -182,7 +183,7 @@ public class UserServiceImpl implements UserService {
 		for (PlayerBriefVO playerBriefVO : playerList) {
 			ClanWar war = clanWarMapper.selectLatestClanWar(playerBriefVO.getClanTag());
 			playerBriefVO.setWarTag(war.getTag());
-			playerBriefVO.setClanWarState(war.getState());
+			playerBriefVO.setClanWarState(ClanWarStateEnum.getEnumByCode(war.getState()).code);
 		}
 
 		return playerList;
