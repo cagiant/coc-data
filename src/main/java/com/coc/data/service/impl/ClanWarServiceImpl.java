@@ -391,6 +391,10 @@ public class ClanWarServiceImpl implements ClanWarService {
         List<ClanWarLogDetailDTO> opponentClanWarLogDetails =
             clanTagDetailMap.computeIfAbsent(opponentClanTag, k -> Lists.newLinkedList());
         extractWarLogToVO(warLogVOList, opponentClanWarLogDetails, false);
+        int index = 0;
+        for (WarLogVO warLogVO : warLogVOList) {
+            warLogVO.setWxKey(String.valueOf(++index));
+        }
 
         return WarDetailVO.builder()
             .clanIconUrl(clanInfo.getBadgeUrls().getSmall())
@@ -470,6 +474,7 @@ public class ClanWarServiceImpl implements ClanWarService {
                 .timeAnchor(getWarLogTimeAnchor(warLogDetail.getCreateTime()))
                 .createTime(warLogDetail.getCreateTime())
                 .attackStar(warLogDetail.getStar())
+                .destructionPercentage(warLogDetail.getDestructionPercentage())
                 .isAttack(isAttack)
                 .build());
         });

@@ -42,4 +42,8 @@ public class WarLogVO {
 	private Date createTime;
 
 	private Long attackStar;
+
+	private String wxKey;
+
+	private Long destructionPercentage;
 }
