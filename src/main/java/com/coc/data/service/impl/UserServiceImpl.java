@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
 		for (PlayerBriefVO playerBriefVO : playerList) {
 			ClanWar war = clanWarMapper.selectLatestClanWar(playerBriefVO.getClanTag());
 			playerBriefVO.setWarTag(war.getTag());
-			playerBriefVO.setClanWarState(ClanWarStateEnum.getEnumByCode(war.getState()).code);
+			playerBriefVO.setClanWarState(ClanWarStateEnum.getEnumByCode(war.getState()).msg);
 		}
 
 		return playerList;
