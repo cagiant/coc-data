@@ -40,6 +40,7 @@ public class WarDetailVO {
 
 	private Long warTimeLeft;
 
+	private String warResult;
 
 	private String state;
 

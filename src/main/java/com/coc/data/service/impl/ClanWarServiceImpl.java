@@ -7,6 +7,7 @@ import com.coc.data.controller.vo.war.WarDetailVO;
 import com.coc.data.controller.vo.war.WarLogVO;
 import com.coc.data.dto.*;
 import com.coc.data.dto.war.ClanWarLogDetailDTO;
+import com.coc.data.enums.ClanWarResultEnum;
 import com.coc.data.enums.ClanWarStateEnum;
 import com.coc.data.enums.ClanWarTypeEnum;
 import com.coc.data.mapper.*;
@@ -405,8 +406,7 @@ public class ClanWarServiceImpl implements ClanWarService {
         }
         threeStarWarLogs =
             threeStarWarLogs.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList());
-
-        return WarDetailVO.builder()
+        WarDetailVO vo = WarDetailVO.builder()
             .clanIconUrl(clanInfo.getBadgeUrls().getSmall())
             .clanName(clanInfo.getName())
             .clanTag(clanInfo.getTag())
@@ -430,6 +430,26 @@ public class ClanWarServiceImpl implements ClanWarService {
             .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList()))
             .recentThreeStarWarLogs(threeStarWarLogs)
             .build();
+
+        String warResult = ClanWarResultEnum.UNKNOWN.msg;
+        if (ClanWarStateEnum.WAR_ENDED.code.equals(clanWar.getState())) {
+            // 星星不相等先看总星星数
+            if (vo.getStars().compareTo(vo.getOpponentStars()) != 0) {
+                warResult =
+                    vo.getStars().compareTo(vo.getOpponentStars()) > 0 ?
+                        ClanWarResultEnum.WIN.msg : ClanWarResultEnum.LOSE.msg;
+                //否则比较摧毁率
+            } else if (vo.getDestructionPercentage().compareTo(vo.getOpponentDestructionPercentage()) != 0) {
+                warResult =
+                    vo.getDestructionPercentage().compareTo(vo.getOpponentDestructionPercentage()) > 0 ? ClanWarResultEnum.WIN.msg : ClanWarResultEnum.LOSE.msg;
+            } else {
+                //星星跟摧毁率都相等，平局
+                warResult = ClanWarResultEnum.DRAW.msg;
+            }
+        }
+        vo.setWarResult(warResult);
+
+        return vo;
     }
 
     Long getWarTimeLeft(ClanWar clanWar) {
