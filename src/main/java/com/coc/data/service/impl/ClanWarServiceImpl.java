@@ -392,10 +392,8 @@ public class ClanWarServiceImpl implements ClanWarService {
         List<ClanWarLogDetailDTO> opponentClanWarLogDetails =
             clanTagDetailMap.computeIfAbsent(opponentClanTag, k -> Lists.newLinkedList());
         extractWarLogToVO(warLogVOList, opponentClanWarLogDetails, false);
-        int index = 0;
         List<WarLogVO> threeStarWarLogs = Lists.newLinkedList();
         for (WarLogVO warLogVO : warLogVOList) {
-            warLogVO.setWxKey(String.valueOf(++index));
             // 我方半小时内的进攻三星
             if (warLogVO.getIsAttack()
                 && warLogVO.getAttackStar() == 3
@@ -427,7 +425,7 @@ public class ClanWarServiceImpl implements ClanWarService {
             .warTimeLeft(getWarTimeLeft(clanWar))
             .state(clanWar.getState())
             .stateMsg(ClanWarStateEnum.getEnumByCode(clanWar.getState()).msg)
-            .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList()))
+            .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getAttackOrder).reversed()).collect(Collectors.toList()))
             .recentThreeStarWarLogs(threeStarWarLogs)
             .build();
 
@@ -505,6 +503,7 @@ public class ClanWarServiceImpl implements ClanWarService {
                 .defenderTag(warLogDetail.getDefenderTag())
                 .timeAnchor(getWarLogTimeAnchor(warLogDetail.getCreateTime()))
                 .createTime(warLogDetail.getCreateTime())
+                .attackOrder(warLogDetail.getAttackOrder())
                 .attackStar(warLogDetail.getStar())
                 .destructionPercentage(warLogDetail.getDestructionPercentage())
                 .isAttack(isAttack)

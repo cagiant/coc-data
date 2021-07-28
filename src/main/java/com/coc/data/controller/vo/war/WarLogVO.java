@@ -43,7 +43,7 @@ public class WarLogVO {
 
 	private Long attackStar;
 
-	private String wxKey;
+	private Long attackOrder;
 
 	private Long destructionPercentage;
 }
