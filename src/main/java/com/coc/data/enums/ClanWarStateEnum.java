@@ -20,4 +20,13 @@ public enum  ClanWarStateEnum {
         this.code = code;
         this.msg = msg;
     }
+
+    public static ClanWarStateEnum getEnumByCode(String code) {
+        for(ClanWarStateEnum enumTmp : ClanWarStateEnum.values()) {
+            if (enumTmp.code.equals(code)) {
+                return enumTmp;
+            }
+        }
+        throw new EnumConstantNotPresentException(ClanWarStateEnum.class, "code=" + code);
+    }
 }

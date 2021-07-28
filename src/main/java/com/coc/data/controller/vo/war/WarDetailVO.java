@@ -43,5 +43,7 @@ public class WarDetailVO {
 
 	private String state;
 
+	private String stateMsg;
+
 	private List<WarLogVO> warLogs;
 }

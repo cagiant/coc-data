@@ -416,6 +416,7 @@ public class ClanWarServiceImpl implements ClanWarService {
             .opponentClanTag(opponentClanInfo.getTag())
             .warTimeLeft(getWarTimeLeft(clanWar))
             .state(clanWar.getState())
+            .stateMsg(ClanWarStateEnum.getEnumByCode(clanWar.getState()).msg)
             .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList()))
             .build();
     }
