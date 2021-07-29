@@ -34,4 +34,8 @@ public class PlayerUserWarInfoDTO {
 	private String clanName;
 
 	private Date createTime;
+
+	private String clanTag;
+
+	private String warTag;
 }

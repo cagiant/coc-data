@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -153,7 +154,19 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		String title = String.format("%s 战况通报", u.getClanName());
 		String msg = String.format("%s 三星对方 %s 号", u.getPlayerName(),
 			u.getOpponentRankToAttack());
-		sendWarResultMessage(title, msg, null, u.getOpenId());
+		try {
+			sendWarResultMessage(
+				title,
+				msg,
+				String.format("pages/war/index?warTag=%s&clanTag=%s",
+					URLEncoder.encode(u.getWarTag(), "utf-8"),
+					URLEncoder.encode(u.getClanTag(), "utf-8")
+				),
+				u.getOpenId());
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	String getMessagePlayerName(String playerName) {

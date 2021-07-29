@@ -54,7 +54,9 @@
                tmp.tag          `playerTag`,
                tmp.name         `playerName`,
                c.name           `clanName`,
-               tmp.create_time  `createTime`
+               tmp.create_time  `createTime`,
+               #{warTag}        `warTag`,
+               c.tag            `clanTag`
         from (select cwl.attack_order,
                      opponent.map_position,
                      attacker.member_tag,
