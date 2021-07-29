@@ -3,7 +3,6 @@ package com.coc.data.controller;
 import com.coc.data.controller.request.war.WarDetailGetRequest;
 import com.coc.data.controller.vo.war.WarDetailVO;
 import com.coc.data.service.ClanWarService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +19,6 @@ import java.net.URLDecoder;
  */
 @RestController
 @RequestMapping("/war")
-@Slf4j
 public class WarController {
 
 	@Resource
@@ -30,7 +28,6 @@ public class WarController {
 	public WarDetailVO getWarDetail(@Valid WarDetailGetRequest warDetailGetRequest) throws UnsupportedEncodingException {
 		String warTag = warDetailGetRequest.getWarTag();
 		String clanTag = warDetailGetRequest.getClanTag();
-		log.info(String.format("war tag: %s, clan tag: %s", warTag, clanTag));
 		if (!clanTag.startsWith("#")) {
 			clanTag = URLDecoder.decode(clanTag, "utf-8");
 			warTag = URLDecoder.decode(warTag, "utf-8");
