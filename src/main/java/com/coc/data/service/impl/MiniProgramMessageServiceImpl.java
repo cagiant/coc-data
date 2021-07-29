@@ -159,8 +159,8 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 				title,
 				msg,
 				String.format("pages/war/index?warTag=%s&clanTag=%s",
-					URLEncoder.encode(u.getWarTag(), "utf-8"),
-					URLEncoder.encode(u.getClanTag(), "utf-8")
+					u.getWarTag(),
+					u.getClanTag()
 				),
 				u.getOpenId());
 
