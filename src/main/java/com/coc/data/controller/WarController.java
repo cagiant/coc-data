@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * @author guokaiqiang
@@ -23,9 +25,13 @@ public class WarController {
 	private ClanWarService clanWarService;
 
 	@GetMapping("/detail")
-	public WarDetailVO getWarDetail(@Valid WarDetailGetRequest warDetailGetRequest) {
+	public WarDetailVO getWarDetail(@Valid WarDetailGetRequest warDetailGetRequest) throws UnsupportedEncodingException {
 		String warTag = warDetailGetRequest.getWarTag();
 		String clanTag = warDetailGetRequest.getClanTag();
+		if (!clanTag.startsWith("#")) {
+			clanTag = URLDecoder.decode(clanTag, "utf-8");
+			warTag = URLDecoder.decode(warTag, "utf-8");
+		}
 
 		return clanWarService.getWarDetail(warTag, clanTag);
 	}
