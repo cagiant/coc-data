@@ -35,8 +35,8 @@
     <select id="selectByWarTag" resultMap="BaseResultMap">
         select * from clan_war where tag  = #{warTag}
     </select>
-    <select id="selectLatestClanWar" resultMap="BaseResultMap">
-        select * from clan_war where  id = (select max(id) from clan_war where clan_tag = #{clanTag} or opponent_clan_tag = #{clanTag})
+    <select id="selectValidClanWarList" resultMap="BaseResultMap">
+        select * from clan_war where (clan_tag = #{clanTag} or opponent_clan_tag = #{clanTag}) order by start_time desc limit 2;
     </select>
     <select id="getUnendedLeagueWarByClanTag" resultMap="BaseResultMap">
         select cw2.*

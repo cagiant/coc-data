@@ -181,7 +181,21 @@ public class UserServiceImpl implements UserService {
 	public List<PlayerBriefVO> getBindPlayers(String openId) {
 		List<PlayerBriefVO> playerList = playerMapper.selectBriefPlayer(openId);
 		for (PlayerBriefVO playerBriefVO : playerList) {
-			ClanWar war = clanWarMapper.selectLatestClanWar(playerBriefVO.getClanTag());
+			List<ClanWar> warList = clanWarMapper.selectValidClanWarList(playerBriefVO.getClanTag());
+			ClanWar war;
+			if (warList.size() == 0) {
+				continue;
+			}
+			war = warList.get(0);
+			if (warList.size() == 2) {
+				// 兼容联赛时同时有两个未结束的战争
+				if (ClanWarStateEnum.PREPARATION.code.equals(warList.get(0).getState())
+					&& ClanWarStateEnum.IN_WAR.code.equals(warList.get(1).getState())
+				) {
+					war = warList.get(1);
+				}
+			}
+
 			playerBriefVO.setWarTag(war.getTag());
 			playerBriefVO.setClanWarState(ClanWarStateEnum.getEnumByCode(war.getState()).msg);
 		}
