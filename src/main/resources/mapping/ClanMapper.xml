@@ -16,6 +16,6 @@
         select * from clan where provide_clan_war_report = 1;
     </select>
     <select id="getNormalClans" resultMap="ResultMapWithBLOBs">
-        select * from clan where expire_time is null or expire_time > now()
+        select * from clan where (expire_time is null or expire_time > now()) and (provide_clan_war_report = 1 or provide_league_war_report = 1)
     </select>
 </mapper>
