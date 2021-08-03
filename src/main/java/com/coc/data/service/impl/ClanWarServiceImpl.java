@@ -393,6 +393,8 @@ public class ClanWarServiceImpl implements ClanWarService {
             clanTagDetailMap.computeIfAbsent(opponentClanTag, k -> Lists.newLinkedList());
         extractWarLogToVO(warLogVOList, opponentClanWarLogDetails, false);
         List<WarLogVO> threeStarWarLogs = Lists.newLinkedList();
+        long attackTime = 0L;
+        long opponentAttackTime = 0L;
         for (WarLogVO warLogVO : warLogVOList) {
             // 我方半小时内的进攻三星
             if (warLogVO.getIsAttack()
@@ -400,6 +402,11 @@ public class ClanWarServiceImpl implements ClanWarService {
                 && warLogVO.getCreateTime().after(DateUtil.asDate(LocalDateTime.now().minusMinutes(30)))
             ) {
                 threeStarWarLogs.add(warLogVO);
+            }
+            if (warLogVO.getIsAttack()) {
+                attackTime ++;
+            } else {
+                opponentAttackTime ++;
             }
         }
         threeStarWarLogs =
@@ -427,6 +434,9 @@ public class ClanWarServiceImpl implements ClanWarService {
             .stateMsg(ClanWarStateEnum.getEnumByCode(clanWar.getState()).msg)
             .warLogs(warLogVOList.stream().sorted(Comparator.comparing(WarLogVO::getAttackOrder).reversed()).collect(Collectors.toList()))
             .recentThreeStarWarLogs(threeStarWarLogs)
+            .totalAttackTime(ClanWarTypeEnum.LEAGUE.code.equals(clanWar.getType()) ? clanWar.getTeamSize().longValue() : clanWar.getTeamSize() * 2)
+            .attackTime(attackTime)
+            .opponentAttackTime(opponentAttackTime)
             .build();
 
         String warResult = ClanWarResultEnum.UNKNOWN.msg;

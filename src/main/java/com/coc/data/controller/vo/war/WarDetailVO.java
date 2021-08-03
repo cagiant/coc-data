@@ -38,6 +38,12 @@ public class WarDetailVO {
 
 	private BigDecimal opponentDestructionPercentage;
 
+	private Long attackTime;
+
+	private Long opponentAttackTime;
+
+	private Long totalAttackTime;
+
 	private Long warTimeLeft;
 
 	private String warResult;
