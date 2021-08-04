@@ -42,6 +42,10 @@ public class WarDetailVO {
 
 	private Long opponentAttackTime;
 
+	private List<ClanWarMemberVO> warMemberNoAttack;
+
+	private List<ClanWarMemberVO> opponentWarMemberNoAttack;
+
 	private Long totalAttackTime;
 
 	private Long warTimeLeft;

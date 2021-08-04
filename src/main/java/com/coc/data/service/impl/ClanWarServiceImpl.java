@@ -3,6 +3,7 @@ package com.coc.data.service.impl;
 import com.coc.data.client.CocApiHttpClient;
 import com.coc.data.constant.ClanTagConstants;
 import com.coc.data.constant.ClanWarConstants;
+import com.coc.data.controller.vo.war.ClanWarMemberVO;
 import com.coc.data.controller.vo.war.WarDetailVO;
 import com.coc.data.controller.vo.war.WarLogVO;
 import com.coc.data.dto.*;
@@ -447,6 +448,17 @@ public class ClanWarServiceImpl implements ClanWarService {
                 opponentAttackTime ++;
             }
         }
+        List<ClanWarMember> clanWarMemberList =
+            clanWarMemberMapper.selectClanMemberByWarTag(warTag);
+        Map<String, List<ClanWarMember>> clanWarMemberMap =
+            clanWarMemberList.stream().collect(Collectors.groupingBy(ClanWarMember::getClanTag));
+
+        // 计算参战成员剩余进攻次数
+        List<ClanWarMemberVO> clanWarMemberVOList =
+            getClanWarMemberVO(clanWarMemberMap.get(clanTag), clanWarLogDetails, clanWar.getType());
+        List<ClanWarMemberVO> opponentClanWarMemberVOList =
+            getClanWarMemberVO(clanWarMemberMap.get(opponentClanTag), opponentClanWarLogDetails, clanWar.getType());
+
         threeStarWarLogs =
             threeStarWarLogs.stream().sorted(Comparator.comparing(WarLogVO::getCreateTime).reversed()).collect(Collectors.toList());
         WarDetailVO vo = WarDetailVO.builder()
@@ -474,6 +486,8 @@ public class ClanWarServiceImpl implements ClanWarService {
             .recentThreeStarWarLogs(threeStarWarLogs)
             .totalAttackTime(ClanWarTypeEnum.LEAGUE.code.equals(clanWar.getType()) ? clanWar.getTeamSize().longValue() : clanWar.getTeamSize() * 2)
             .attackTime(attackTime)
+            .warMemberNoAttack(clanWarMemberVOList.stream().filter(s -> s.getRemainedAttack() > 0).collect(Collectors.toList()))
+            .opponentWarMemberNoAttack(opponentClanWarMemberVOList.stream().filter(s -> s.getRemainedAttack() > 0).collect(Collectors.toList()))
             .opponentAttackTime(opponentAttackTime)
             .build();
 
@@ -496,6 +510,25 @@ public class ClanWarServiceImpl implements ClanWarService {
         vo.setWarResult(warResult);
 
         return vo;
+    }
+
+    List<ClanWarMemberVO> getClanWarMemberVO(List<ClanWarMember> clanWarMemberList,
+                                             List<ClanWarLogDetailDTO> clanWarLogList,
+                                             String type) {
+        int totalAttack = ClanWarTypeEnum.NORMAL.code.equals(type) ? 2 : 1;
+        Map<String, List<ClanWarLogDetailDTO>> clanWarLogListMap =
+            clanWarLogList.stream().collect(Collectors.groupingBy(ClanWarLogDetailDTO::getAttackerTag));
+        List<ClanWarMemberVO> voList = Lists.newLinkedList();
+        for (ClanWarMember clanWarMember : clanWarMemberList) {
+            voList.add(ClanWarMemberVO.builder()
+                .mapPosition(clanWarMember.getMapPosition().longValue())
+                .name(clanWarMember.getMemberName())
+                .remainedAttack(totalAttack - clanWarLogListMap.computeIfAbsent(clanWarMember.getMemberTag(), k -> new ArrayList<>()).size())
+                .tag(clanWarMember.getMemberTag())
+                .build());
+        }
+
+        return voList;
     }
 
     Long getWarTimeLeft(ClanWar clanWar) {

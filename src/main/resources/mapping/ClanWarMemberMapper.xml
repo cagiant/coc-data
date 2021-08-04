@@ -36,4 +36,7 @@
             #{item}
         </foreach>) and clan_tag = #{clanTag}
     </select>
+    <select id="selectClanMemberByWarTag" resultMap="BaseResultMap">
+        select * from clan_war_member where war_tag = #{warTag} and is_deleted = 0
+    </select>
 </mapper>

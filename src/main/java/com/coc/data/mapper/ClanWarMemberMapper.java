@@ -19,4 +19,6 @@ public interface ClanWarMemberMapper extends BaseDao<ClanWarMember, ClanWarMembe
 
     void deleteNotInWarClanMember(@Param("warTag") String tag,
                                   @Param("list") List<String> inWarClanWarMemberList);
+
+    List<ClanWarMember> selectClanMemberByWarTag(@Param("warTag") String warTag);
 }
