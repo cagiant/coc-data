@@ -337,6 +337,7 @@ public class ClanWarServiceImpl implements ClanWarService {
             buildClanWarLog(warInfo, clanWarLogList, memberDTO);
         });
         if (!currentClanWarMemberDOList.isEmpty()) {
+            shuffleClanWarMember(currentClanWarMemberDOList);
             log.info("部落 {}, 正在保存参战成员信息", clanWithWarInfo.getName());
             clanWarMemberMapper.batchInsert(currentClanWarMemberDOList);
             playerMapper.batchDelete(playerList);
@@ -347,6 +348,27 @@ public class ClanWarServiceImpl implements ClanWarService {
             clanWarLogMapper.batchInsert(clanWarLogList);
             miniProgramMessageService.sendThreeStarMessage(warInfo);
         }
+    }
+
+    /**
+     * 刷新地图序号
+     * @param currentClanWarMemberDOList
+     * @return void
+     * @author guokaiqiang
+     * @date 2021/8/4 12:59
+     **/
+    void shuffleClanWarMember(List<ClanWarMember> currentClanWarMemberDOList) {
+        Map<String, List<ClanWarMember>> clanWarMemberMap =
+            currentClanWarMemberDOList.stream().collect(Collectors.groupingBy(ClanWarMember::getClanTag));
+        currentClanWarMemberDOList.clear();
+        clanWarMemberMap.forEach((clanTag, warMemberTmp) -> {
+            warMemberTmp =
+                warMemberTmp.stream().sorted(Comparator.comparing(ClanWarMember::getMapPosition)).collect(Collectors.toList());
+            for (int i=0; i< warMemberTmp.size(); i ++) {
+                warMemberTmp.get(i).setMapPosition((byte)(i + 1));
+            }
+            currentClanWarMemberDOList.addAll(warMemberTmp);
+        });
     }
 
     @Override
