@@ -486,8 +486,8 @@ public class ClanWarServiceImpl implements ClanWarService {
             .recentThreeStarWarLogs(threeStarWarLogs)
             .totalAttackTime(ClanWarTypeEnum.LEAGUE.code.equals(clanWar.getType()) ? clanWar.getTeamSize().longValue() : clanWar.getTeamSize() * 2)
             .attackTime(attackTime)
-            .warMemberNoAttack(clanWarMemberVOList.stream().filter(s -> s.getRemainedAttack() > 0).collect(Collectors.toList()))
-            .opponentWarMemberNoAttack(opponentClanWarMemberVOList.stream().filter(s -> s.getRemainedAttack() > 0).collect(Collectors.toList()))
+            .warMemberNoAttack(clanWarMemberVOList.stream().filter(s -> s.getRemainedAttack() > 0).sorted(Comparator.comparing(ClanWarMemberVO::getMapPosition)).collect(Collectors.toList()))
+            .opponentWarMemberNoAttack(opponentClanWarMemberVOList.stream().filter(s -> s.getRemainedAttack() > 0).sorted(Comparator.comparing(ClanWarMemberVO::getMapPosition)).collect(Collectors.toList()))
             .opponentAttackTime(opponentAttackTime)
             .build();
 
