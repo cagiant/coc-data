@@ -22,6 +22,14 @@
         </foreach>
         )
     </delete>
+    <update id="deleteNotInWarClanMember">
+        update clan_war_member set is_deleted = 1 where war_tag = #{warTag}
+        and member_tag not in(
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
     <select id="getClanWarMemberInfo" resultMap="BaseResultMap">
         select * from clan_war_member where war_tag in
         (<foreach collection="list" item="item" separator=",">

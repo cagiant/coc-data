@@ -31,6 +31,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
@@ -130,9 +131,24 @@ public class ClanWarServiceImpl implements ClanWarService {
         log.info("更新对战详细信息");
         if (ClanWarConstants.WAR_ENDED.equals(warInfo.getState())) {
             log.info("战争已结束，更新参战人员");
-            refreshLeagueGroupWarMembers(warInfo, warTag);
+            refreshLeagueGroupWarMembersAndLogs(warInfo, warTag);
+        }
+        // 战争开始一小时内，刷新参战人员信息
+        if (ClanWarStateEnum.IN_WAR.code.equals(warInfo.getState())
+            && LocalDateTime.now().minusHours(1).isBefore(warInfo.getStartTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+        ) {
+            refreshLeagueGroupWarMember(warInfo);
         }
         recWarMemberAndWarLogs(warInfo);
+    }
+
+    void refreshLeagueGroupWarMember(WarInfoDTO warInfo) {
+        List<ClanWarMemberDTO> clanWarMemberList = Lists.newLinkedList();
+        clanWarMemberList.addAll(warInfo.getClan().getMembers());
+        clanWarMemberList.addAll(warInfo.getOpponent().getMembers());
+        List<String> inWarClanWarMemberList =
+            clanWarMemberList.stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
+        clanWarMemberMapper.deleteNotInWarClanMember(warInfo.getTag(), inWarClanWarMemberList);
     }
 
     @Override
@@ -150,7 +166,7 @@ public class ClanWarServiceImpl implements ClanWarService {
      * @author guokaiqiang
      * @date 2020/9/6 11:20
      **/
-    private void refreshLeagueGroupWarMembers(WarInfoDTO warInfo, String warTag) {
+    private void refreshLeagueGroupWarMembersAndLogs(WarInfoDTO warInfo, String warTag) {
         ClanWarInfoDTO clanWarInfo = warInfo.getClan();
         ClanWarInfoDTO opponentWarInfo = warInfo.getOpponent();
         List<String> clanWarMemberTagList = clanWarInfo.getMembers().stream().map(ClanWarMemberDTO::getTag).collect(Collectors.toList());
