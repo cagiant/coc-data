@@ -45,7 +45,7 @@ public class Schedule {
 		List<Clan> clanList = clanMapper.selectByExample(null);
 		for (Clan clan : clanList) {
 			clanService.syncClanBaseInfo(clan.getTag());
-			if (clanService.atLeagueWar(clan.getTag())) {
+			if (clan.getProvideLeagueWarReport() && clanService.atLeagueWar(clan.getTag())) {
 				clanService.syncLeagueGroupInfo(clan.getTag());
 			}
 		}
