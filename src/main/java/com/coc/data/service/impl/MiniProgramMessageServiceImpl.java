@@ -130,7 +130,14 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		List<PlayerUserWarInfoDTO> memberRelatedUsers =
 			userService.getThreeStarPlayerInfoInCertainTime(warInfo.getTag(),
 				DateUtil.asDate(startTime));
-		memberRelatedUsers = memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(Collectors.toList());
+		// 过滤掉不需要发信息的用户，同时每个用户，每个通知只发送一次
+		memberRelatedUsers =
+			memberRelatedUsers.stream().filter(this::userAcceptWarInfoMessage).collect(
+				Collectors.collectingAndThen(Collectors.toCollection(
+					() -> new TreeSet<>(Comparator.comparing(o -> String.format("%s-%s", o.getAttackOrder(), o.getOpenId())))
+				),
+				ArrayList::new
+			));
 		if (memberRelatedUsers.size() == 0) {
 			redisUtil.setex(threeStarRedisKey, taskTime.format(formatter), 60 * 60 * 24);
 			return;
