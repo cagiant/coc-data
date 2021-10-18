@@ -142,7 +142,15 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 			redisUtil.setex(threeStarRedisKey, taskTime.format(formatter), 60 * 60 * 24);
 			return;
 		}
-		memberRelatedUsers.forEach(this::sendThreeStartMessage);
+		Map<String, List<PlayerUserWarInfoDTO>> memberMap =
+			memberRelatedUsers.stream().collect(Collectors.groupingBy(PlayerUserWarInfoDTO::getOpenId));
+		memberMap.forEach((k, infos) -> {
+			if (infos.size() == 1) {
+				sendThreeStarMessage(infos.get(0));
+			} else {
+				sendThreeStarMessage(infos.get(0), infos.size());
+			}
+		});
 		Optional<PlayerUserWarInfoDTO> maxCreateTimeInfo =
 			memberRelatedUsers.stream().max(Comparator.comparing(PlayerUserWarInfoDTO::getCreateTime));
 		maxCreateTimeInfo.ifPresent(playerUserWarInfoDTO -> redisUtil.setex(
@@ -157,10 +165,28 @@ public class MiniProgramMessageServiceImpl implements MiniProgramMessageService 
 		// 等战争结果信息能查了再填写
 	}
 
-	void sendThreeStartMessage(PlayerUserWarInfoDTO u) {
+	void sendThreeStarMessage(PlayerUserWarInfoDTO u) {
 		String title = String.format("%s 战况通报", u.getClanName());
 		String msg = String.format("%s 三星对方 %s 号", u.getPlayerName(),
 			u.getOpponentRankToAttack());
+		try {
+			sendWarResultMessage(
+				title,
+				msg,
+				String.format("pages/war/index?warTag=%s&clanTag=%s",
+					URLEncoder.encode(u.getWarTag(), "utf-8"),
+					URLEncoder.encode(u.getClanTag(), "utf-8")
+				),
+				u.getOpenId());
+
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	void sendThreeStarMessage(PlayerUserWarInfoDTO u, int threeStarCount) {
+		String title = String.format("%s 战况通报", u.getClanName());
+		String msg = String.format("新增 %s 个三星，点击下方链接查看", threeStarCount);
 		try {
 			sendWarResultMessage(
 				title,
