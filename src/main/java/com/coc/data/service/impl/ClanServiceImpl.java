@@ -15,6 +15,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -130,6 +131,10 @@ public class ClanServiceImpl implements ClanService {
 
     @Override
     public boolean atLeagueWar(String tag) {
+        // 12号之后肯定没有人再进行联赛了
+        if (LocalDate.now().getDayOfMonth() > 12) {
+            return false;
+        }
         try {
             LeagueGroupInfoDTO leagueGroupInfo =
                 httpClient.getClanLeagueGroupInfoByClanTag(tag);

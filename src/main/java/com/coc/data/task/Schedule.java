@@ -2,7 +2,7 @@ package com.coc.data.task;
 
 import com.coc.data.mapper.ClanMapper;
 import com.coc.data.model.base.Clan;
-import com.coc.data.model.base.ClanWar;
+import com.coc.data.model.base.ClanExample;
 import com.coc.data.service.ClanService;
 import com.coc.data.service.ClanWarService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,9 @@ public class Schedule {
 	@Scheduled(cron = "0 */50 * * * *")
 	@GetMapping("/clanInfo")
 	public void syncClanInfo() {
-		List<Clan> clanList = clanMapper.selectByExample(null);
+		ClanExample example = new ClanExample();
+		example.createCriteria().andProvideLeagueWarReportEqualTo(true);
+		List<Clan> clanList = clanMapper.selectByExample(example);
 		for (Clan clan : clanList) {
 			clanService.syncClanBaseInfo(clan.getTag());
 			if (clan.getProvideLeagueWarReport() && clanService.atLeagueWar(clan.getTag())) {
@@ -54,7 +56,9 @@ public class Schedule {
 	@Scheduled(cron = "0 */5 * * * *")
 	@GetMapping("/currentWarInfo")
 	public void syncClanCurrentWarInfo() {
-		List<Clan> clanList = clanMapper.selectByExample(null);
+		ClanExample example = new ClanExample();
+		example.createCriteria().andProvideLeagueWarReportEqualTo(true);
+		List<Clan> clanList = clanMapper.selectByExample(example);
 		for (Clan clan : clanList) {
 			clanWarService.syncClanCurrentWarInfo(clan);
 		}
