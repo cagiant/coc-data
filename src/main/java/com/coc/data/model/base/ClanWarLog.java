@@ -20,6 +20,16 @@ public class ClanWarLog implements Comparable<ClanWarLog>{
 
     private Integer attackOrder;
 
+    private Integer duration;
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
     private Date createTime;
 
     public Long getId() {

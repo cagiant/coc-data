@@ -24,4 +24,6 @@ public class AttackDTO {
     private String destructionPercentage;
 
     private Long order;
+
+    private Integer duration;
 }

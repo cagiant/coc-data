@@ -618,6 +618,7 @@ public class ClanWarServiceImpl implements ClanWarService {
                         .attackOrder(attack.getOrder().intValue())
                         .star(attack.getStars().shortValue())
                         .warTag(warInfo.getTag())
+                        .duration(attack.getDuration())
                         .build()
                 );
             });
