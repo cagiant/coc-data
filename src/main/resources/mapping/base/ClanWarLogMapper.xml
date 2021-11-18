@@ -9,6 +9,7 @@
     <result column="star" jdbcType="SMALLINT" property="star" />
     <result column="destruction_percentage" jdbcType="VARCHAR" property="destructionPercentage" />
     <result column="attack_order" jdbcType="INTEGER" property="attackOrder" />
+    <result column="duration" jdbcType="INTEGER" property="duration" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -71,7 +72,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, war_tag, attacker_tag, defender_tag, star, destruction_percentage, attack_order, 
-    create_time
+    duration, create_time
   </sql>
   <select id="selectByExample" parameterType="com.coc.data.model.base.ClanWarLogExample" resultMap="BaseResultMap">
     select
@@ -106,10 +107,12 @@
   <insert id="insert" parameterType="com.coc.data.model.base.ClanWarLog">
     insert into clan_war_log (id, war_tag, attacker_tag, 
       defender_tag, star, destruction_percentage, 
-      attack_order, create_time)
+      attack_order, duration, create_time
+      )
     values (#{id,jdbcType=BIGINT}, #{warTag,jdbcType=VARCHAR}, #{attackerTag,jdbcType=VARCHAR}, 
       #{defenderTag,jdbcType=VARCHAR}, #{star,jdbcType=SMALLINT}, #{destructionPercentage,jdbcType=VARCHAR}, 
-      #{attackOrder,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+      #{attackOrder,jdbcType=INTEGER}, #{duration,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.coc.data.model.base.ClanWarLog">
     insert into clan_war_log
@@ -134,6 +137,9 @@
       </if>
       <if test="attackOrder != null">
         attack_order,
+      </if>
+      <if test="duration != null">
+        duration,
       </if>
       <if test="createTime != null">
         create_time,
@@ -160,6 +166,9 @@
       </if>
       <if test="attackOrder != null">
         #{attackOrder,jdbcType=INTEGER},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -196,6 +205,9 @@
       <if test="record.attackOrder != null">
         attack_order = #{record.attackOrder,jdbcType=INTEGER},
       </if>
+      <if test="record.duration != null">
+        duration = #{record.duration,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -213,6 +225,7 @@
       star = #{record.star,jdbcType=SMALLINT},
       destruction_percentage = #{record.destructionPercentage,jdbcType=VARCHAR},
       attack_order = #{record.attackOrder,jdbcType=INTEGER},
+      duration = #{record.duration,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -239,6 +252,9 @@
       <if test="attackOrder != null">
         attack_order = #{attackOrder,jdbcType=INTEGER},
       </if>
+      <if test="duration != null">
+        duration = #{duration,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -253,6 +269,7 @@
       star = #{star,jdbcType=SMALLINT},
       destruction_percentage = #{destructionPercentage,jdbcType=VARCHAR},
       attack_order = #{attackOrder,jdbcType=INTEGER},
+      duration = #{duration,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
