@@ -11,6 +11,7 @@ public class RedisKeyBuilder {
 		return "MINI_TOKEN";
 	}
 
+	@Deprecated
 	public static String buildClanInfoKey(String clanTag) {
 		return String.format("CLAN_INFO:%s", clanTag);
 	}
