@@ -11,6 +11,8 @@ import com.coc.data.dto.war.ClanWarLogDetailDTO;
 import com.coc.data.enums.ClanWarResultEnum;
 import com.coc.data.enums.ClanWarStateEnum;
 import com.coc.data.enums.ClanWarTypeEnum;
+import com.coc.data.enums.redis.ClanRedisEnum;
+import com.coc.data.enums.redis.RedisKeyEnum;
 import com.coc.data.mapper.*;
 import com.coc.data.model.base.*;
 import com.coc.data.service.ClanService;
@@ -281,7 +283,8 @@ public class ClanWarServiceImpl implements ClanWarService {
      * @date 2021/7/11 10:28
      **/
     private void refreshClanInfo(String clanTag) {
-        if (!redisUtil.setnxWithMilliseconds(RedisKeyBuilder.buildClanInfoKey(clanTag), "1", 5 * 60 * 1000)) {
+        String concurrentKey = RedisKeyEnum.CLAN.buildKey(ClanRedisEnum.CLAN_INFO.build(), clanTag);
+        if (!redisUtil.setnxWithMilliseconds(concurrentKey, "1", 5 * 60 * 1000)) {
             return;
         }
         Clan clan = clanMapper.selectByClanTag(clanTag);
