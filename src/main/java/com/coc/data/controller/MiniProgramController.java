@@ -24,12 +24,6 @@ public class MiniProgramController {
     @Resource
     private MiniProgramMessageService miniProgramMessageService;
 
-    @GetMapping("/test")
-    void test() {
-        miniProgramMessageService.sendWarResultMessage("三星通知", "戴尔笔记本进攻对方4号位，获得三星", null,
-            "oabXk5OGOt_oR0yw3PRGLahy_pwQ");
-    }
-
     @GetMapping("/msgCallback")
     public String getMsgCallback(HttpServletRequest request) {
         String signature = request.getParameter("signature");
