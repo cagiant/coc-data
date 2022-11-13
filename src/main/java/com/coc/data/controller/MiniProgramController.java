@@ -43,8 +43,6 @@ public class MiniProgramController {
 
     @PostMapping("/msgCallback")
     public String postMsgCallback(HttpServletRequest request) {
-//        log.info(FormatUtil.serializeObject2JsonStr(request));
-
         return "success";
     }
 }
