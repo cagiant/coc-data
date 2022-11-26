@@ -6,7 +6,9 @@ package com.coc.data.enums.redis;
  */
 public enum RedisKeyEnum {
 
-    CLAN("clan");
+    CLAN("clan"),
+    WAR("war"),
+    ;
 
     private final String prefix;
     RedisKeyEnum(String prefix) {
