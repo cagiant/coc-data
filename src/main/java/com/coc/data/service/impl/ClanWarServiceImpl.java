@@ -13,6 +13,7 @@ import com.coc.data.enums.ClanWarStateEnum;
 import com.coc.data.enums.ClanWarTypeEnum;
 import com.coc.data.enums.redis.ClanRedisEnum;
 import com.coc.data.enums.redis.RedisKeyEnum;
+import com.coc.data.enums.redis.WarRedisEnum;
 import com.coc.data.mapper.*;
 import com.coc.data.model.base.*;
 import com.coc.data.service.ClanService;
@@ -112,6 +113,10 @@ public class ClanWarServiceImpl implements ClanWarService {
 
     @Override
     public void syncClanLeagueWarInfo(String warTag) {
+        String redisKey = RedisKeyEnum.WAR.buildKey(WarRedisEnum.CLAN_WAR_SYNC.build(), warTag);
+        if (!redisUtil.setnxWithMilliseconds(redisKey, "1", 5 * 60 * 1000)) {
+            return;
+        }
         WarInfoDTO warInfo;
         try {
             warInfo = httpClient.getClanLeagueGroupWarInfoByTag(warTag);
