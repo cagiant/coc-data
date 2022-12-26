@@ -4,6 +4,7 @@ package com.coc.data.service;
  * @author guokaiqiang
  * @date 2020/7/30 22:01
  */
+@Deprecated
 public interface DataSyncService {
 
     /**
