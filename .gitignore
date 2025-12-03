@@ -34,7 +34,27 @@ build/
 ### VS Code ###
 .vscode/
 
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+### Linux ###
+*~
+.directory
+
 ### dev use only ###
 application.properties
 log
 generatorConfig.xml
+
+### Temporary files ###
+*.log
+*.tmp
+*.swp
+*.bak
